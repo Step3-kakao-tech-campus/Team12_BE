@@ -30,6 +30,19 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+
+	// H2 Database
+	runtimeOnly 'com.h2database:h2'
+
+	// JWT Token
+	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+	// junit
+	implementation 'junit:junit:4.12'
+
+	// JWT Test 사용시 필요한 라이브러리
+	implementation 'javax.xml.bind:jaxb-api:2.3.0'
+
 }
 
 tasks.named('test') {
