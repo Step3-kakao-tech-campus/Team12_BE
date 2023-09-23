@@ -1,19 +1,17 @@
 package pickup_shuttle.pickup.domain.user;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Getter
+// @Setter // 임시
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "user")
+@Table(name = "user_tb")
 @DynamicUpdate
 public class User {
     @Id
@@ -25,7 +23,7 @@ public class User {
     @Column(name = "pwd", nullable = false)
     private String pwd;
     @Column(name = "role", nullable = false)
-    @ColumnDefault("일반")
+    @ColumnDefault("'일반'")
     private String role;
     @Column(name = "nickname", nullable = false)
     private String nickname;

@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 import pickup_shuttle.pickup.domain.user.User;
+import pickup_shuttle.pickup.domain.user.UserRequest;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtTokenFilter extends OncePerRequestFilter {
 
-    private final User user;
+    private final UserRequest.LoginDTO loginDTO;
     private final String secretKey;
 
     @Override
@@ -50,12 +51,15 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         // Jwt Token에서 LoginId 추출
         String loginId = JwtTokenUtil.getLoginId(token, secretKey);
 
-        // 추출한 LoginId로 User 찾아오기
-        User loginUser = user;
+        // loginDTO로 UID 찾기
+        String loginUserUID = loginDTO.getUid();
+        
+        // loginDTO로 PWD 찾기
+        String loginUserPWD = loginDTO.getPassword();
 
         // LoginUser 정보로 UsernamePasswordAuthenticationToken 발급
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                loginUser.getUserId(), null, List.of(new SimpleGrantedAuthority(loginUser.getRole())));
+                loginUserUID, null, List.of(new SimpleGrantedAuthority("일반")));
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
         // 권한 부여

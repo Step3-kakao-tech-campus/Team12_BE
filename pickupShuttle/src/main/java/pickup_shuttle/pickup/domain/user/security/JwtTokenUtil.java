@@ -8,6 +8,10 @@ import java.util.Date;
 
 public class JwtTokenUtil {
 
+    public static final Long EXP = 1000L * 60 * 60 * 48; // 48시간.
+    public static final String HEADER = "Authorization";
+    public static final String SECRET = "pickUpShuttle_SECRET_KEY";
+
     // JWT Token 발급
     public static String createToken(String loginId, String key, long expireTimeMs) {
         // Claim = Gwt Token에 들어갈 정보
