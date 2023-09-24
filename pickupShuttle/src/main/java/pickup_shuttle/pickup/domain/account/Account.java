@@ -22,7 +22,7 @@ public class Account {
     private Long accountId;
 
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(name = "number", nullable = false)
@@ -31,7 +31,7 @@ public class Account {
     private String bank;
 
     @Builder
-    public Account(User user, String number, String bank){
+    public Account(User user, String number, String bank) {
         this.user = user;
         this.number = number;
         this.bank = bank;

@@ -20,11 +20,10 @@ public class UserService {
     public void register(UserRequest.RegisterDTO requestDTO){
         checkNicknameDuplicate(requestDTO.getNickname());
         Long userId = 1L; // 로그인 구현 후 변경
-
+        User userPS = userRepository.findById(userId).orElseThrow(
+                () -> new Exception400("유저가 존재하지 않습니다")
+        );
         try{
-            User userPS = userRepository.findById(userId).orElseThrow(
-                    () -> new Exception400("유저가 존재하지 않습니다")
-            );
             userPS.updateNickname(requestDTO.getNickname());
             accountRepository.save(requestDTO.toAccount(userPS));
 
@@ -32,7 +31,6 @@ public class UserService {
             throw new Exception500("unknown server error");
         }
     }
-
 
     public void checkNicknameDuplicate(String nickname){
         Optional<User> userOP = userRepository.findByNickname(nickname);
