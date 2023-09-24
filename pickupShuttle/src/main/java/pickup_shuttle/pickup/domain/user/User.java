@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -13,8 +14,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "user")
+@Table(name = "user_tb")
 @DynamicUpdate
+@DynamicInsert
 public class User {
     @Id
     @Column(name = "id")
@@ -25,12 +27,12 @@ public class User {
     @Column(name = "pwd", nullable = false)
     private String pwd;
     @Column(name = "role", nullable = false)
-    @ColumnDefault("일반")
+    @ColumnDefault("'일반'")
     private String role;
     @Column(name = "nickname", nullable = false)
     private String nickname;
     @Column(name = "url", nullable = false)
-    @ColumnDefault("")
+    @ColumnDefault("''")
     private String url;
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
@@ -44,6 +46,10 @@ public class User {
         this.nickname = nickname;
         this.phoneNumber = phoneNumber;
         this.name = name;
+    }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public void updateRole(String role) {
