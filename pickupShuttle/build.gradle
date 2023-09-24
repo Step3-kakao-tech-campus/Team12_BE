@@ -30,7 +30,6 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
-
 	// H2 Database
 	runtimeOnly 'com.h2database:h2'
 
@@ -48,8 +47,6 @@ dependencies {
 
 	// json 변환 라이브러리
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.3'
-
-
 }
 
 tasks.named('test') {
