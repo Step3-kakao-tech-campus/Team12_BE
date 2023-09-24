@@ -14,7 +14,6 @@ import pickup_shuttle.pickup.domain.user.User;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "account_tb")
-@DynamicUpdate
 public class Account {
     @Id
     @Column(name = "account_id")
