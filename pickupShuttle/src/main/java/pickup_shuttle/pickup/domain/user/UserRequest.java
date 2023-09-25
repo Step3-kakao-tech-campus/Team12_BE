@@ -1,6 +1,7 @@
 package pickup_shuttle.pickup.domain.user;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -33,6 +34,16 @@ public class UserRequest {
     public static class NicknameCheckDTO{
         @NotBlank(message = "닉네임 값이 공백입니다")
         private String nickname;
+    }
+
+    @Getter
+    @Setter
+    public static class LoginDTO {
+        @NotEmpty(message = "아이디 값이 공백입니다.")
+        private String uid;
+
+        @NotEmpty(message = "패스워드 값이 공백입니다.")
+        private String password;
     }
 
 }
