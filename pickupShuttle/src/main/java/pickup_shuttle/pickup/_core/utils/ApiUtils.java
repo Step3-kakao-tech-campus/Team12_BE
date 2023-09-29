@@ -1,4 +1,4 @@
-package pickup_shuttle.pickup.domain._core.utils;
+package pickup_shuttle.pickup._core.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
