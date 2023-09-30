@@ -5,9 +5,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import pickup_shuttle.pickup.domain.user.User;
+import pickup_shuttle.pickup.domain.User;
 
 @Entity
 @Getter

@@ -1,4 +1,4 @@
-package pickup_shuttle.pickup.domain.user;
+package pickup_shuttle.pickup.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

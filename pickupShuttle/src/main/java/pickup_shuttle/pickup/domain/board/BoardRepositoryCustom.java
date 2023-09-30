@@ -6,6 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BoardRepositoryCustom {
-    Slice<Board> searchByTagAndSlice(Long lastBoardId, String tag, Pageable pageable);
     Slice<Board> searchAllBySlice(Long lastBoardId, Pageable pageable);
 }

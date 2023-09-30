@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import pickup_shuttle.pickup.domain.board.Board;
-import pickup_shuttle.pickup.domain.user.User;
+import pickup_shuttle.pickup.domain.User;
 
 import java.time.LocalDateTime;
 

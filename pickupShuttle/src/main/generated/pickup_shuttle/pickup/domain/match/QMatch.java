@@ -30,7 +30,7 @@ public class QMatch extends EntityPathBase<Match> {
 
     public final DateTimePath<java.time.LocalDateTime> matchTime = createDateTime("matchTime", java.time.LocalDateTime.class);
 
-    public final pickup_shuttle.pickup.domain.user.QUser user;
+    public final pickup_shuttle.pickup.domain.QUser user;
 
     public QMatch(String variable) {
         this(Match.class, forVariable(variable), INITS);
@@ -51,7 +51,7 @@ public class QMatch extends EntityPathBase<Match> {
     public QMatch(Class<? extends Match> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.board = inits.isInitialized("board") ? new pickup_shuttle.pickup.domain.board.QBoard(forProperty("board"), inits.get("board")) : null;
-        this.user = inits.isInitialized("user") ? new pickup_shuttle.pickup.domain.user.QUser(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new pickup_shuttle.pickup.domain.QUser(forProperty("user")) : null;
     }
 
 }

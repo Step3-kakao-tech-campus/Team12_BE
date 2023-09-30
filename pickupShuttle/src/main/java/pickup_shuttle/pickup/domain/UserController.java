@@ -1,4 +1,4 @@
-package pickup_shuttle.pickup.domain.user;
+package pickup_shuttle.pickup.domain;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,7 @@ import pickup_shuttle.pickup._core.utils.ApiUtils;
 
 @RequiredArgsConstructor
 @RestController
-public class UserRestController {
+public class UserController {
     private final UserService userService;
     // 회원가입
     @PostMapping("/users/register")

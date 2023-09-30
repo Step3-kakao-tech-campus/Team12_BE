@@ -10,7 +10,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import pickup_shuttle.pickup.domain.store.Store;
-import pickup_shuttle.pickup.domain.user.User;
+import pickup_shuttle.pickup.domain.User;
 
 import java.time.LocalDateTime;
 
@@ -26,15 +26,15 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long boardId;
 
-    @Column(name = "finish_at", nullable = false)
+    @Column(name = "finished_at", nullable = false)
     private LocalDateTime finishAt;
 
     @Column(name = "created_at", nullable = false)
     @CreatedDate
     private LocalDateTime createdAt;
 
-    @Column(name = "location", nullable = false)
-    private String location;
+    @Column(name = "destination", nullable = false)
+    private String destination;
 
     @Column(name = "tip", nullable = false)
     private int tip;
@@ -51,14 +51,14 @@ public class Board {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
     private Store store;
 
     @Builder
-    public Board(LocalDateTime finishAt, String location, int tip, User user, Store store) {
+    public Board(LocalDateTime finishAt, String destination, int tip, User user, Store store) {
         this.finishAt = finishAt;
-        this.location = location;
+        this.destination = destination;
         this.tip = tip;
         this.user = user;
         this.store = store;

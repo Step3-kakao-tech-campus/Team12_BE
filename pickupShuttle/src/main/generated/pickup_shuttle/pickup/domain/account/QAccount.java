@@ -28,7 +28,7 @@ public class QAccount extends EntityPathBase<Account> {
 
     public final StringPath number = createString("number");
 
-    public final pickup_shuttle.pickup.domain.user.QUser user;
+    public final pickup_shuttle.pickup.domain.QUser user;
 
     public QAccount(String variable) {
         this(Account.class, forVariable(variable), INITS);
@@ -48,7 +48,7 @@ public class QAccount extends EntityPathBase<Account> {
 
     public QAccount(Class<? extends Account> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.user = inits.isInitialized("user") ? new pickup_shuttle.pickup.domain.user.QUser(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new pickup_shuttle.pickup.domain.QUser(forProperty("user")) : null;
     }
 
 }

@@ -26,9 +26,9 @@ public class QBoard extends EntityPathBase<Board> {
 
     public final DateTimePath<java.time.LocalDateTime> createdAt = createDateTime("createdAt", java.time.LocalDateTime.class);
 
-    public final DateTimePath<java.time.LocalDateTime> finishAt = createDateTime("finishAt", java.time.LocalDateTime.class);
+    public final StringPath destination = createString("destination");
 
-    public final StringPath location = createString("location");
+    public final DateTimePath<java.time.LocalDateTime> finishAt = createDateTime("finishAt", java.time.LocalDateTime.class);
 
     public final BooleanPath match = createBoolean("match");
 
@@ -38,7 +38,7 @@ public class QBoard extends EntityPathBase<Board> {
 
     public final NumberPath<Integer> tip = createNumber("tip", Integer.class);
 
-    public final pickup_shuttle.pickup.domain.user.QUser user;
+    public final pickup_shuttle.pickup.domain.QUser user;
 
     public QBoard(String variable) {
         this(Board.class, forVariable(variable), INITS);
@@ -59,7 +59,7 @@ public class QBoard extends EntityPathBase<Board> {
     public QBoard(Class<? extends Board> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.store = inits.isInitialized("store") ? new pickup_shuttle.pickup.domain.store.QStore(forProperty("store")) : null;
-        this.user = inits.isInitialized("user") ? new pickup_shuttle.pickup.domain.user.QUser(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new pickup_shuttle.pickup.domain.QUser(forProperty("user")) : null;
     }
 
 }
