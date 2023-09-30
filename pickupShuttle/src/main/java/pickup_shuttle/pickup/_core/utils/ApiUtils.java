@@ -12,6 +12,10 @@ public class ApiUtils {
         return new ApiResult<>(false, null, new ApiError(message, status.value()));
     }
 
-    private ApiUtils() {
+
+    public record ApiResult<T>(boolean success, T response, ApiError error) {
+    }
+
+    public record ApiError(String message, int status) {
     }
 }

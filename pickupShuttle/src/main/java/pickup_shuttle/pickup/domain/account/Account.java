@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import pickup_shuttle.pickup.domain.User;
+import pickup_shuttle.pickup.domain.user.User;
 
 @Entity
 @Getter

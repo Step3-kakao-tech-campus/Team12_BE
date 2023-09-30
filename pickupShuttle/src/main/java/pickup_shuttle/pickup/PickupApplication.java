@@ -7,8 +7,8 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import pickup_shuttle.pickup.domain.User;
-import pickup_shuttle.pickup.domain.UserRepository;
+import pickup_shuttle.pickup.domain.user.User;
+import pickup_shuttle.pickup.domain.user.UserRepository;
 
 import java.util.Arrays;
 

@@ -1,4 +1,4 @@
-package pickup_shuttle.pickup.domain;
+package pickup_shuttle.pickup.domain.user;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import pickup_shuttle.pickup.domain.account.Account;
+import pickup_shuttle.pickup.domain.user.User;
 
 public class UserRequest {
 

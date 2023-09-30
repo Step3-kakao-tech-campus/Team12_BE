@@ -10,7 +10,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import pickup_shuttle.pickup.domain.store.Store;
-import pickup_shuttle.pickup.domain.User;
+import pickup_shuttle.pickup.domain.user.User;
 
 import java.time.LocalDateTime;
 

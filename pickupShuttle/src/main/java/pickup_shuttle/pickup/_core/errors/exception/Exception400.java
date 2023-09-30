@@ -2,7 +2,6 @@ package pickup_shuttle.pickup._core.errors.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
-import pickup_shuttle.pickup._core.utils.ApiResult;
 import pickup_shuttle.pickup._core.utils.ApiUtils;
 
 
@@ -14,7 +13,7 @@ public class Exception400 extends RuntimeException {
         super(message);
     }
 
-    public ApiResult<?> body(){
+    public ApiUtils.ApiResult<?> body(){
         return ApiUtils.error(getMessage(), HttpStatus.BAD_REQUEST);
     }
 

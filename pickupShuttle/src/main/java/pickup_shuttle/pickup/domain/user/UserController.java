@@ -1,4 +1,4 @@
-package pickup_shuttle.pickup.domain;
+package pickup_shuttle.pickup.domain.user;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
