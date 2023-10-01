@@ -1,6 +1,7 @@
 package pickup_shuttle.pickup.domain.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import pickup_shuttle.pickup.domain.user.User;
 
 import java.util.Optional;
 

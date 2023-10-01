@@ -1,13 +1,13 @@
-package pickup_shuttle.pickup.domain._core.errors;
+package pickup_shuttle.pickup._core.errors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import pickup_shuttle.pickup.domain._core.errors.exception.Exception400;
-import pickup_shuttle.pickup.domain._core.errors.exception.Exception500;
-import pickup_shuttle.pickup.domain._core.utils.ApiUtils;
+import pickup_shuttle.pickup._core.errors.exception.Exception400;
+import pickup_shuttle.pickup._core.utils.ApiUtils;
+import pickup_shuttle.pickup._core.errors.exception.Exception500;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {

@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import pickup_shuttle.pickup.domain._core.utils.ApiUtils;
+import pickup_shuttle.pickup._core.utils.ApiUtils;
 
 @RequiredArgsConstructor
 @RestController
-public class UserRestController {
+public class UserController {
     private final UserService userService;
     // 회원가입
     @PostMapping("/users/register")

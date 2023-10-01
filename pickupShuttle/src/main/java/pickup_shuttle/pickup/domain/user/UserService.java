@@ -3,8 +3,8 @@ package pickup_shuttle.pickup.domain.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pickup_shuttle.pickup.domain._core.errors.exception.Exception400;
-import pickup_shuttle.pickup.domain._core.errors.exception.Exception500;
+import pickup_shuttle.pickup._core.errors.exception.Exception400;
+import pickup_shuttle.pickup._core.errors.exception.Exception500;
 import pickup_shuttle.pickup.domain.account.AccountRepository;
 
 import java.util.Optional;

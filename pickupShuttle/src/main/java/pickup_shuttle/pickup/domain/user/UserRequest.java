@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import pickup_shuttle.pickup.domain.account.Account;
+import pickup_shuttle.pickup.domain.user.User;
 
 public class UserRequest {
 
