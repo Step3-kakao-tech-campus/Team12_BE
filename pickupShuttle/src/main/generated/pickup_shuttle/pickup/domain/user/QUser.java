@@ -1,4 +1,4 @@
-package pickup_shuttle.pickup.domain;
+package pickup_shuttle.pickup.domain.user;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -7,7 +7,6 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
-import pickup_shuttle.pickup.domain.user.User;
 
 
 /**
@@ -16,9 +15,15 @@ import pickup_shuttle.pickup.domain.user.User;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QUser extends EntityPathBase<User> {
 
-    private static final long serialVersionUID = -1826608805L;
+    private static final long serialVersionUID = 2115563710L;
 
     public static final QUser user = new QUser("user");
+
+    public final StringPath account = createString("account");
+
+    public final StringPath bank = createString("bank");
+
+    public final StringPath email = createString("email");
 
     public final StringPath name = createString("name");
 
@@ -28,13 +33,15 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath pwd = createString("pwd");
 
-    public final StringPath role = createString("role");
+    public final StringPath socialId = createString("socialId");
 
     public final StringPath uid = createString("uid");
 
     public final StringPath url = createString("url");
 
     public final NumberPath<Long> userId = createNumber("userId", Long.class);
+
+    public final EnumPath<UserRole> userRole = createEnum("userRole", UserRole.class);
 
     public QUser(String variable) {
         super(User.class, forVariable(variable));

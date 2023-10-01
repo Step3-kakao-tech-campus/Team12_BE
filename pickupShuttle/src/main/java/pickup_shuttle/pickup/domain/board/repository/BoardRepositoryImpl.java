@@ -1,4 +1,4 @@
-package pickup_shuttle.pickup.domain.board;
+package pickup_shuttle.pickup.domain.board.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -8,6 +8,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
+import pickup_shuttle.pickup.domain.board.Board;
+import pickup_shuttle.pickup.domain.board.repository.BoardRepositoryCustom;
+
 import java.util.List;
 import static pickup_shuttle.pickup.domain.board.QBoard.*;
 import static pickup_shuttle.pickup.domain.store.QStore.*;
