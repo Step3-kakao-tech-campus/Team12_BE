@@ -15,7 +15,7 @@ import pickup_shuttle.pickup.domain.user.User;
 @Table(name = "account_tb")
 public class Account {
     @Id
-    @Column(name = "account_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long accountId;
 
