@@ -6,8 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pickup_shuttle.pickup._core.errors.exception.Exception400;
 import pickup_shuttle.pickup._core.errors.exception.Exception500;
-import pickup_shuttle.pickup.domain.account.Account;
-import pickup_shuttle.pickup.domain.account.AccountRepository;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
 import pickup_shuttle.pickup.domain.user.dto.request.RegisterRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
@@ -19,7 +17,7 @@ import java.util.Optional;
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    private final AccountRepository accountRepository;
+    // private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
 
 
@@ -32,7 +30,7 @@ public class UserService {
         );
         try{
             userPS.updateNickname(requestDTO.nickname());
-            accountRepository.save(requestDTO.toAccount(userPS));
+         //   accountRepository.save(requestDTO.toAccount(userPS));
 
         } catch (Exception e) {
             throw new Exception500("unknown server error");
@@ -46,6 +44,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public void signup(SignUpRqDTO signUpRqDTO, CustomOauth2User customOauth2User){
         String bankName = signUpRqDTO.bankName();
         String accountNum = signUpRqDTO.accountNum();
@@ -53,8 +52,8 @@ public class UserService {
         user.get().setRole(UserRole.USER);
         customOauth2User.setBankName(bankName);
         customOauth2User.setAccountNum(accountNum);
-        Account account = new Account(user.get(),accountNum,bankName);
-        accountRepository.save(account);
+        user.get().setBank(bankName);
+        user.get().setAccount(accountNum);
         return;
     }
 
