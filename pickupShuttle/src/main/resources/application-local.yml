@@ -8,14 +8,18 @@ spring:
   datasource:
     url: jdbc:h2:mem:test;MODE=MySQL
     driver-class-name: org.h2.Driver
+<<<<<<< HEAD
     username: sa
+=======
+    username:
+>>>>>>> 7bf9a69863910e0a198ac312c3cbac9913aa5fc8
     password:
   h2:
     console:
       enabled: true
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
     properties:
       hibernate:

@@ -12,17 +12,21 @@ import pickup_shuttle.pickup.domain.board.dto.request.WriteRqDTO;
 import pickup_shuttle.pickup.domain.board.dto.response.BoardListRpDTO;
 import pickup_shuttle.pickup.domain.board.dto.response.WriteRpDTO;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
-import pickup_shuttle.pickup.domain.oauth2.userinfo.OAuth2UserInfo;
+
+import pickup_shuttle.pickup.domain.board.dto.response.BoardDetailAfterRpDTO;
+import pickup_shuttle.pickup.domain.board.dto.response.BoardDetailBeforeRpDTO;
 
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("articles")
 public class BoardController {
     private final BoardService boardService;
 
-    @GetMapping("/articles")
+    @GetMapping
     public ResponseEntity<?> getBoardList(
-            @RequestParam(value = "lastBoardId", required = false) Long lastBoardId,
+            @RequestParam(value = "offset" +
+                    "", required = false) Long lastBoardId,
             @RequestParam(value = "limit",defaultValue = "10") int size) {
         Slice<BoardListRpDTO> responseDTOSlice = boardService.boardList(lastBoardId, size);
         return ResponseEntity.ok(ApiUtils.success(responseDTOSlice));
@@ -32,6 +36,17 @@ public class BoardController {
     public ResponseEntity<?> write(@RequestBody @Valid WriteRqDTO requestDTO,
                                    @AuthenticationPrincipal CustomOauth2User customOauth2User){
         WriteRpDTO responseDTO = boardService.write(requestDTO, customOauth2User);
+        return ResponseEntity.ok(ApiUtils.success(responseDTO));
+    }
+    @GetMapping("/before/{boardId}")
+    public ResponseEntity<?> beforeBoardDetail(@PathVariable("boardId") Long boardId) {
+        BoardDetailBeforeRpDTO responseDTO = boardService.boardDetailBefore(boardId);
+        return ResponseEntity.ok(ApiUtils.success(responseDTO));
+    }
+
+    @GetMapping("/after/{boardId}")
+    private ResponseEntity<?> afterBoardDetail(@PathVariable("boardId") Long boardId) {
+        BoardDetailAfterRpDTO responseDTO = boardService.boardDetailAfter(boardId);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 }

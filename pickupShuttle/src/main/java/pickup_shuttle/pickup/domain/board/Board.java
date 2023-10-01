@@ -9,6 +9,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import pickup_shuttle.pickup.domain.match.Match;
 import pickup_shuttle.pickup.domain.store.Store;
 import pickup_shuttle.pickup.domain.user.User;
 
@@ -45,7 +46,7 @@ public class Board {
 
     @Column(name = "is_match", nullable = false)
     @ColumnDefault("'N'")
-    private boolean match;
+    private boolean isMatch;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -54,6 +55,10 @@ public class Board {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
     private Store store;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "match_id")
+    private Match match;
 
     @Builder
     public Board(LocalDateTime finishAt, String destination, int tip, User user, Store store) {
@@ -68,7 +73,7 @@ public class Board {
         this.request = request;
     }
 
-    public void updateMatch(boolean match) {
-        this.match = match;
+    public void updateMatch(boolean isMatch) {
+        this.isMatch = isMatch;
     }
 }

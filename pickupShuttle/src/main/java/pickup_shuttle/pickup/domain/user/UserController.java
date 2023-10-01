@@ -10,13 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import pickup_shuttle.pickup._core.utils.ApiUtils;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
+
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 
 @RequiredArgsConstructor
 @RestController
 public class UserController {
     private final UserService userService;
-
+    
     // 은행명, 계좌번호 입력 창으로 이동
     @GetMapping("/users/register/input")
     public ModelAndView userInfoInput() {
@@ -26,8 +27,9 @@ public class UserController {
         return modelAndView;
     }
 
+
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(SignUpRqDTO requestDTO, @AuthenticationPrincipal CustomOauth2User customOauth2User, Errors errors){
+    public ResponseEntity<?> signup(SignUpRqDTO requestDTO, @AuthenticationPrincipal CustomOauth2User customOauth2User, Errors errors) {
         userService.signup(requestDTO, customOauth2User);
 
         return ResponseEntity.ok(ApiUtils.success("처리에 성공하였습니다." + "은행이름: " + requestDTO.getBankName() + "  계좌번호: " + requestDTO.getAccountNum()));

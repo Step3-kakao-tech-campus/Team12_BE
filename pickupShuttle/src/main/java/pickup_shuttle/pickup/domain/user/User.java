@@ -25,7 +25,7 @@ public class User {
     @Column(name = "pwd", nullable = true) // Oauth
     private String pwd;
     @Column(name = "role", nullable = false)
-    @ColumnDefault("'ROLE_GUEST'")
+    @ColumnDefault("3")
     private UserRole userRole;
     @Column(name = "nickname", nullable = false)
     private String nickname;
@@ -41,16 +41,30 @@ public class User {
     // private String refreshToken; // 리프레시 토큰
     private String email; // 처음 OAuth 로그인 한 사람 식별용
     private String socialId; // 카카오 고유 ID로 식별용
-    // private String refreshToken;
+    @Column(name = "bank")
+    private String bank;
+    @Column(name = "account")
+    private String account;
 
     @Builder
-    public User(String socialId, String email,UserRole userRole, String nickname, String phoneNumber, String name) {
+    public User(String socialId, String email,UserRole userRole, String nickname,
+                String phoneNumber, String name, String bank, String account) {
         this.socialId = socialId;
         this.email = email;
         this.nickname = nickname;
         this.phoneNumber = phoneNumber;
         this.userRole = userRole;
         this.name = name;
+        this.bank = bank;
+        this.account = account;
+    }
+
+    public void setBank(String bank){
+        this.bank = bank;
+    }
+
+    public void setAccount(String account){
+        this.account = account;
     }
 
     // 유저 권한 설정 메서드

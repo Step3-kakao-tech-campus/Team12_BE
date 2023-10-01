@@ -27,7 +27,7 @@ public class BoardControllerTest {
     @Autowired
     private ObjectMapper om;
 
-    @Test
+    @Test //공고글 목록 조회
     void testBoardList() throws Exception {
         //given
         String lastBoardId = "";
@@ -49,6 +49,7 @@ public class BoardControllerTest {
         resultActions.andExpect(jsonPath("$.success").value("true"));
     }
 
+<<<<<<< HEAD
     @WithMockUser(username = "test", roles = {"ROLE_STUDENT"})
     @Test
     void testWrite() throws Exception{
@@ -67,11 +68,22 @@ public class BoardControllerTest {
         ResultActions resultActions = mvc.perform(
                 post("/articles/write")
                         .content(requestBody)
+=======
+    @Test // 공고글 상세 조회 (매칭 전)
+    void testBoardDetailBefore() throws Exception {
+        //given
+        String boardId = "1";
+
+        //when
+        ResultActions resultActions = mvc.perform(
+                get("/articles/before/{boardId}", boardId)
+>>>>>>> 7bf9a69863910e0a198ac312c3cbac9913aa5fc8
                         .contentType(MediaType.APPLICATION_JSON)
         );
 
         //eye
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+<<<<<<< HEAD
         System.out.println("testWrite : " + responseBody);
 
         //then
@@ -95,11 +107,31 @@ public class BoardControllerTest {
         ResultActions resultActions = mvc.perform(
                 post("/articles/write")
                         .content(requestBody)
+=======
+        System.out.println("testBoardList : " + responseBody);
+
+        //then
+        resultActions.andExpect(jsonPath("$.success").value("true"));
+        resultActions.andExpect(jsonPath("$.response.boardId").value("1"));
+        resultActions.andExpect(jsonPath("$.response.shopName").value("전남대 후문 스타벅스"));
+        resultActions.andExpect(jsonPath("$.response.tip").value("1000"));
+    }
+
+    @Test // 공고글 상세 조회 (매칭 후)
+    void testBoardDetailAfter() throws Exception {
+        //given
+        String boardId = "1";
+
+        //when
+        ResultActions resultActions = mvc.perform(
+                get("/articles/after/{boardId}", boardId)
+>>>>>>> 7bf9a69863910e0a198ac312c3cbac9913aa5fc8
                         .contentType(MediaType.APPLICATION_JSON)
         );
 
         //eye
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+<<<<<<< HEAD
         System.out.println("testWriteNotFoundStore : " + responseBody);
 
         //then
@@ -255,6 +287,17 @@ public class BoardControllerTest {
         resultActions.andExpect(jsonPath("$.success").value("false"));
         resultActions.andExpect(jsonPath("$.error.message").value("마감기간이 공백입니다"));
         resultActions.andExpect(jsonPath("$.error.status").value(400));
+=======
+        System.out.println("testBoardList : " + responseBody);
+
+        //then
+        resultActions.andExpect(jsonPath("$.success").value("true"));
+        resultActions.andExpect(jsonPath("$.response.boardId").value("1"));
+        resultActions.andExpect(jsonPath("$.response.shopName").value("전남대 후문 스타벅스"));
+        resultActions.andExpect(jsonPath("$.response.tip").value("1000"));
+        resultActions.andExpect(jsonPath("$.response.isMatch").value("true"));
+        resultActions.andExpect(jsonPath("$.response.pickerPhoneNumber").value("010-0000-1234"));
+>>>>>>> 7bf9a69863910e0a198ac312c3cbac9913aa5fc8
     }
 
 }

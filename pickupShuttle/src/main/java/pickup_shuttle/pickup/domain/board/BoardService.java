@@ -19,6 +19,11 @@ import pickup_shuttle.pickup.domain.store.StoreRepository;
 import pickup_shuttle.pickup.domain.user.User;
 import pickup_shuttle.pickup.domain.user.UserRepository;
 
+import pickup_shuttle.pickup.domain.board.dto.response.BoardDetailAfterRpDTO;
+import pickup_shuttle.pickup.domain.board.dto.response.BoardDetailBeforeRpDTO;
+import pickup_shuttle.pickup.domain.board.repository.BoardRepository;
+import pickup_shuttle.pickup.domain.board.repository.BoardRepositoryCustom;
+
 
 import java.time.ZoneOffset;
 import java.util.List;
@@ -40,6 +45,7 @@ public class BoardService {
         return getBoardListResponseDTOs(pageRequest, boardsSlice);
     }
 
+    //boardSlice로 BoardListRpDTO 만드는 과정
     private Slice<BoardListRpDTO> getBoardListResponseDTOs(PageRequest pageRequest, Slice<Board> boardSlice) {
         List<BoardListRpDTO> boardBoardListRpDTO = boardSlice.getContent().stream()
                 .map(b -> BoardListRpDTO.builder()
@@ -54,7 +60,7 @@ public class BoardService {
     }
 
     @Transactional
-    public WriteRpDTO write(WriteRqDTO requestDTO, CustomOauth2User customOauth2User){
+    public WriteRpDTO write(WriteRqDTO requestDTO, CustomOauth2User customOauth2User) {
 
         User user = userRepository.findBySocialId(customOauth2User.getName()).orElseThrow(
                 () -> new Exception400("유저가 존재하지 않습니다")
@@ -66,11 +72,49 @@ public class BoardService {
         try {
             boardRepository.save(board);
             beverageRepository.save(requestDTO.toBeverage(board));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new Exception500("unknown server error");
         }
 
         return new WriteRpDTO(board.getBoardId());
+    }
+    public BoardDetailBeforeRpDTO boardDetailBefore(Long boardId) {
+        Board board = boardRepository.mfindByBoardId(boardId).orElseThrow(
+                () -> new Exception400(boardId + " -> 공고글을 찾을 수 없습니다")
+        );
+       return BoardDetailBeforeRpDTO.builder()
+               .boardId(board.getBoardId())
+               .destination(board.getDestination())
+               .request(board.getRequest())
+               .tip(board.getTip())
+               .finishedAt(board.getFinishAt().toEpochSecond(ZoneOffset.UTC))
+               .isMatch(board.isMatch())
+               .shopName(board.getStore().getName())
+               .build();
+    }
+    //select 2번
+    public BoardDetailAfterRpDTO boardDetailAfter(Long boardId) {
+        Board board = boardRepository.m2findByBoardId(boardId).orElseThrow(
+                () -> new Exception400(boardId + " -> 공고글을 찾을 수 없습니다")
+        );
+        User user = userRepository.findByUserId(board.getMatch().getUser().getUserId()).orElseThrow(
+                () -> new Exception400("매칭 된 picker를 찾을 수 없습니다")
+        );
+
+//        Match match =
+        return BoardDetailAfterRpDTO.builder()
+                .boardId(board.getBoardId())
+                .destination(board.getDestination())
+                .request(board.getRequest())
+                .tip(board.getTip())
+                .finishedAt(board.getFinishAt().toEpochSecond(ZoneOffset.UTC))
+                .isMatch(board.isMatch())
+                .shopName(board.getStore().getName())
+                .pickerBank(user.getBank())
+                .pickerAccount(user.getAccount())
+                .pickerPhoneNumber(user.getPhoneNumber())
+                .arrivalTime(board.getMatch().getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).toEpochSecond(ZoneOffset.UTC))
+                .isMatch(board.isMatch())
+                .build();
     }
 }

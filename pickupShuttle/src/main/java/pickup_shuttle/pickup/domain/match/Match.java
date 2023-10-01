@@ -32,14 +32,13 @@ public class Match {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_id")
-    private Board board;
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "board_id")
+//    private Board board;
 
     @Builder
-    public Match(int arrivalTime, User user, Board board) {
+    public Match(int arrivalTime, User user) {
         this.arrivalTime = arrivalTime;
         this.user = user;
-        this.board = board;
     }
 }
