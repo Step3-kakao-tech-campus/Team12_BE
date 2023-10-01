@@ -9,7 +9,8 @@ import pickup_shuttle.pickup._core.errors.exception.Exception500;
 import pickup_shuttle.pickup.domain.account.Account;
 import pickup_shuttle.pickup.domain.account.AccountRepository;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
-import pickup_shuttle.pickup.domain.user.dto.SignUpRqDTO;
+import pickup_shuttle.pickup.domain.user.dto.request.RegisterRqDTO;
+import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 
 import java.util.Optional;
 
@@ -23,14 +24,14 @@ public class UserService {
 
 
     @Transactional
-    public void register(UserRequest.RegisterDTO requestDTO){
-        checkNicknameDuplicate(requestDTO.getNickname());
+    public void register(RegisterRqDTO requestDTO){
+        checkNicknameDuplicate(requestDTO.nickname());
         Long userId = 1L; // 로그인 구현 후 변경
         User userPS = userRepository.findById(userId).orElseThrow(
                 () -> new Exception400("유저가 존재하지 않습니다")
         );
         try{
-            userPS.updateNickname(requestDTO.getNickname());
+            userPS.updateNickname(requestDTO.nickname());
             accountRepository.save(requestDTO.toAccount(userPS));
 
         } catch (Exception e) {
@@ -46,8 +47,8 @@ public class UserService {
     }
 
     public void signup(SignUpRqDTO signUpRqDTO, CustomOauth2User customOauth2User){
-        String bankName = signUpRqDTO.getBankName();
-        String accountNum = signUpRqDTO.getAccountNum();
+        String bankName = signUpRqDTO.bankName();
+        String accountNum = signUpRqDTO.accountNum();
         Optional<User> user = userRepository.findBySocialId(customOauth2User.getName());
         user.get().setRole(UserRole.USER);
         customOauth2User.setBankName(bankName);

@@ -23,7 +23,7 @@ public class BoardControllerTest {
     @Autowired
     private ObjectMapper om;
 
-    @Test
+    @Test //공고글 목록 조회
     void testBoardList() throws Exception {
         //given
         String lastBoardId = "";
@@ -44,4 +44,51 @@ public class BoardControllerTest {
         //then
         resultActions.andExpect(jsonPath("$.success").value("true"));
     }
+
+    @Test // 공고글 상세 조회 (매칭 전)
+    void testBoardDetailBefore() throws Exception {
+        //given
+        String boardId = "1";
+
+        //when
+        ResultActions resultActions = mvc.perform(
+                get("/articles/before/{boardId}", boardId)
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        //eye
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("testBoardList : " + responseBody);
+
+        //then
+        resultActions.andExpect(jsonPath("$.success").value("true"));
+        resultActions.andExpect(jsonPath("$.response.boardId").value("1"));
+        resultActions.andExpect(jsonPath("$.response.shopName").value("전남대 후문 스타벅스"));
+        resultActions.andExpect(jsonPath("$.response.tip").value("1000"));
+    }
+
+    @Test // 공고글 상세 조회 (매칭 후)
+    void testBoardDetailAfter() throws Exception {
+        //given
+        String boardId = "1";
+
+        //when
+        ResultActions resultActions = mvc.perform(
+                get("/articles/after/{boardId}", boardId)
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        //eye
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("testBoardList : " + responseBody);
+
+        //then
+        resultActions.andExpect(jsonPath("$.success").value("true"));
+        resultActions.andExpect(jsonPath("$.response.boardId").value("1"));
+        resultActions.andExpect(jsonPath("$.response.shopName").value("전남대 후문 스타벅스"));
+        resultActions.andExpect(jsonPath("$.response.tip").value("1000"));
+        resultActions.andExpect(jsonPath("$.response.isMatch").value("true"));
+        resultActions.andExpect(jsonPath("$.response.pickerPhoneNumber").value("010-0000-1234"));
+    }
+
 }

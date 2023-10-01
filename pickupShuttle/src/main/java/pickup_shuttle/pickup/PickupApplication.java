@@ -20,7 +20,6 @@ public class PickupApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(PickupApplication.class, args);
 	}
-
 }
 
 
