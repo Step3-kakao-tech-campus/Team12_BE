@@ -21,25 +21,6 @@ public class PickupApplication {
 		SpringApplication.run(PickupApplication.class, args);
 	}
 
-	// update 확인용 mock data
-	@Profile("local")
-	@Bean
-	CommandLineRunner localServerStart(UserRepository userRepository) {
-		return args -> {
-			userRepository.saveAll(Arrays.asList(newUser("honggildong")));
-		};
-	}
-	private User newUser(String uid){
-		return User.builder()
-				.uid(uid)
-				.pwd("{bcrypt}$2a$10$8H0OT8wgtALJkig6fmypi.Y7jzI5Y7W9PGgRKqnVeS2cLWGifwHF2")
-				.nickname("")
-				.phoneNumber("010-0000-0000")
-				.name("홍길동")
-				.build();
-	}
-
-
 }
 
 
