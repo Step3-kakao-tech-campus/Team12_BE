@@ -1,19 +1,9 @@
 package pickup_shuttle.pickup.domain.user;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-<<<<<<< HEAD
-import pickup_shuttle.pickup.domain.account.Account;
-import pickup_shuttle.pickup.domain.account.AccountRepository;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
-=======
-import pickup_shuttle.pickup._core.errors.exception.Exception400;
-import pickup_shuttle.pickup._core.errors.exception.Exception500;
-import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
-import pickup_shuttle.pickup.domain.user.dto.request.RegisterRqDTO;
->>>>>>> 7bf9a69863910e0a198ac312c3cbac9913aa5fc8
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 
 import java.util.Optional;

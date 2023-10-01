@@ -65,7 +65,7 @@ public class BoardService {
         User user = userRepository.findBySocialId(customOauth2User.getName()).orElseThrow(
                 () -> new Exception400("유저가 존재하지 않습니다")
         );
-        Store store = storeRepository.findByName(requestDTO.getStore()).orElseThrow(
+        Store store = storeRepository.findByName(requestDTO.store()).orElseThrow(
                 () -> new Exception400("가게가 존재하지 않습니다")
         );
         Board board = requestDTO.toBoard(user, store);

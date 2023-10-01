@@ -4,7 +4,6 @@ SET REFERENTIAL_INTEGRITY FALSE;
 
 truncate table user_tb;
 truncate table board_tb;
-truncate table account_tb;
 truncate table store_tb;
 truncate table beverage_tb;
 SET REFERENTIAL_INTEGRITY TRUE;
@@ -15,7 +14,6 @@ SET REFERENTIAL_INTEGRITY TRUE;
 INSERT INTO user_tb (`uid`,`pwd`,`nickname`, `phone_number`, `name`, `bank`, `account`) VALUES ('honggildong', '{bcrypt}$2a$10$8H0OT8wgtALJkig6fmypi.Y7jzI5Y7W9PGgRKqnVeS2cLWGifwHF2', 'pickupmaster', '010-0000-0000','홍길동', '농협', '000-0000-0000-000');
 
 INSERT INTO user_tb (`uid`,`pwd`,`nickname`, `phone_number`, `name`, `bank`, `account`) VALUES ('honggildong2', '{bcrypt}$2a$10$8H0OT8wgtALJkig6fmypi.Y7jzI5Y7W9PGgRKqnVeS2cLWGifwHF2', 'pickupmaster1', '010-0000-1234','홍길동', '농협', '000-0000-0000-000');
-
 
 
 insert into store_tb(`id`,`name`) values ('1', '전남대 후문 스타벅스');
