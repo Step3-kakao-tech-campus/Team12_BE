@@ -38,6 +38,7 @@ public class BoardController {
         WriteRpDTO responseDTO = boardService.write(requestDTO, customOauth2User);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
+
     @GetMapping("/before/{boardId}")
     public ResponseEntity<?> beforeBoardDetail(@PathVariable("boardId") Long boardId) {
         BoardDetailBeforeRpDTO responseDTO = boardService.boardDetailBefore(boardId);
