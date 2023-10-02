@@ -1,6 +1,7 @@
 package pickup_shuttle.pickup.domain.board;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -10,6 +11,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import pickup_shuttle.pickup.domain.board.dto.request.WriteRqDTO;
+import pickup_shuttle.pickup.security.service.JwtService;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -24,6 +26,9 @@ public class BoardControllerTest {
 
     @Autowired
     private ObjectMapper om;
+
+    @Autowired
+    private JwtService jwtService;
 
     @Test //공고글 목록 조회
     void testBoardList() throws Exception {
@@ -96,6 +101,7 @@ public class BoardControllerTest {
     @Test
     void testWrite() throws Exception{
         //given
+        String accessToken = jwtService.createAccessToken("0000");
         WriteRqDTO writeRqDTO = WriteRqDTO.builder()
                 .store("starbucks")
                 .beverage("아이스 아메리카노 1잔")
@@ -111,6 +117,7 @@ public class BoardControllerTest {
                 post("/articles/write")
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
+                        .cookie(new Cookie("access_token", accessToken))
         );
 
         //eye
@@ -124,6 +131,7 @@ public class BoardControllerTest {
     @Test
     void testWriteNotFoundStore() throws Exception{
         //given
+        String accessToken = jwtService.createAccessToken("0000");
         WriteRqDTO writeRqDTO = WriteRqDTO.builder()
                 .store("팬도로시")
                 .beverage("아이스 아메리카노 1잔")
@@ -139,6 +147,7 @@ public class BoardControllerTest {
                 post("/articles/write")
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
+                        .cookie(new Cookie("access_token", accessToken))
         );
 
         //eye
@@ -153,6 +162,7 @@ public class BoardControllerTest {
     @Test
     void testWriteBlankStore() throws Exception{
         //given
+        String accessToken = jwtService.createAccessToken("0000");
         WriteRqDTO writeRqDTO = WriteRqDTO.builder()
                 .store(" ")
                 .beverage("아이스 아메리카노 1잔")
@@ -168,6 +178,7 @@ public class BoardControllerTest {
                 post("/articles/write")
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
+                        .cookie(new Cookie("access_token", accessToken))
         );
 
         //eye
@@ -183,6 +194,7 @@ public class BoardControllerTest {
     @Test
     void testWriteBlankBeverage() throws Exception{
         //given
+        String accessToken = jwtService.createAccessToken("0000");
         WriteRqDTO writeRqDTO = WriteRqDTO.builder()
                 .store("starbucks")
                 .beverage(" ")
@@ -198,6 +210,7 @@ public class BoardControllerTest {
                 post("/articles/write")
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
+                        .cookie(new Cookie("access_token", accessToken))
         );
 
         //eye
@@ -213,6 +226,7 @@ public class BoardControllerTest {
     @Test
     void testWriteBlankDestination() throws Exception{
         //given
+        String accessToken = jwtService.createAccessToken("0000");
         WriteRqDTO writeRqDTO = WriteRqDTO.builder()
                 .store("starbucks")
                 .beverage("아이스 아메리카노 1잔")
@@ -228,6 +242,7 @@ public class BoardControllerTest {
                 post("/articles/write")
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
+                        .cookie(new Cookie("access_token", accessToken))
         );
 
         //eye
@@ -243,11 +258,12 @@ public class BoardControllerTest {
     @Test
     void testWriteInvalidTip() throws Exception{
         //given
+        String accessToken = jwtService.createAccessToken("0000");
         WriteRqDTO writeRqDTO = WriteRqDTO.builder()
                 .store("starbucks")
                 .beverage("아이스 아메리카노 1잔")
                 .destination("공과대학 7호관 팬도로시")
-                .tip(100)
+                .tip(-100)
                 .request("후딱후딱 갖다주십쇼!!!!!!!!!!!!!!")
                 .finishAt("2023-10-01 19:00")
                 .build();
@@ -258,6 +274,7 @@ public class BoardControllerTest {
                 post("/articles/write")
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
+                        .cookie(new Cookie("access_token", accessToken))
         );
 
         //eye
@@ -266,13 +283,14 @@ public class BoardControllerTest {
 
         //then
         resultActions.andExpect(jsonPath("$.success").value("false"));
-        resultActions.andExpect(jsonPath("$.error.message").value("픽업팁은 최소 1000원 이상입니다"));
+        resultActions.andExpect(jsonPath("$.error.message").value("픽업팁이 음수입니다"));
         resultActions.andExpect(jsonPath("$.error.status").value(400));
     }
 
     @Test
     void testWriteBlankFinishAt() throws Exception{
         //given
+        String accessToken = jwtService.createAccessToken("0000");
         WriteRqDTO writeRqDTO = WriteRqDTO.builder()
                 .store("starbucks")
                 .beverage("아이스 아메리카노 1잔")
@@ -288,6 +306,7 @@ public class BoardControllerTest {
                 post("/articles/write")
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
+                        .cookie(new Cookie("access_token", accessToken))
         );
 
         //eye

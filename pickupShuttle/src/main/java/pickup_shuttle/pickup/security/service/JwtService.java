@@ -119,15 +119,13 @@ public class JwtService {
             for (Cookie c : cookies) {
                 String name = c.getName(); // 쿠키 이름 가져오기
                 String value = c.getValue(); // 쿠키 값 가져오기
-                if (name.equals("refresh_token")) {
-                    refreshtokenStr =value;
-                    System.out.println("추출한 refreshTokenStr: " + refreshtokenStr);
-                }
+                    if (name.equals("refresh_token")) {
+                        refreshtokenStr =value;
+                        System.out.println("추출한 refreshTokenStr: " + refreshtokenStr);
+                    }
                 }
             }
-            return Optional.ofNullable(refreshtokenStr)
-                .filter(refreshToken -> refreshToken.startsWith(BEARER))
-                .map(refreshToken -> refreshToken.replace(BEARER, ""));
+        return Optional.ofNullable(refreshtokenStr);
     }
 
     /**
@@ -149,9 +147,8 @@ public class JwtService {
             }
         }
 
-        return Optional.ofNullable(accessTokenStr)
-                .filter(refreshToken -> refreshToken.startsWith(BEARER))
-                .map(refreshToken -> refreshToken.replace(BEARER, ""));
+        return Optional.ofNullable(accessTokenStr);
+
     }
 
     /**
@@ -174,6 +171,7 @@ public class JwtService {
             return Optional.empty();
         }
     }
+
 
     /**
      * RefreshToken DB 저장(업데이트)

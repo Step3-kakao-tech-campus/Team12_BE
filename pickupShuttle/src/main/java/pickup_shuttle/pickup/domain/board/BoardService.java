@@ -13,7 +13,6 @@ import pickup_shuttle.pickup.domain.beverage.BeverageRepository;
 import pickup_shuttle.pickup.domain.board.dto.request.WriteRqDTO;
 import pickup_shuttle.pickup.domain.board.dto.response.BoardListRpDTO;
 import pickup_shuttle.pickup.domain.board.dto.response.WriteRpDTO;
-import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
 import pickup_shuttle.pickup.domain.store.Store;
 import pickup_shuttle.pickup.domain.store.StoreRepository;
 import pickup_shuttle.pickup.domain.user.User;
@@ -60,9 +59,8 @@ public class BoardService {
     }
 
     @Transactional
-    public WriteRpDTO write(WriteRqDTO requestDTO, CustomOauth2User customOauth2User) {
-
-        User user = userRepository.findBySocialId(customOauth2User.getName()).orElseThrow(
+    public WriteRpDTO write(WriteRqDTO requestDTO, String userId) {
+        User user = userRepository.findBySocialId(userId).orElseThrow(
                 () -> new Exception400("유저가 존재하지 않습니다")
         );
         Store store = storeRepository.findByName(requestDTO.store()).orElseThrow(
