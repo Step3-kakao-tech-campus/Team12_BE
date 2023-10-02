@@ -8,14 +8,21 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pickup_shuttle.pickup._core.errors.exception.Exception400;
-import pickup_shuttle.pickup.domain.board.dto.response.BoardDetailAfterRpDTO;
-import pickup_shuttle.pickup.domain.board.dto.response.BoardDetailBeforeRpDTO;
+import pickup_shuttle.pickup._core.errors.exception.Exception500;
+import pickup_shuttle.pickup.domain.beverage.BeverageRepository;
+import pickup_shuttle.pickup.domain.board.dto.request.WriteRqDTO;
 import pickup_shuttle.pickup.domain.board.dto.response.BoardListRpDTO;
-import pickup_shuttle.pickup.domain.board.repository.BoardRepository;
-import pickup_shuttle.pickup.domain.board.repository.BoardRepositoryCustom;
-import pickup_shuttle.pickup.domain.match.Match;
+import pickup_shuttle.pickup.domain.board.dto.response.WriteRpDTO;
+import pickup_shuttle.pickup.domain.store.Store;
+import pickup_shuttle.pickup.domain.store.StoreRepository;
 import pickup_shuttle.pickup.domain.user.User;
 import pickup_shuttle.pickup.domain.user.UserRepository;
+
+import pickup_shuttle.pickup.domain.board.dto.response.BoardDetailAfterRpDTO;
+import pickup_shuttle.pickup.domain.board.dto.response.BoardDetailBeforeRpDTO;
+import pickup_shuttle.pickup.domain.board.repository.BoardRepository;
+import pickup_shuttle.pickup.domain.board.repository.BoardRepositoryCustom;
+
 
 import java.time.ZoneOffset;
 import java.util.List;
@@ -28,8 +35,9 @@ public class BoardService {
     private final BoardRepositoryCustom boardRepositoryCustom;
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+    private final StoreRepository storeRepository;
+    private final BeverageRepository beverageRepository;
 
-    //
     public Slice<BoardListRpDTO> boardList(Long lastBoardId, int limit) {
         PageRequest pageRequest = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "boardId"));
         Slice<Board> boardsSlice = boardRepositoryCustom.searchAllBySlice(lastBoardId, pageRequest);
@@ -50,6 +58,24 @@ public class BoardService {
         return new SliceImpl<>(boardBoardListRpDTO,pageRequest,boardSlice.hasNext());
     }
 
+    @Transactional
+    public WriteRpDTO write(WriteRqDTO requestDTO, String userId) {
+        User user = userRepository.findBySocialId(userId).orElseThrow(
+                () -> new Exception400("유저가 존재하지 않습니다")
+        );
+        Store store = storeRepository.findByName(requestDTO.store()).orElseThrow(
+                () -> new Exception400("가게가 존재하지 않습니다")
+        );
+        Board board = requestDTO.toBoard(user, store);
+        try {
+            boardRepository.save(board);
+            beverageRepository.save(requestDTO.toBeverage(board));
+        } catch (Exception e) {
+            throw new Exception500("unknown server error");
+        }
+
+        return new WriteRpDTO(board.getBoardId());
+    }
     public BoardDetailBeforeRpDTO boardDetailBefore(Long boardId) {
         Board board = boardRepository.mfindByBoardId(boardId).orElseThrow(
                 () -> new Exception400(boardId + " -> 공고글을 찾을 수 없습니다")
@@ -73,7 +99,7 @@ public class BoardService {
                 () -> new Exception400("매칭 된 picker를 찾을 수 없습니다")
         );
 
-        //Match match =
+//        Match match =
         return BoardDetailAfterRpDTO.builder()
                 .boardId(board.getBoardId())
                 .destination(board.getDestination())
