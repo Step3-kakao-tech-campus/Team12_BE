@@ -41,7 +41,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
                 response.sendRedirect("/users/register/input"); // 리다이렉트 주소 (계좌번호 입력)
                 jwtService.sendAccessAndRefreshToken(response, accessToken, null);
                 User findUser = userRepository.findBySocialId(oauth2User.getName())
-                  .orElseThrow(() -> new IllegalArgumentException("이메일에 해당하는 유저가 없습니다."));
+                        .orElseThrow(() -> new IllegalArgumentException("이메일에 해당하는 유저가 없습니다."));
                 findUser.authorizeUser();
 
             } else {

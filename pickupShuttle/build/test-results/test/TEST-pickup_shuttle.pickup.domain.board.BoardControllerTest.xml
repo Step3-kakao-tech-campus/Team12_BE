@@ -1,0 +1,927 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="pickup_shuttle.pickup.domain.board.BoardControllerTest" tests="12" skipped="0" failures="1" errors="0" timestamp="2023-10-04T12:53:28" hostname="MacPro.local" time="1.183">
+  <properties/>
+  <testcase name="testWriteBlankDestination()" classname="pickup_shuttle.pickup.domain.board.BoardControllerTest" time="0.543"/>
+  <testcase name="testWriteNotFoundStore()" classname="pickup_shuttle.pickup.domain.board.BoardControllerTest" time="0.081"/>
+  <testcase name="testWriteBlankStore()" classname="pickup_shuttle.pickup.domain.board.BoardControllerTest" time="0.037"/>
+  <testcase name="testWrite()" classname="pickup_shuttle.pickup.domain.board.BoardControllerTest" time="0.083"/>
+  <testcase name="testBoardDetailAfter()" classname="pickup_shuttle.pickup.domain.board.BoardControllerTest" time="0.055"/>
+  <testcase name="testBoardList()" classname="pickup_shuttle.pickup.domain.board.BoardControllerTest" time="0.099"/>
+  <testcase name="testWriteBlankBeverage()" classname="pickup_shuttle.pickup.domain.board.BoardControllerTest" time="0.063">
+    <failure message="java.lang.AssertionError: JSON path &quot;$.success&quot; expected:&lt;false&gt; but was:&lt;true&gt;" type="java.lang.AssertionError">java.lang.AssertionError: JSON path &quot;$.success&quot; expected:&lt;false&gt; but was:&lt;true&gt;
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+	at org.springframework.test.util.JsonPathExpectationsHelper.assertValue(JsonPathExpectationsHelper.java:123)
+	at org.springframework.test.web.servlet.result.JsonPathResultMatchers.lambda$value$2(JsonPathResultMatchers.java:111)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at pickup_shuttle.pickup.domain.board.BoardControllerTest.testWriteBlankBeverage(BoardControllerTest.java:236)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:727)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:147)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:217)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:213)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:138)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:68)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:107)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:88)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:67)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:52)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:86)
+	at org.junit.platform.launcher.core.DefaultLauncherSession$DelegatingLauncher.execute(DefaultLauncherSession.java:86)
+	at org.gradle.api.internal.tasks.testing.junitplatform.JUnitPlatformTestClassProcessor$CollectAllTestClassesExecutor.processAllTestClasses(JUnitPlatformTestClassProcessor.java:110)
+	at org.gradle.api.internal.tasks.testing.junitplatform.JUnitPlatformTestClassProcessor$CollectAllTestClassesExecutor.access$000(JUnitPlatformTestClassProcessor.java:90)
+	at org.gradle.api.internal.tasks.testing.junitplatform.JUnitPlatformTestClassProcessor.stop(JUnitPlatformTestClassProcessor.java:85)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.stop(SuiteTestClassProcessor.java:62)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at jdk.proxy1/jdk.proxy1.$Proxy2.stop(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$3.run(TestWorker.java:193)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:129)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:100)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:60)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:113)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+</failure>
+  </testcase>
+  <testcase name="공고글 작성자가 매칭 수락 한 경우" classname="pickup_shuttle.pickup.domain.board.BoardControllerTest" time="0.05"/>
+  <testcase name="testBoardDetailBefore()" classname="pickup_shuttle.pickup.domain.board.BoardControllerTest" time="0.041"/>
+  <testcase name="testWriteBlankFinishAt()" classname="pickup_shuttle.pickup.domain.board.BoardControllerTest" time="0.037"/>
+  <testcase name="testBoardAgree()" classname="pickup_shuttle.pickup.domain.board.BoardControllerTest" time="0.051"/>
+  <testcase name="testWriteInvalidTip()" classname="pickup_shuttle.pickup.domain.board.BoardControllerTest" time="0.036"/>
+  <system-out><![CDATA[21:53:25.720 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [pickup_shuttle.pickup.domain.board.BoardControllerTest]: BoardControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+21:53:25.798 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration pickup_shuttle.pickup.PickupApplication for test class pickup_shuttle.pickup.domain.board.BoardControllerTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.1.3)
+
+2023-10-04T21:53:26.029+09:00  INFO 72115 --- [    Test worker] p.p.domain.board.BoardControllerTest     : Starting BoardControllerTest using Java 17.0.7 with PID 72115 (started by jinhyuk in /Users/jinhyuk/KakaoWeek5/pickupShuttle)
+2023-10-04T21:53:26.030+09:00 DEBUG 72115 --- [    Test worker] p.p.domain.board.BoardControllerTest     : Running with Spring Boot v3.1.3, Spring v6.0.11
+2023-10-04T21:53:26.030+09:00  INFO 72115 --- [    Test worker] p.p.domain.board.BoardControllerTest     : The following 3 profiles are active: "oauth", "prod", "local"
+2023-10-04T21:53:26.376+09:00  INFO 72115 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-10-04T21:53:26.414+09:00  INFO 72115 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 34 ms. Found 6 JPA repository interfaces.
+2023-10-04T21:53:26.679+09:00  INFO 72115 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-10-04T21:53:26.711+09:00  INFO 72115 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.2.7.Final
+2023-10-04T21:53:26.712+09:00  INFO 72115 --- [    Test worker] org.hibernate.cfg.Environment            : HHH000406: Using bytecode reflection optimizer
+2023-10-04T21:53:26.764+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration boolean -> org.hibernate.type.BasicTypeReference@514377fc
+2023-10-04T21:53:26.764+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration boolean -> org.hibernate.type.BasicTypeReference@514377fc
+2023-10-04T21:53:26.764+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Boolean -> org.hibernate.type.BasicTypeReference@514377fc
+2023-10-04T21:53:26.764+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration numeric_boolean -> org.hibernate.type.BasicTypeReference@2e4eda17
+2023-10-04T21:53:26.764+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration org.hibernate.type.NumericBooleanConverter -> org.hibernate.type.BasicTypeReference@2e4eda17
+2023-10-04T21:53:26.764+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration true_false -> org.hibernate.type.BasicTypeReference@7b5021d1
+2023-10-04T21:53:26.764+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration org.hibernate.type.TrueFalseConverter -> org.hibernate.type.BasicTypeReference@7b5021d1
+2023-10-04T21:53:26.764+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration yes_no -> org.hibernate.type.BasicTypeReference@6befbb12
+2023-10-04T21:53:26.764+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration org.hibernate.type.YesNoConverter -> org.hibernate.type.BasicTypeReference@6befbb12
+2023-10-04T21:53:26.764+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration byte -> org.hibernate.type.BasicTypeReference@21d9cd04
+2023-10-04T21:53:26.765+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration byte -> org.hibernate.type.BasicTypeReference@21d9cd04
+2023-10-04T21:53:26.765+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Byte -> org.hibernate.type.BasicTypeReference@21d9cd04
+2023-10-04T21:53:26.765+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration binary -> org.hibernate.type.BasicTypeReference@799f354a
+2023-10-04T21:53:26.765+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration byte[] -> org.hibernate.type.BasicTypeReference@799f354a
+2023-10-04T21:53:26.765+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration [B -> org.hibernate.type.BasicTypeReference@799f354a
+2023-10-04T21:53:26.765+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration binary_wrapper -> org.hibernate.type.BasicTypeReference@7ac48f05
+2023-10-04T21:53:26.765+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration wrapper-binary -> org.hibernate.type.BasicTypeReference@7ac48f05
+2023-10-04T21:53:26.765+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration image -> org.hibernate.type.BasicTypeReference@7af1d072
+2023-10-04T21:53:26.765+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration blob -> org.hibernate.type.BasicTypeReference@27ffd9f8
+2023-10-04T21:53:26.765+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Blob -> org.hibernate.type.BasicTypeReference@27ffd9f8
+2023-10-04T21:53:26.765+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_blob -> org.hibernate.type.BasicTypeReference@642c6461
+2023-10-04T21:53:26.766+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_blob_wrapper -> org.hibernate.type.BasicTypeReference@3ace6346
+2023-10-04T21:53:26.766+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration short -> org.hibernate.type.BasicTypeReference@4e48462d
+2023-10-04T21:53:26.766+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration short -> org.hibernate.type.BasicTypeReference@4e48462d
+2023-10-04T21:53:26.766+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Short -> org.hibernate.type.BasicTypeReference@4e48462d
+2023-10-04T21:53:26.766+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration integer -> org.hibernate.type.BasicTypeReference@17216605
+2023-10-04T21:53:26.766+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration int -> org.hibernate.type.BasicTypeReference@17216605
+2023-10-04T21:53:26.766+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Integer -> org.hibernate.type.BasicTypeReference@17216605
+2023-10-04T21:53:26.766+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration long -> org.hibernate.type.BasicTypeReference@10a907ec
+2023-10-04T21:53:26.766+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration long -> org.hibernate.type.BasicTypeReference@10a907ec
+2023-10-04T21:53:26.766+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Long -> org.hibernate.type.BasicTypeReference@10a907ec
+2023-10-04T21:53:26.766+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration float -> org.hibernate.type.BasicTypeReference@59b492ec
+2023-10-04T21:53:26.766+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration float -> org.hibernate.type.BasicTypeReference@59b492ec
+2023-10-04T21:53:26.766+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Float -> org.hibernate.type.BasicTypeReference@59b492ec
+2023-10-04T21:53:26.766+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration double -> org.hibernate.type.BasicTypeReference@55c1ced9
+2023-10-04T21:53:26.766+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration double -> org.hibernate.type.BasicTypeReference@55c1ced9
+2023-10-04T21:53:26.766+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Double -> org.hibernate.type.BasicTypeReference@55c1ced9
+2023-10-04T21:53:26.766+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration big_integer -> org.hibernate.type.BasicTypeReference@49cc9b2a
+2023-10-04T21:53:26.767+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.math.BigInteger -> org.hibernate.type.BasicTypeReference@49cc9b2a
+2023-10-04T21:53:26.767+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration big_decimal -> org.hibernate.type.BasicTypeReference@11826398
+2023-10-04T21:53:26.767+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.math.BigDecimal -> org.hibernate.type.BasicTypeReference@11826398
+2023-10-04T21:53:26.767+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration character -> org.hibernate.type.BasicTypeReference@6c5ca0b6
+2023-10-04T21:53:26.767+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration char -> org.hibernate.type.BasicTypeReference@6c5ca0b6
+2023-10-04T21:53:26.767+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Character -> org.hibernate.type.BasicTypeReference@6c5ca0b6
+2023-10-04T21:53:26.767+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration character_nchar -> org.hibernate.type.BasicTypeReference@37b01ce2
+2023-10-04T21:53:26.767+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration string -> org.hibernate.type.BasicTypeReference@1a88c4f5
+2023-10-04T21:53:26.767+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.String -> org.hibernate.type.BasicTypeReference@1a88c4f5
+2023-10-04T21:53:26.767+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration nstring -> org.hibernate.type.BasicTypeReference@1894fa9f
+2023-10-04T21:53:26.767+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration characters -> org.hibernate.type.BasicTypeReference@1144a02b
+2023-10-04T21:53:26.767+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration char[] -> org.hibernate.type.BasicTypeReference@1144a02b
+2023-10-04T21:53:26.767+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration [C -> org.hibernate.type.BasicTypeReference@1144a02b
+2023-10-04T21:53:26.767+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration wrapper-characters -> org.hibernate.type.BasicTypeReference@26a4f9ed
+2023-10-04T21:53:26.767+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration text -> org.hibernate.type.BasicTypeReference@7a572ea0
+2023-10-04T21:53:26.767+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration ntext -> org.hibernate.type.BasicTypeReference@45287377
+2023-10-04T21:53:26.767+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration clob -> org.hibernate.type.BasicTypeReference@7159d601
+2023-10-04T21:53:26.767+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Clob -> org.hibernate.type.BasicTypeReference@7159d601
+2023-10-04T21:53:26.768+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration nclob -> org.hibernate.type.BasicTypeReference@70b33256
+2023-10-04T21:53:26.768+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.NClob -> org.hibernate.type.BasicTypeReference@70b33256
+2023-10-04T21:53:26.768+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_clob -> org.hibernate.type.BasicTypeReference@33d230ce
+2023-10-04T21:53:26.768+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_clob_char_array -> org.hibernate.type.BasicTypeReference@35e74e08
+2023-10-04T21:53:26.768+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_clob_character_array -> org.hibernate.type.BasicTypeReference@a316f6b
+2023-10-04T21:53:26.768+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_nclob -> org.hibernate.type.BasicTypeReference@63f9ddf9
+2023-10-04T21:53:26.768+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_nclob_character_array -> org.hibernate.type.BasicTypeReference@410fc508
+2023-10-04T21:53:26.768+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_nclob_char_array -> org.hibernate.type.BasicTypeReference@4e17442f
+2023-10-04T21:53:26.768+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration Duration -> org.hibernate.type.BasicTypeReference@4f5c30b1
+2023-10-04T21:53:26.768+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.Duration -> org.hibernate.type.BasicTypeReference@4f5c30b1
+2023-10-04T21:53:26.768+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration LocalDateTime -> org.hibernate.type.BasicTypeReference@62e73ab6
+2023-10-04T21:53:26.768+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.LocalDateTime -> org.hibernate.type.BasicTypeReference@62e73ab6
+2023-10-04T21:53:26.768+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration LocalDate -> org.hibernate.type.BasicTypeReference@5d7f8467
+2023-10-04T21:53:26.768+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.LocalDate -> org.hibernate.type.BasicTypeReference@5d7f8467
+2023-10-04T21:53:26.768+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration LocalTime -> org.hibernate.type.BasicTypeReference@29bd85db
+2023-10-04T21:53:26.769+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.LocalTime -> org.hibernate.type.BasicTypeReference@29bd85db
+2023-10-04T21:53:26.769+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetDateTime -> org.hibernate.type.BasicTypeReference@7caf1e5
+2023-10-04T21:53:26.769+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.OffsetDateTime -> org.hibernate.type.BasicTypeReference@7caf1e5
+2023-10-04T21:53:26.769+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetDateTimeWithTimezone -> org.hibernate.type.BasicTypeReference@5c234920
+2023-10-04T21:53:26.769+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetDateTimeWithoutTimezone -> org.hibernate.type.BasicTypeReference@7ddeb27f
+2023-10-04T21:53:26.769+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetTime -> org.hibernate.type.BasicTypeReference@38087342
+2023-10-04T21:53:26.769+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.OffsetTime -> org.hibernate.type.BasicTypeReference@38087342
+2023-10-04T21:53:26.769+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetTimeUtc -> org.hibernate.type.BasicTypeReference@681de87f
+2023-10-04T21:53:26.769+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetTimeWithTimezone -> org.hibernate.type.BasicTypeReference@2eb1c615
+2023-10-04T21:53:26.769+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetTimeWithoutTimezone -> org.hibernate.type.BasicTypeReference@2674d4f6
+2023-10-04T21:53:26.769+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration ZonedDateTime -> org.hibernate.type.BasicTypeReference@5d9d2119
+2023-10-04T21:53:26.769+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.ZonedDateTime -> org.hibernate.type.BasicTypeReference@5d9d2119
+2023-10-04T21:53:26.769+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration ZonedDateTimeWithTimezone -> org.hibernate.type.BasicTypeReference@5a4464c5
+2023-10-04T21:53:26.769+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration ZonedDateTimeWithoutTimezone -> org.hibernate.type.BasicTypeReference@7ae590f6
+2023-10-04T21:53:26.769+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration date -> org.hibernate.type.BasicTypeReference@7ab63838
+2023-10-04T21:53:26.769+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Date -> org.hibernate.type.BasicTypeReference@7ab63838
+2023-10-04T21:53:26.769+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration time -> org.hibernate.type.BasicTypeReference@4e974b9e
+2023-10-04T21:53:26.769+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Time -> org.hibernate.type.BasicTypeReference@4e974b9e
+2023-10-04T21:53:26.770+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration timestamp -> org.hibernate.type.BasicTypeReference@370c7cc5
+2023-10-04T21:53:26.770+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Timestamp -> org.hibernate.type.BasicTypeReference@370c7cc5
+2023-10-04T21:53:26.770+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Date -> org.hibernate.type.BasicTypeReference@370c7cc5
+2023-10-04T21:53:26.770+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration calendar -> org.hibernate.type.BasicTypeReference@61b838f2
+2023-10-04T21:53:26.770+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Calendar -> org.hibernate.type.BasicTypeReference@61b838f2
+2023-10-04T21:53:26.770+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.GregorianCalendar -> org.hibernate.type.BasicTypeReference@61b838f2
+2023-10-04T21:53:26.770+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration calendar_date -> org.hibernate.type.BasicTypeReference@2a04ab05
+2023-10-04T21:53:26.770+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration calendar_time -> org.hibernate.type.BasicTypeReference@5ebbde60
+2023-10-04T21:53:26.770+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration instant -> org.hibernate.type.BasicTypeReference@a056b26
+2023-10-04T21:53:26.770+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.Instant -> org.hibernate.type.BasicTypeReference@a056b26
+2023-10-04T21:53:26.770+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration uuid -> org.hibernate.type.BasicTypeReference@2a5abd3c
+2023-10-04T21:53:26.770+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.UUID -> org.hibernate.type.BasicTypeReference@2a5abd3c
+2023-10-04T21:53:26.770+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration pg-uuid -> org.hibernate.type.BasicTypeReference@2a5abd3c
+2023-10-04T21:53:26.770+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration uuid-binary -> org.hibernate.type.BasicTypeReference@250967f1
+2023-10-04T21:53:26.770+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration uuid-char -> org.hibernate.type.BasicTypeReference@25c1f5ee
+2023-10-04T21:53:26.770+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration class -> org.hibernate.type.BasicTypeReference@4bce62b
+2023-10-04T21:53:26.770+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Class -> org.hibernate.type.BasicTypeReference@4bce62b
+2023-10-04T21:53:26.770+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration currency -> org.hibernate.type.BasicTypeReference@7bf018dd
+2023-10-04T21:53:26.770+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration Currency -> org.hibernate.type.BasicTypeReference@7bf018dd
+2023-10-04T21:53:26.770+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Currency -> org.hibernate.type.BasicTypeReference@7bf018dd
+2023-10-04T21:53:26.770+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration locale -> org.hibernate.type.BasicTypeReference@15a8cebd
+2023-10-04T21:53:26.770+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Locale -> org.hibernate.type.BasicTypeReference@15a8cebd
+2023-10-04T21:53:26.770+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration serializable -> org.hibernate.type.BasicTypeReference@3f6c2763
+2023-10-04T21:53:26.771+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.io.Serializable -> org.hibernate.type.BasicTypeReference@3f6c2763
+2023-10-04T21:53:26.771+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration timezone -> org.hibernate.type.BasicTypeReference@5c82031b
+2023-10-04T21:53:26.771+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.TimeZone -> org.hibernate.type.BasicTypeReference@5c82031b
+2023-10-04T21:53:26.771+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration ZoneOffset -> org.hibernate.type.BasicTypeReference@274fdea6
+2023-10-04T21:53:26.771+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.ZoneOffset -> org.hibernate.type.BasicTypeReference@274fdea6
+2023-10-04T21:53:26.771+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration url -> org.hibernate.type.BasicTypeReference@74c121d4
+2023-10-04T21:53:26.771+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.net.URL -> org.hibernate.type.BasicTypeReference@74c121d4
+2023-10-04T21:53:26.771+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration row_version -> org.hibernate.type.BasicTypeReference@2a484710
+2023-10-04T21:53:26.773+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration object -> org.hibernate.type.JavaObjectType@2fdf22f7
+2023-10-04T21:53:26.773+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Object -> org.hibernate.type.JavaObjectType@2fdf22f7
+2023-10-04T21:53:26.774+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration null -> org.hibernate.type.NullType@a21c74
+2023-10-04T21:53:26.774+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_date -> org.hibernate.type.BasicTypeReference@b8a144e
+2023-10-04T21:53:26.774+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_time -> org.hibernate.type.BasicTypeReference@5fb8dc01
+2023-10-04T21:53:26.774+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_timestamp -> org.hibernate.type.BasicTypeReference@3e38c472
+2023-10-04T21:53:26.774+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_calendar -> org.hibernate.type.BasicTypeReference@2ee92e7d
+2023-10-04T21:53:26.774+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_calendar_date -> org.hibernate.type.BasicTypeReference@759a678a
+2023-10-04T21:53:26.774+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_calendar_time -> org.hibernate.type.BasicTypeReference@6cdbe5ec
+2023-10-04T21:53:26.774+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_binary -> org.hibernate.type.BasicTypeReference@14b8a751
+2023-10-04T21:53:26.774+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_serializable -> org.hibernate.type.BasicTypeReference@7345f97d
+2023-10-04T21:53:26.789+09:00  INFO 72115 --- [    Test worker] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-10-04T21:53:26.860+09:00  INFO 72115 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2023-10-04T21:53:26.871+09:00  INFO 72115 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-10-04T21:53:26.955+09:00  INFO 72115 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5d37aa0f
+2023-10-04T21:53:26.956+09:00  INFO 72115 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-10-04T21:53:27.011+09:00 DEBUG 72115 --- [    Test worker] o.h.t.d.sql.spi.DdlTypeRegistry          : addDescriptor(12, org.hibernate.type.descriptor.sql.internal.CapacityDependentDdlType@f1d1463) replaced previous registration(org.hibernate.type.descriptor.sql.internal.CapacityDependentDdlType@47ef5a33)
+2023-10-04T21:53:27.011+09:00 DEBUG 72115 --- [    Test worker] o.h.t.d.sql.spi.DdlTypeRegistry          : addDescriptor(-9, org.hibernate.type.descriptor.sql.internal.CapacityDependentDdlType@6a278584) replaced previous registration(org.hibernate.type.descriptor.sql.internal.CapacityDependentDdlType@28f90752)
+2023-10-04T21:53:27.011+09:00 DEBUG 72115 --- [    Test worker] o.h.t.d.sql.spi.DdlTypeRegistry          : addDescriptor(-3, org.hibernate.type.descriptor.sql.internal.CapacityDependentDdlType@4f20b022) replaced previous registration(org.hibernate.type.descriptor.sql.internal.CapacityDependentDdlType@72a34537)
+2023-10-04T21:53:27.012+09:00 DEBUG 72115 --- [    Test worker] o.h.t.d.sql.spi.DdlTypeRegistry          : addDescriptor(4003, org.hibernate.type.descriptor.sql.internal.DdlTypeImpl@24fef542) replaced previous registration(org.hibernate.type.descriptor.sql.internal.DdlTypeImpl@44ddb518)
+2023-10-04T21:53:27.012+09:00 DEBUG 72115 --- [    Test worker] o.h.t.d.sql.spi.DdlTypeRegistry          : addDescriptor(4001, org.hibernate.type.descriptor.sql.internal.DdlTypeImpl@e36bc01) replaced previous registration(org.hibernate.type.descriptor.sql.internal.DdlTypeImpl@6654ca0d)
+2023-10-04T21:53:27.012+09:00 DEBUG 72115 --- [    Test worker] o.h.t.d.sql.spi.DdlTypeRegistry          : addDescriptor(4002, org.hibernate.type.descriptor.sql.internal.DdlTypeImpl@35536760) replaced previous registration(org.hibernate.type.descriptor.sql.internal.DdlTypeImpl@1c8f71a7)
+2023-10-04T21:53:27.012+09:00 DEBUG 72115 --- [    Test worker] o.h.t.d.sql.spi.DdlTypeRegistry          : addDescriptor(2004, org.hibernate.type.descriptor.sql.internal.CapacityDependentDdlType@27e21083) replaced previous registration(org.hibernate.type.descriptor.sql.internal.DdlTypeImpl@67a6a2d0)
+2023-10-04T21:53:27.012+09:00 DEBUG 72115 --- [    Test worker] o.h.t.d.sql.spi.DdlTypeRegistry          : addDescriptor(2005, org.hibernate.type.descriptor.sql.internal.CapacityDependentDdlType@49e0b123) replaced previous registration(org.hibernate.type.descriptor.sql.internal.DdlTypeImpl@2e85e3f1)
+2023-10-04T21:53:27.012+09:00 DEBUG 72115 --- [    Test worker] o.h.t.d.sql.spi.DdlTypeRegistry          : addDescriptor(2011, org.hibernate.type.descriptor.sql.internal.CapacityDependentDdlType@195498aa) replaced previous registration(org.hibernate.type.descriptor.sql.internal.DdlTypeImpl@4b360972)
+2023-10-04T21:53:27.012+09:00 DEBUG 72115 --- [    Test worker] o.h.t.d.jdbc.spi.JdbcTypeRegistry        : addDescriptor(NCharTypeDescriptor) replaced previous registration(CharTypeDescriptor)
+2023-10-04T21:53:27.012+09:00 DEBUG 72115 --- [    Test worker] o.h.t.d.jdbc.spi.JdbcTypeRegistry        : addDescriptor(NVarcharTypeDescriptor) replaced previous registration(VarcharTypeDescriptor)
+2023-10-04T21:53:27.013+09:00 DEBUG 72115 --- [    Test worker] o.h.t.d.jdbc.spi.JdbcTypeRegistry        : addDescriptor(LongNVarcharTypeDescriptor) replaced previous registration(LongVarcharTypeDescriptor)
+2023-10-04T21:53:27.013+09:00 DEBUG 72115 --- [    Test worker] o.h.t.d.jdbc.spi.JdbcTypeRegistry        : addDescriptor(NClobTypeDescriptor(DEFAULT)) replaced previous registration(ClobTypeDescriptor(DEFAULT))
+2023-10-04T21:53:27.013+09:00 DEBUG 72115 --- [    Test worker] o.h.t.d.jdbc.spi.JdbcTypeRegistry        : addDescriptor(2005, ClobTypeDescriptor(STREAM_BINDING)) replaced previous registration(ClobTypeDescriptor(DEFAULT))
+2023-10-04T21:53:27.015+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration null -> org.hibernate.type.NullType@39514976
+2023-10-04T21:53:27.015+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Type registration key [null] overrode previous entry : `org.hibernate.type.NullType@a21c74`
+2023-10-04T21:53:27.019+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration org.hibernate.type.OffsetDateTimeType -> basicType@1(java.time.OffsetDateTime,3003)
+2023-10-04T21:53:27.019+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetDateTime -> basicType@1(java.time.OffsetDateTime,3003)
+2023-10-04T21:53:27.019+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.OffsetDateTime -> basicType@1(java.time.OffsetDateTime,3003)
+2023-10-04T21:53:27.020+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration org.hibernate.type.ZonedDateTimeType -> basicType@2(java.time.ZonedDateTime,3003)
+2023-10-04T21:53:27.020+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration ZonedDateTime -> basicType@2(java.time.ZonedDateTime,3003)
+2023-10-04T21:53:27.020+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.ZonedDateTime -> basicType@2(java.time.ZonedDateTime,3003)
+2023-10-04T21:53:27.020+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration org.hibernate.type.OffsetTimeType -> basicType@3(java.time.OffsetTime,3007)
+2023-10-04T21:53:27.020+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetTime -> basicType@3(java.time.OffsetTime,3007)
+2023-10-04T21:53:27.020+09:00 DEBUG 72115 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.OffsetTime -> basicType@3(java.time.OffsetTime,3007)
+2023-10-04T21:53:27.020+09:00 DEBUG 72115 --- [    Test worker] o.h.type.spi.TypeConfiguration$Scope     : Scoping TypeConfiguration [org.hibernate.type.spi.TypeConfiguration@7742a276] to MetadataBuildingContext [org.hibernate.boot.internal.MetadataBuildingContextRootImpl@1f48fa72]
+2023-10-04T21:53:27.127+09:00  INFO 72115 --- [    Test worker] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-10-04T21:53:27.511+09:00  INFO 72115 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-10-04T21:53:27.512+09:00 DEBUG 72115 --- [    Test worker] o.h.type.spi.TypeConfiguration$Scope     : Scoping TypeConfiguration [org.hibernate.type.spi.TypeConfiguration@7742a276] to SessionFactoryImplementor [org.hibernate.internal.SessionFactoryImpl@2a7b5925]
+Hibernate: 
+    alter table board_tb 
+       modify column created_at  datetime(6) not null
+Hibernate: 
+    alter table board_tb 
+       modify column finished_at  datetime(6) not null
+Hibernate: 
+    alter table match_tb 
+       modify column match_time  datetime(6) not null
+2023-10-04T21:53:27.612+09:00 TRACE 72115 --- [    Test worker] o.h.type.spi.TypeConfiguration$Scope     : Handling #sessionFactoryCreated from [org.hibernate.internal.SessionFactoryImpl@2a7b5925] for TypeConfiguration
+2023-10-04T21:53:27.613+09:00  INFO 72115 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-10-04T21:53:27.781+09:00  INFO 72115 --- [    Test worker] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2023-10-04T21:53:28.276+09:00  INFO 72115 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@3c511385, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@20e7ea20, org.springframework.security.web.context.SecurityContextHolderFilter@7ebc2975, org.springframework.security.web.header.HeaderWriterFilter@56957f08, org.springframework.security.web.authentication.logout.LogoutFilter@667ce5fa, org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter@5453020f, pickup_shuttle.pickup.security.filter.JwtAuthenticationProcessingFilter@40fd9358, org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter@744d0cfb, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@12db2921, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@7da4c956, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@2640f5ea, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@5a14a8c1, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@7c5c53e5, org.springframework.security.web.access.ExceptionTranslationFilter@40a32c25, org.springframework.security.web.access.intercept.AuthorizationFilter@3d5a6849]
+2023-10-04T21:53:28.441+09:00  INFO 72115 --- [    Test worker] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2023-10-04T21:53:28.519+09:00  INFO 72115 --- [    Test worker] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:mysql://localhost:3306/pickup?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC'
+2023-10-04T21:53:28.554+09:00  INFO 72115 --- [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2023-10-04T21:53:28.554+09:00  INFO 72115 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2023-10-04T21:53:28.555+09:00  INFO 72115 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2023-10-04T21:53:28.571+09:00  INFO 72115 --- [    Test worker] p.p.domain.board.BoardControllerTest     : Started BoardControllerTest in 2.698 seconds (process running for 3.311)
+JWT Auth 필터 작동중
+2023-10-04T21:53:28.968+09:00  INFO 72115 --- [    Test worker] .p.s.f.JwtAuthenticationProcessingFilter : checkAccessTokenAndAuthentication() 호출
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOCwiZW1haWwiOiIwMDAwIn0.WW1RQ3bB2f5M2vz4Af7S4EGLFpeKGD5hhcPCIuVOb9Q2CJMqaY6SRafsE75Xyrh5RNahs9W-T1hIu4De_ip-MQ
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOCwiZW1haWwiOiIwMDAwIn0.WW1RQ3bB2f5M2vz4Af7S4EGLFpeKGD5hhcPCIuVOb9Q2CJMqaY6SRafsE75Xyrh5RNahs9W-T1hIu4De_ip-MQ
+추출된 엑세스 토큰: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOCwiZW1haWwiOiIwMDAwIn0.WW1RQ3bB2f5M2vz4Af7S4EGLFpeKGD5hhcPCIuVOb9Q2CJMqaY6SRafsE75Xyrh5RNahs9W-T1hIu4De_ip-MQ
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOCwiZW1haWwiOiIwMDAwIn0.WW1RQ3bB2f5M2vz4Af7S4EGLFpeKGD5hhcPCIuVOb9Q2CJMqaY6SRafsE75Xyrh5RNahs9W-T1hIu4De_ip-MQ
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.account,
+        u1_0.bank,
+        u1_0.email,
+        u1_0.name,
+        u1_0.nickname,
+        u1_0.phone_number,
+        u1_0.pwd,
+        u1_0.social_id,
+        u1_0.uid,
+        u1_0.url,
+        u1_0.role 
+    from
+        user_tb u1_0 
+    where
+        u1_0.email=?
+testWriteBlankDestination : {"success":false,"response":null,"error":{"message":"위치가 공백입니다","status":400}}
+JWT Auth 필터 작동중
+2023-10-04T21:53:29.178+09:00  INFO 72115 --- [    Test worker] .p.s.f.JwtAuthenticationProcessingFilter : checkAccessTokenAndAuthentication() 호출
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIwMDAwIn0.K1gzHv9G3KTZsEB77iAwTjGJWGh-rjyn_MJjm5fZHFyj5UQUFaNiVPCZOC_4jBHM3SoKUIl63lTMmFKbkDk11Q
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIwMDAwIn0.K1gzHv9G3KTZsEB77iAwTjGJWGh-rjyn_MJjm5fZHFyj5UQUFaNiVPCZOC_4jBHM3SoKUIl63lTMmFKbkDk11Q
+추출된 엑세스 토큰: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIwMDAwIn0.K1gzHv9G3KTZsEB77iAwTjGJWGh-rjyn_MJjm5fZHFyj5UQUFaNiVPCZOC_4jBHM3SoKUIl63lTMmFKbkDk11Q
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIwMDAwIn0.K1gzHv9G3KTZsEB77iAwTjGJWGh-rjyn_MJjm5fZHFyj5UQUFaNiVPCZOC_4jBHM3SoKUIl63lTMmFKbkDk11Q
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.account,
+        u1_0.bank,
+        u1_0.email,
+        u1_0.name,
+        u1_0.nickname,
+        u1_0.phone_number,
+        u1_0.pwd,
+        u1_0.social_id,
+        u1_0.uid,
+        u1_0.url,
+        u1_0.role 
+    from
+        user_tb u1_0 
+    where
+        u1_0.email=?
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIwMDAwIn0.K1gzHv9G3KTZsEB77iAwTjGJWGh-rjyn_MJjm5fZHFyj5UQUFaNiVPCZOC_4jBHM3SoKUIl63lTMmFKbkDk11Q
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.account,
+        u1_0.bank,
+        u1_0.email,
+        u1_0.name,
+        u1_0.nickname,
+        u1_0.phone_number,
+        u1_0.pwd,
+        u1_0.social_id,
+        u1_0.uid,
+        u1_0.url,
+        u1_0.role 
+    from
+        user_tb u1_0 
+    where
+        u1_0.social_id=?
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.name 
+    from
+        store_tb s1_0 
+    where
+        s1_0.name=?
+testWriteNotFoundStore : {"success":false,"response":null,"error":{"message":"가게가 존재하지 않습니다","status":400}}
+JWT Auth 필터 작동중
+2023-10-04T21:53:29.238+09:00  INFO 72115 --- [    Test worker] .p.s.f.JwtAuthenticationProcessingFilter : checkAccessTokenAndAuthentication() 호출
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIwMDAwIn0.K1gzHv9G3KTZsEB77iAwTjGJWGh-rjyn_MJjm5fZHFyj5UQUFaNiVPCZOC_4jBHM3SoKUIl63lTMmFKbkDk11Q
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIwMDAwIn0.K1gzHv9G3KTZsEB77iAwTjGJWGh-rjyn_MJjm5fZHFyj5UQUFaNiVPCZOC_4jBHM3SoKUIl63lTMmFKbkDk11Q
+추출된 엑세스 토큰: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIwMDAwIn0.K1gzHv9G3KTZsEB77iAwTjGJWGh-rjyn_MJjm5fZHFyj5UQUFaNiVPCZOC_4jBHM3SoKUIl63lTMmFKbkDk11Q
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIwMDAwIn0.K1gzHv9G3KTZsEB77iAwTjGJWGh-rjyn_MJjm5fZHFyj5UQUFaNiVPCZOC_4jBHM3SoKUIl63lTMmFKbkDk11Q
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.account,
+        u1_0.bank,
+        u1_0.email,
+        u1_0.name,
+        u1_0.nickname,
+        u1_0.phone_number,
+        u1_0.pwd,
+        u1_0.social_id,
+        u1_0.uid,
+        u1_0.url,
+        u1_0.role 
+    from
+        user_tb u1_0 
+    where
+        u1_0.email=?
+testWriteBlankStore : {"success":false,"response":null,"error":{"message":"가게가 공백입니다","status":400}}
+accessToken은 eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIxMTExIn0.awguh3GUGlurai3X_2mars82WkEtIodDX02p92L8kPWoaDATauXQW4pR6dZts7F1qtNu1qowGWccOqi-hruWdg
+JWT Auth 필터 작동중
+2023-10-04T21:53:29.276+09:00  INFO 72115 --- [    Test worker] .p.s.f.JwtAuthenticationProcessingFilter : checkAccessTokenAndAuthentication() 호출
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIxMTExIn0.awguh3GUGlurai3X_2mars82WkEtIodDX02p92L8kPWoaDATauXQW4pR6dZts7F1qtNu1qowGWccOqi-hruWdg
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIxMTExIn0.awguh3GUGlurai3X_2mars82WkEtIodDX02p92L8kPWoaDATauXQW4pR6dZts7F1qtNu1qowGWccOqi-hruWdg
+추출된 엑세스 토큰: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIxMTExIn0.awguh3GUGlurai3X_2mars82WkEtIodDX02p92L8kPWoaDATauXQW4pR6dZts7F1qtNu1qowGWccOqi-hruWdg
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIxMTExIn0.awguh3GUGlurai3X_2mars82WkEtIodDX02p92L8kPWoaDATauXQW4pR6dZts7F1qtNu1qowGWccOqi-hruWdg
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.account,
+        u1_0.bank,
+        u1_0.email,
+        u1_0.name,
+        u1_0.nickname,
+        u1_0.phone_number,
+        u1_0.pwd,
+        u1_0.social_id,
+        u1_0.uid,
+        u1_0.url,
+        u1_0.role 
+    from
+        user_tb u1_0 
+    where
+        u1_0.email=?
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIxMTExIn0.awguh3GUGlurai3X_2mars82WkEtIodDX02p92L8kPWoaDATauXQW4pR6dZts7F1qtNu1qowGWccOqi-hruWdg
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.account,
+        u1_0.bank,
+        u1_0.email,
+        u1_0.name,
+        u1_0.nickname,
+        u1_0.phone_number,
+        u1_0.pwd,
+        u1_0.social_id,
+        u1_0.uid,
+        u1_0.url,
+        u1_0.role 
+    from
+        user_tb u1_0 
+    where
+        u1_0.social_id=?
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.name 
+    from
+        store_tb s1_0 
+    where
+        s1_0.name=?
+Hibernate: 
+    insert 
+    into
+        board_tb
+        (created_at,destination,finished_at,is_match,request,store_id,tip,user_id) 
+    values
+        (?,?,?,?,?,?,?,?)
+Hibernate: 
+    insert 
+    into
+        beverage_tb
+        (board_id,name) 
+    values
+        (?,?)
+Hibernate: 
+    insert 
+    into
+        beverage_tb
+        (board_id,name) 
+    values
+        (?,?)
+testWrite : {"success":true,"response":{"boardId":6},"error":null}
+JWT Auth 필터 작동중
+2023-10-04T21:53:29.359+09:00  INFO 72115 --- [    Test worker] .p.s.f.JwtAuthenticationProcessingFilter : checkAccessTokenAndAuthentication() 호출
+Hibernate: 
+    select
+        b1_0.id,
+        b1_0.created_at,
+        b1_0.destination,
+        b1_0.finished_at,
+        b1_0.is_match,
+        m1_0.id,
+        m1_0.arrival_time,
+        m1_0.match_time,
+        m1_0.user_id,
+        b1_0.request,
+        s1_0.id,
+        s1_0.name,
+        b1_0.tip,
+        b1_0.user_id 
+    from
+        board_tb b1_0 
+    join
+        store_tb s1_0 
+            on s1_0.id=b1_0.store_id 
+    join
+        match_tb m1_0 
+            on m1_0.id=b1_0.match_id 
+    where
+        b1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.account,
+        u1_0.bank,
+        u1_0.email,
+        u1_0.name,
+        u1_0.nickname,
+        u1_0.phone_number,
+        u1_0.pwd,
+        u1_0.social_id,
+        u1_0.uid,
+        u1_0.url,
+        u1_0.role 
+    from
+        user_tb u1_0 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        b1_0.board_id,
+        b1_0.id,
+        b1_0.name 
+    from
+        beverage_tb b1_0 
+    where
+        b1_0.board_id=?
+testBoardList : {"success":true,"response":{"boardId":1,"shopName":"전남대 후문 스타벅스","destination":"전남대 공대7 217호관","beverage":[{"name":"핫 아메리카노"},{"name":"아이스 아메리카노"}],"tip":1000,"request":"빨리 와주세요","finishedAt":1696073040,"isMatch":true,"pickerBank":"농협","pickerAccount":"000-0000-0000-000","arrivalTime":1696073940,"pickerPhoneNumber":"010-0000-1234"},"error":null}
+JWT Auth 필터 작동중
+2023-10-04T21:53:29.424+09:00  INFO 72115 --- [    Test worker] .p.s.f.JwtAuthenticationProcessingFilter : checkAccessTokenAndAuthentication() 호출
+Hibernate: 
+    select
+        b1_0.id,
+        b1_0.created_at,
+        b1_0.destination,
+        b1_0.finished_at,
+        b1_0.is_match,
+        b1_0.match_id,
+        b1_0.request,
+        s1_0.id,
+        s1_0.name,
+        b1_0.tip,
+        b1_0.user_id 
+    from
+        board_tb b1_0 
+    join
+        store_tb s1_0 
+            on s1_0.id=b1_0.store_id 
+    order by
+        b1_0.id desc limit ?
+testBoardList : {"success":true,"response":{"content":[{"boardId":5,"shopName":"전남대 후문 스타벅스","finishedAt":1696073040,"tip":1000,"match":false},{"boardId":4,"shopName":"전남대 후문 스타벅스","finishedAt":1696073040,"tip":1000,"match":false},{"boardId":3,"shopName":"전남대 후문 스타벅스","finishedAt":1696073040,"tip":1000,"match":false},{"boardId":2,"shopName":"전남대 후문 스타벅스","finishedAt":1696073040,"tip":1000,"match":false},{"boardId":1,"shopName":"전남대 후문 스타벅스","finishedAt":1696073040,"tip":1000,"match":true}],"pageable":{"pageNumber":0,"pageSize":10,"sort":{"empty":false,"unsorted":false,"sorted":true},"offset":0,"paged":true,"unpaged":false},"first":true,"last":true,"size":10,"number":0,"sort":{"empty":false,"unsorted":false,"sorted":true},"numberOfElements":5,"empty":false},"error":null}
+JWT Auth 필터 작동중
+2023-10-04T21:53:29.529+09:00  INFO 72115 --- [    Test worker] .p.s.f.JwtAuthenticationProcessingFilter : checkAccessTokenAndAuthentication() 호출
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIwMDAwIn0.K1gzHv9G3KTZsEB77iAwTjGJWGh-rjyn_MJjm5fZHFyj5UQUFaNiVPCZOC_4jBHM3SoKUIl63lTMmFKbkDk11Q
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIwMDAwIn0.K1gzHv9G3KTZsEB77iAwTjGJWGh-rjyn_MJjm5fZHFyj5UQUFaNiVPCZOC_4jBHM3SoKUIl63lTMmFKbkDk11Q
+추출된 엑세스 토큰: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIwMDAwIn0.K1gzHv9G3KTZsEB77iAwTjGJWGh-rjyn_MJjm5fZHFyj5UQUFaNiVPCZOC_4jBHM3SoKUIl63lTMmFKbkDk11Q
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIwMDAwIn0.K1gzHv9G3KTZsEB77iAwTjGJWGh-rjyn_MJjm5fZHFyj5UQUFaNiVPCZOC_4jBHM3SoKUIl63lTMmFKbkDk11Q
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.account,
+        u1_0.bank,
+        u1_0.email,
+        u1_0.name,
+        u1_0.nickname,
+        u1_0.phone_number,
+        u1_0.pwd,
+        u1_0.social_id,
+        u1_0.uid,
+        u1_0.url,
+        u1_0.role 
+    from
+        user_tb u1_0 
+    where
+        u1_0.email=?
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIwMDAwIn0.K1gzHv9G3KTZsEB77iAwTjGJWGh-rjyn_MJjm5fZHFyj5UQUFaNiVPCZOC_4jBHM3SoKUIl63lTMmFKbkDk11Q
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.account,
+        u1_0.bank,
+        u1_0.email,
+        u1_0.name,
+        u1_0.nickname,
+        u1_0.phone_number,
+        u1_0.pwd,
+        u1_0.social_id,
+        u1_0.uid,
+        u1_0.url,
+        u1_0.role 
+    from
+        user_tb u1_0 
+    where
+        u1_0.social_id=?
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.name 
+    from
+        store_tb s1_0 
+    where
+        s1_0.name=?
+Hibernate: 
+    insert 
+    into
+        board_tb
+        (created_at,destination,finished_at,is_match,request,store_id,tip,user_id) 
+    values
+        (?,?,?,?,?,?,?,?)
+Hibernate: 
+    insert 
+    into
+        beverage_tb
+        (board_id,name) 
+    values
+        (?,?)
+Hibernate: 
+    insert 
+    into
+        beverage_tb
+        (board_id,name) 
+    values
+        (?,?)
+testWriteBlankBeverage : {"success":true,"response":{"boardId":6},"error":null}
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /articles/write
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"235", Cookie:"access_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIwMDAwIn0.K1gzHv9G3KTZsEB77iAwTjGJWGh-rjyn_MJjm5fZHFyj5UQUFaNiVPCZOC_4jBHM3SoKUIl63lTMmFKbkDk11Q"]
+             Body = {"store":"starbucks","beverage":["아이스 아메리카노","핫 아메리카노",""],"destination":"공과대학 7호관 팬도로시","tip":1000,"request":"후딱후딱 갖다주십쇼!!!!!!!!!!!!!!","finishedAt":"2023-10-01 19:00"}
+    Session Attrs = {}
+
+Handler:
+             Type = pickup_shuttle.pickup.domain.board.BoardController
+           Method = pickup_shuttle.pickup.domain.board.BoardController#write(BoardWriteRqDTO, String)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = [Content-Type:"application/json;charset=UTF-8", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0"]
+     Content type = application/json;charset=UTF-8
+             Body = {"success":true,"response":{"boardId":6},"error":null}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+JWT Auth 필터 작동중
+2023-10-04T21:53:29.580+09:00  INFO 72115 --- [    Test worker] .p.s.f.JwtAuthenticationProcessingFilter : checkAccessTokenAndAuthentication() 호출
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIwMDAwIn0.K1gzHv9G3KTZsEB77iAwTjGJWGh-rjyn_MJjm5fZHFyj5UQUFaNiVPCZOC_4jBHM3SoKUIl63lTMmFKbkDk11Q
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIwMDAwIn0.K1gzHv9G3KTZsEB77iAwTjGJWGh-rjyn_MJjm5fZHFyj5UQUFaNiVPCZOC_4jBHM3SoKUIl63lTMmFKbkDk11Q
+추출된 엑세스 토큰: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIwMDAwIn0.K1gzHv9G3KTZsEB77iAwTjGJWGh-rjyn_MJjm5fZHFyj5UQUFaNiVPCZOC_4jBHM3SoKUIl63lTMmFKbkDk11Q
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIwMDAwIn0.K1gzHv9G3KTZsEB77iAwTjGJWGh-rjyn_MJjm5fZHFyj5UQUFaNiVPCZOC_4jBHM3SoKUIl63lTMmFKbkDk11Q
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.account,
+        u1_0.bank,
+        u1_0.email,
+        u1_0.name,
+        u1_0.nickname,
+        u1_0.phone_number,
+        u1_0.pwd,
+        u1_0.social_id,
+        u1_0.uid,
+        u1_0.url,
+        u1_0.role 
+    from
+        user_tb u1_0 
+    where
+        u1_0.email=?
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIwMDAwIn0.K1gzHv9G3KTZsEB77iAwTjGJWGh-rjyn_MJjm5fZHFyj5UQUFaNiVPCZOC_4jBHM3SoKUIl63lTMmFKbkDk11Q
+Hibernate: 
+    select
+        b1_0.id,
+        b1_0.created_at,
+        b1_0.destination,
+        b1_0.finished_at,
+        b1_0.is_match,
+        b1_0.match_id,
+        b1_0.request,
+        s1_0.id,
+        s1_0.name,
+        b1_0.tip,
+        b1_0.user_id 
+    from
+        board_tb b1_0 
+    join
+        store_tb s1_0 
+            on s1_0.id=b1_0.store_id 
+    where
+        b1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.account,
+        u1_0.bank,
+        u1_0.email,
+        u1_0.name,
+        u1_0.nickname,
+        u1_0.phone_number,
+        u1_0.pwd,
+        u1_0.social_id,
+        u1_0.uid,
+        u1_0.url,
+        u1_0.role 
+    from
+        user_tb u1_0 
+    where
+        u1_0.social_id=?
+Hibernate: 
+    insert 
+    into
+        match_tb
+        (arrival_time,match_time,user_id) 
+    values
+        (?,?,?)
+testWriteBlankFinishAt : {"success":false,"response":null,"error":{"message":"공고글 작성자는 매칭 수락을 할 수 없습니다","status":400}}
+JWT Auth 필터 작동중
+2023-10-04T21:53:29.630+09:00  INFO 72115 --- [    Test worker] .p.s.f.JwtAuthenticationProcessingFilter : checkAccessTokenAndAuthentication() 호출
+Hibernate: 
+    select
+        b1_0.id,
+        b1_0.created_at,
+        b1_0.destination,
+        b1_0.finished_at,
+        b1_0.is_match,
+        b1_0.match_id,
+        b1_0.request,
+        s1_0.id,
+        s1_0.name,
+        b1_0.tip,
+        b1_0.user_id 
+    from
+        board_tb b1_0 
+    join
+        store_tb s1_0 
+            on s1_0.id=b1_0.store_id 
+    where
+        b1_0.id=?
+Hibernate: 
+    select
+        b1_0.board_id,
+        b1_0.id,
+        b1_0.name 
+    from
+        beverage_tb b1_0 
+    where
+        b1_0.board_id=?
+testBoardList : {"success":true,"response":{"boardId":1,"shopName":"전남대 후문 스타벅스","destination":"전남대 공대7 217호관","beverage":[{"name":"핫 아메리카노"},{"name":"아이스 아메리카노"}],"tip":1000,"request":"빨리 와주세요","finishedAt":1696073040,"isMatch":true},"error":null}
+JWT Auth 필터 작동중
+2023-10-04T21:53:29.671+09:00  INFO 72115 --- [    Test worker] .p.s.f.JwtAuthenticationProcessingFilter : checkAccessTokenAndAuthentication() 호출
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIwMDAwIn0.K1gzHv9G3KTZsEB77iAwTjGJWGh-rjyn_MJjm5fZHFyj5UQUFaNiVPCZOC_4jBHM3SoKUIl63lTMmFKbkDk11Q
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIwMDAwIn0.K1gzHv9G3KTZsEB77iAwTjGJWGh-rjyn_MJjm5fZHFyj5UQUFaNiVPCZOC_4jBHM3SoKUIl63lTMmFKbkDk11Q
+추출된 엑세스 토큰: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIwMDAwIn0.K1gzHv9G3KTZsEB77iAwTjGJWGh-rjyn_MJjm5fZHFyj5UQUFaNiVPCZOC_4jBHM3SoKUIl63lTMmFKbkDk11Q
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIwMDAwIn0.K1gzHv9G3KTZsEB77iAwTjGJWGh-rjyn_MJjm5fZHFyj5UQUFaNiVPCZOC_4jBHM3SoKUIl63lTMmFKbkDk11Q
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.account,
+        u1_0.bank,
+        u1_0.email,
+        u1_0.name,
+        u1_0.nickname,
+        u1_0.phone_number,
+        u1_0.pwd,
+        u1_0.social_id,
+        u1_0.uid,
+        u1_0.url,
+        u1_0.role 
+    from
+        user_tb u1_0 
+    where
+        u1_0.email=?
+testWriteBlankFinishAt : {"success":false,"response":null,"error":{"message":"마감기간이 공백입니다","status":400}}
+JWT Auth 필터 작동중
+2023-10-04T21:53:29.706+09:00  INFO 72115 --- [    Test worker] .p.s.f.JwtAuthenticationProcessingFilter : checkAccessTokenAndAuthentication() 호출
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIxMTExIn0.awguh3GUGlurai3X_2mars82WkEtIodDX02p92L8kPWoaDATauXQW4pR6dZts7F1qtNu1qowGWccOqi-hruWdg
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIxMTExIn0.awguh3GUGlurai3X_2mars82WkEtIodDX02p92L8kPWoaDATauXQW4pR6dZts7F1qtNu1qowGWccOqi-hruWdg
+추출된 엑세스 토큰: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIxMTExIn0.awguh3GUGlurai3X_2mars82WkEtIodDX02p92L8kPWoaDATauXQW4pR6dZts7F1qtNu1qowGWccOqi-hruWdg
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIxMTExIn0.awguh3GUGlurai3X_2mars82WkEtIodDX02p92L8kPWoaDATauXQW4pR6dZts7F1qtNu1qowGWccOqi-hruWdg
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.account,
+        u1_0.bank,
+        u1_0.email,
+        u1_0.name,
+        u1_0.nickname,
+        u1_0.phone_number,
+        u1_0.pwd,
+        u1_0.social_id,
+        u1_0.uid,
+        u1_0.url,
+        u1_0.role 
+    from
+        user_tb u1_0 
+    where
+        u1_0.email=?
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIxMTExIn0.awguh3GUGlurai3X_2mars82WkEtIodDX02p92L8kPWoaDATauXQW4pR6dZts7F1qtNu1qowGWccOqi-hruWdg
+Hibernate: 
+    select
+        b1_0.id,
+        b1_0.created_at,
+        b1_0.destination,
+        b1_0.finished_at,
+        b1_0.is_match,
+        b1_0.match_id,
+        b1_0.request,
+        s1_0.id,
+        s1_0.name,
+        b1_0.tip,
+        b1_0.user_id 
+    from
+        board_tb b1_0 
+    join
+        store_tb s1_0 
+            on s1_0.id=b1_0.store_id 
+    where
+        b1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.account,
+        u1_0.bank,
+        u1_0.email,
+        u1_0.name,
+        u1_0.nickname,
+        u1_0.phone_number,
+        u1_0.pwd,
+        u1_0.social_id,
+        u1_0.uid,
+        u1_0.url,
+        u1_0.role 
+    from
+        user_tb u1_0 
+    where
+        u1_0.social_id=?
+Hibernate: 
+    insert 
+    into
+        match_tb
+        (arrival_time,match_time,user_id) 
+    values
+        (?,?,?)
+Hibernate: 
+    select
+        b1_0.board_id,
+        b1_0.id,
+        b1_0.name 
+    from
+        beverage_tb b1_0 
+    where
+        b1_0.board_id=?
+Hibernate: 
+    update
+        board_tb 
+    set
+        created_at=?,
+        destination=?,
+        finished_at=?,
+        is_match=?,
+        match_id=?,
+        request=?,
+        store_id=?,
+        tip=?,
+        user_id=? 
+    where
+        id=?
+testWriteBlankFinishAt : {"success":true,"response":{"shopName":"전남대 후문 스타벅스","destination":"전남대 공대7 217호관","beverage":[{"name":"핫 아메리카노"},{"name":"아이스 아메리카노"}],"tip":1000,"request":"빨리 와주세요","finishedAt":1696073040,"arrivalTime":1696458209},"error":null}
+JWT Auth 필터 작동중
+2023-10-04T21:53:29.758+09:00  INFO 72115 --- [    Test worker] .p.s.f.JwtAuthenticationProcessingFilter : checkAccessTokenAndAuthentication() 호출
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIwMDAwIn0.K1gzHv9G3KTZsEB77iAwTjGJWGh-rjyn_MJjm5fZHFyj5UQUFaNiVPCZOC_4jBHM3SoKUIl63lTMmFKbkDk11Q
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIwMDAwIn0.K1gzHv9G3KTZsEB77iAwTjGJWGh-rjyn_MJjm5fZHFyj5UQUFaNiVPCZOC_4jBHM3SoKUIl63lTMmFKbkDk11Q
+추출된 엑세스 토큰: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIwMDAwIn0.K1gzHv9G3KTZsEB77iAwTjGJWGh-rjyn_MJjm5fZHFyj5UQUFaNiVPCZOC_4jBHM3SoKUIl63lTMmFKbkDk11Q
+추출된 accessTokenStr 이름: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTY5NjQyNzYwOSwiZW1haWwiOiIwMDAwIn0.K1gzHv9G3KTZsEB77iAwTjGJWGh-rjyn_MJjm5fZHFyj5UQUFaNiVPCZOC_4jBHM3SoKUIl63lTMmFKbkDk11Q
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.account,
+        u1_0.bank,
+        u1_0.email,
+        u1_0.name,
+        u1_0.nickname,
+        u1_0.phone_number,
+        u1_0.pwd,
+        u1_0.social_id,
+        u1_0.uid,
+        u1_0.url,
+        u1_0.role 
+    from
+        user_tb u1_0 
+    where
+        u1_0.email=?
+testWriteInvalidTip : {"success":false,"response":null,"error":{"message":"픽업팁이 음수입니다","status":400}}
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

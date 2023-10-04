@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import pickup_shuttle.pickup.domain.board.Board;
 import pickup_shuttle.pickup.domain.user.User;
 
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "match_tb")
+@EntityListeners(AuditingEntityListener.class)
 public class Match {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

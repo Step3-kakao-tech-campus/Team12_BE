@@ -1,20 +1,29 @@
 package pickup_shuttle.pickup.domain.board;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pickup_shuttle.pickup._core.errors.exception.Exception400;
 import pickup_shuttle.pickup._core.utils.ApiUtils;
-import pickup_shuttle.pickup.domain.board.dto.response.BoardDetailAfterRpDTO;
-import pickup_shuttle.pickup.domain.board.dto.response.BoardDetailBeforeRpDTO;
-import pickup_shuttle.pickup.domain.board.dto.response.BoardListRpDTO;
+
+import pickup_shuttle.pickup.config.Login;
+import pickup_shuttle.pickup.domain.board.dto.request.BoardAgreeRqDTO;
+import pickup_shuttle.pickup.domain.board.dto.request.BoardWriteRqDTO;
+import pickup_shuttle.pickup.domain.board.dto.response.*;
+
+import pickup_shuttle.pickup.domain.user.User;
+import pickup_shuttle.pickup.security.service.JwtService;
+
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("articles")
 public class BoardController {
     private final BoardService boardService;
-
+    private final JwtService jwtService;
     @GetMapping
     public ResponseEntity<?> getBoardList(
             @RequestParam(value = "offset" +
@@ -24,6 +33,13 @@ public class BoardController {
         return ResponseEntity.ok(ApiUtils.success(responseDTOSlice));
     }
 
+    @PostMapping("/write")
+    public ResponseEntity<?> write(@RequestBody @Valid BoardWriteRqDTO requestDTO, @Login String socialId){
+        boardService.checkListBlank(requestDTO.beverage());
+        BoardWriteRpDTO responseDTO = boardService.write(requestDTO, socialId);
+        return ResponseEntity.ok(ApiUtils.success(responseDTO));
+    }
+
     @GetMapping("/before/{boardId}")
     public ResponseEntity<?> beforeBoardDetail(@PathVariable("boardId") Long boardId) {
         BoardDetailBeforeRpDTO responseDTO = boardService.boardDetailBefore(boardId);
@@ -31,8 +47,16 @@ public class BoardController {
     }
 
     @GetMapping("/after/{boardId}")
-    private ResponseEntity<?> afterBoardDetail(@PathVariable("boardId") Long boardId) {
+    public ResponseEntity<?> afterBoardDetail(@PathVariable("boardId") Long boardId) {
         BoardDetailAfterRpDTO responseDTO = boardService.boardDetailAfter(boardId);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
+    @PostMapping("/agree/{boardId}")
+    public ResponseEntity<?> pickupAgree(@PathVariable("boardId") Long boardId,
+                                         @RequestBody @Valid BoardAgreeRqDTO requestDTO,
+                                         @Login String socialId) {
+        BoardAgreeRpDTO responseDTO = boardService.boardAgree(requestDTO,boardId,socialId);
+        return ResponseEntity.ok(ApiUtils.success(responseDTO));
+    }
+
 }

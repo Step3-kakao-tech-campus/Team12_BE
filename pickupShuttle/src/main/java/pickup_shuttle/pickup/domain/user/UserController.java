@@ -20,13 +20,7 @@ import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 @RestController
 public class UserController {
     private final UserService userService;
-    // 회원가입
-    @PostMapping("/users/register")
-    public ResponseEntity<?> register(@RequestBody @Valid RegisterRqDTO registerDTO){
-        userService.register(registerDTO);
-        return ResponseEntity.ok(ApiUtils.success("회원가입 성공"));
-    }
-    
+
     // 은행명, 계좌번호 입력 창으로 이동
     @GetMapping("/users/register/input")
     public ModelAndView userInfoInput() {
@@ -36,13 +30,6 @@ public class UserController {
         return modelAndView;
     }
 
-
-    // 닉네임 중복 확인
-    @GetMapping("/users/duplicate/nickname")
-    public ResponseEntity<?> checkNickname(@RequestBody @Valid NicknameCheckRqDTO nicknameCheckDTO){
-        userService.checkNicknameDuplicate(nicknameCheckDTO.nickname());
-        return ResponseEntity.ok(ApiUtils.success("사용 가능한 닉네임 입니다"));
-    }
 
     @PostMapping("/signup")
     public ResponseEntity<?> signup(SignUpRqDTO requestDTO, @AuthenticationPrincipal CustomOauth2User customOauth2User, Errors errors){
