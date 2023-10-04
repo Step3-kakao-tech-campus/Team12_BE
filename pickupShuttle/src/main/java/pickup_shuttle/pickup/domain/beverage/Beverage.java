@@ -23,11 +23,14 @@ public class Beverage {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private Board board;
+
+
     @Builder
-    public Beverage(String name, Board board) {
+    public Beverage(String name) {
         this.name = name;
-        this.board = board;
     }
+
+    public void setBoard(Board board) {this.board = board;}
 
     private void updateName(String name) {
         this.name = name;

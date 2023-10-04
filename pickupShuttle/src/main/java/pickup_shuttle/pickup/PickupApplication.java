@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 //@SpringBootApplication
 @EnableJpaAuditing
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
-public class PickupApplication {
+public class 	PickupApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(PickupApplication.class, args);
 	}
