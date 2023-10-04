@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import pickup_shuttle.pickup._core.errors.exception.Exception400;
 import pickup_shuttle.pickup._core.utils.ApiUtils;
 
-import pickup_shuttle.pickup.domain.board.dto.request.WriteRqDTO;
-import pickup_shuttle.pickup.domain.board.dto.response.BoardListRpDTO;
-import pickup_shuttle.pickup.domain.board.dto.response.WriteRpDTO;
+import pickup_shuttle.pickup.config.Login;
+import pickup_shuttle.pickup.domain.board.dto.request.BoardAgreeRqDTO;
+import pickup_shuttle.pickup.domain.board.dto.request.BoardWriteRqDTO;
+import pickup_shuttle.pickup.domain.board.dto.response.*;
 
-import pickup_shuttle.pickup.domain.board.dto.response.BoardDetailAfterRpDTO;
-import pickup_shuttle.pickup.domain.board.dto.response.BoardDetailBeforeRpDTO;
+import pickup_shuttle.pickup.domain.user.User;
 import pickup_shuttle.pickup.security.service.JwtService;
 
 
@@ -34,14 +34,9 @@ public class BoardController {
     }
 
     @PostMapping("/write")
-    public ResponseEntity<?> write(@RequestBody @Valid WriteRqDTO requestDTO, HttpServletRequest request){
-        String accessToken = jwtService.extractAccessToken(request).orElseThrow(
-                () -> new Exception400("access token을 추출하지 못했습니다")
-        );
-        String userId = jwtService.extractEmail(accessToken).orElseThrow(
-                () -> new Exception400("user의 Id를 추출하지 못했습니다")
-        );
-        WriteRpDTO responseDTO = boardService.write(requestDTO, userId);
+    public ResponseEntity<?> write(@RequestBody @Valid BoardWriteRqDTO requestDTO, @Login String socialId){
+        boardService.checkListBlank(requestDTO.beverage());
+        BoardWriteRpDTO responseDTO = boardService.write(requestDTO, socialId);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 
@@ -52,8 +47,16 @@ public class BoardController {
     }
 
     @GetMapping("/after/{boardId}")
-    private ResponseEntity<?> afterBoardDetail(@PathVariable("boardId") Long boardId) {
+    public ResponseEntity<?> afterBoardDetail(@PathVariable("boardId") Long boardId) {
         BoardDetailAfterRpDTO responseDTO = boardService.boardDetailAfter(boardId);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
+    @PostMapping("/agree/{boardId}")
+    public ResponseEntity<?> pickupAgree(@PathVariable("boardId") Long boardId,
+                                         @RequestBody @Valid BoardAgreeRqDTO requestDTO,
+                                         @Login String socialId) {
+        BoardAgreeRpDTO responseDTO = boardService.boardAgree(requestDTO,boardId,socialId);
+        return ResponseEntity.ok(ApiUtils.success(responseDTO));
+    }
+
 }

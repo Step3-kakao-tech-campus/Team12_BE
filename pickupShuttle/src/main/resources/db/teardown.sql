@@ -1,6 +1,6 @@
 -- 모든 제약 조건 비활성화
 -- SET foreign_key_checks = 0;
-SET REFERENTIAL_INTEGRITY FALSE;
+SET foreign_key_checks = 0;
 
 truncate table user_tb;
 truncate table board_tb;
@@ -8,7 +8,7 @@ truncate table store_tb;
 truncate table beverage_tb;
 truncate table match_tb;
 
-SET REFERENTIAL_INTEGRITY TRUE;
+SET foreign_key_checks = 1;
 
 -- SET foreign_key_checks = 1;
 -- 모든 제약 조건 활성화
@@ -31,6 +31,10 @@ insert into board_tb(`tip`, `created_at`, `finished_at`, `is_match`, `destinatio
 insert into board_tb(`tip`, `created_at`, `finished_at`, `is_match`, `destination`, `request`, `user_id`, `store_id`) values ('1000', '2023-09-30 00:14', '2023-09-30 02:24', 'N', '전남대 공대7 217호관', '빨리 와주세요', '1', '1');
 
 insert into board_tb(`tip`, `created_at`, `finished_at`, `is_match`, `destination`, `request`, `user_id`, `store_id`) values ('1000', '2023-09-30 00:14', '2023-09-30 02:24', 'N', '전남대 공대7 217호관', '빨리 와주세요', '1', '1');
+
+insert into beverage_tb(`board_id`, `name`) values ('1', '핫 아메리카노');
+
+insert into beverage_tb(`board_id`, `name`) values ('1', '아이스 아메리카노');
 
 insert into match_tb(`id`, `arrival_time`, `match_time`, `user_id`) values ('1', '5', '2023-09-30 02:34', '2');
 
