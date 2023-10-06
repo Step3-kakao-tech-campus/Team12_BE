@@ -15,6 +15,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import pickup_shuttle.pickup.domain.oauth2.handler.OAuth2LoginFailureHandler;
 import pickup_shuttle.pickup.domain.oauth2.handler.OAuth2LoginSuccessHandler;
@@ -46,17 +47,21 @@ public class SecurityConfig {
                 .headers((headers) -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
 
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(new AntPathRequestMatcher("/admin")).hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(new AntPathRequestMatcher("/users/register/input")).hasAuthority("ROLE_GUEST")
                         .requestMatchers(
-                                new AntPathRequestMatcher("/**"),
+                                new AntPathRequestMatcher("/"),
                                 new AntPathRequestMatcher("/css/**"),
                                 new AntPathRequestMatcher("/images/**"),
                                 new AntPathRequestMatcher("/js/**"),
                                 new AntPathRequestMatcher("/h2-console/**"),
-                                new AntPathRequestMatcher("/profile")
+                                new AntPathRequestMatcher("/profile"),
+                                new AntPathRequestMatcher("/exception/**")
                         ).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/users/register/input")).hasAuthority("ROLE_GUEST")
-                        .requestMatchers(new AntPathRequestMatcher("/admin")).hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated())
+                .exceptionHandling((exceptionHandling) -> exceptionHandling.accessDeniedPage("/errorPage"))
+
+
 
                 .logout((logout) -> logout
                         .logoutSuccessUrl("/"))
@@ -74,9 +79,7 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/")
                         .invalidateHttpSession(true));
 
-        http.addFilterBefore(jwtAuthenticationProcessingFilter(), OAuth2LoginAuthenticationFilter.class);
-
-        //http.authorizeHttpRequests(auth -> auth.requestMatchers(new AntPathRequestMatcher("/**")).permitAll().anyRequest().authenticated())
+        http.addFilterBefore(jwtAuthenticationProcessingFilter(), LogoutFilter.class);
 
         return http.build();
 

@@ -36,18 +36,19 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             // User의 Role이 Guest일 경우에 처음 요청한 회원이므로 회원가입 페이지로 리다이렉트
             if(oauth2User.getUserRole() == UserRole.GUEST){
                 //String loginId, String key, long expireTimeMs
-                String accessToken = jwtService.createAccessToken(oauth2User.getName());
-                response.addHeader(jwtService.getAccessHeader(),"Bearer " + accessToken);
+                User findUser = userRepository.findBySocialId(oauth2User.getName())
+                        .orElseThrow(() -> new IllegalArgumentException("socialID에 해당하는 유저가 없습니다."));
+                // oauthUser.getName()은 socialID를 불러옵니다.
+                String accessToken = jwtService.createAccessToken(findUser.getUserId().toString());
+                // response.addHeader(jwtService.getAccessHeader(),"Bearer " + accessToken);
                 response.sendRedirect("/users/register/input"); // 리다이렉트 주소 (계좌번호 입력)
                 jwtService.sendAccessAndRefreshToken(response, accessToken, null);
-                User findUser = userRepository.findBySocialId(oauth2User.getName())
-                        .orElseThrow(() -> new IllegalArgumentException("이메일에 해당하는 유저가 없습니다."));
                 findUser.authorizeUser();
 
             } else {
                 System.out.println("loginSuccess 실행");
                 loginSuccess(response, oauth2User);
-                redirectStrategy.sendRedirect(request, response, "/");
+                redirectStrategy.sendRedirect(request, response, "/login/callback");
             }
         } catch(Exception e){
             throw e;
@@ -55,11 +56,10 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     }
 
     private void loginSuccess(HttpServletResponse response, CustomOauth2User oauth2User) throws IOException {
-        System.out.println("리프레시 토큰과 엑세스 토큰 발행!");
-        String accessToken = jwtService.createAccessToken(oauth2User.getName());
+        String userPK = String.valueOf(userRepository.findBySocialId(oauth2User.getName()).get().getUserId());
+        System.out.println("리프레시 토큰과 엑세스 토큰 발행!, userPK: " + userPK);
+        String accessToken = null; // 엑세스 토큰은 "/login/callback"에서 응답 Body 형태로 응답해줄 예정.
         String refreshToken = jwtService.createRefreshToken();
-        response.addHeader(jwtService.getAccessHeader(), "Bearer " + accessToken);
-        response.addHeader(jwtService.getRefreshHeader(), "Bearer " + refreshToken);
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
         jwtService.updateRefreshToken(oauth2User.getName(), refreshToken);

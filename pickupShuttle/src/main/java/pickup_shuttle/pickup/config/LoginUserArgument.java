@@ -30,7 +30,7 @@ public class LoginUserArgument implements HandlerMethodArgumentResolver {
         String accessToken = jwtService.extractAccessToken(request).orElseThrow(
                 () -> new Exception400("access token을 추출하지 못했습니다")
         );
-        String userId = jwtService.extractEmail(accessToken).orElseThrow(
+        String userId = jwtService.extractUserID(accessToken).orElseThrow(
                 () -> new Exception400("user의 Id를 추출하지 못했습니다")
         );
         return userId;
