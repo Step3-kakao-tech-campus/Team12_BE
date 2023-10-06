@@ -234,7 +234,7 @@ public class BoardControllerTest {
 
         //then
         resultActions.andExpect(jsonPath("$.success").value("false"));
-        resultActions.andExpect(jsonPath("$.error.message").value("음료가 공백입니다"));
+        resultActions.andExpect(jsonPath("$.error.message").value("음료명에 빈 문자열 or null이 입력 되었습니다"));
         resultActions.andExpect(jsonPath("$.error.status").value(400));
     }
 

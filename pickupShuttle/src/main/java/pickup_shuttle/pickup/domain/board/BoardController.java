@@ -1,20 +1,15 @@
 package pickup_shuttle.pickup.domain.board;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pickup_shuttle.pickup._core.errors.exception.Exception400;
 import pickup_shuttle.pickup._core.utils.ApiUtils;
-
 import pickup_shuttle.pickup.config.Login;
 import pickup_shuttle.pickup.domain.board.dto.request.BoardAgreeRqDTO;
 import pickup_shuttle.pickup.domain.board.dto.request.BoardWriteRqDTO;
 import pickup_shuttle.pickup.domain.board.dto.response.*;
-
-import pickup_shuttle.pickup.domain.user.User;
 import pickup_shuttle.pickup.security.service.JwtService;
 
 
