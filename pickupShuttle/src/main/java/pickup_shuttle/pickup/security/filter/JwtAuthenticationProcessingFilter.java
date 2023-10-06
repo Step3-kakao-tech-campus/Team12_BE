@@ -99,7 +99,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                 .ifPresent(user -> {
                     String reIssuedRefreshToken = reIssueRefreshToken(user.getRefreshToken());
                     try {
-                        jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(user.getUser().getUid()),
+                        jwtService.sendRefreshToken(response,
                                 reIssuedRefreshToken);
                     } catch (Exception e){
                         System.out.println(e.toString());

@@ -42,7 +42,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
                 String accessToken = jwtService.createAccessToken(findUser.getUserId().toString());
                 // response.addHeader(jwtService.getAccessHeader(),"Bearer " + accessToken);
                 response.sendRedirect("/users/register/input"); // 리다이렉트 주소 (계좌번호 입력)
-                jwtService.sendAccessAndRefreshToken(response, accessToken, null);
+                jwtService.sendRefreshToken(response, null);
                 findUser.authorizeUser();
 
             } else {
@@ -61,7 +61,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         String accessToken = null; // 엑세스 토큰은 "/login/callback"에서 응답 Body 형태로 응답해줄 예정.
         String refreshToken = jwtService.createRefreshToken();
 
-        jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
+        jwtService.sendRefreshToken(response, refreshToken);
         jwtService.updateRefreshToken(oauth2User.getName(), refreshToken);
     }
 

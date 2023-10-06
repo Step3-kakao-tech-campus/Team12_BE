@@ -1,7 +1,5 @@
 package pickup_shuttle.pickup.domain.user;
 
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,13 +8,11 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import pickup_shuttle.pickup._core.utils.ApiUtils;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
-import pickup_shuttle.pickup.domain.user.dto.request.NicknameCheckRqDTO;
-import pickup_shuttle.pickup.domain.user.dto.request.RegisterRqDTO;
+import pickup_shuttle.pickup.domain.refreshToken.dto.response.AccessTokenRpDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 import pickup_shuttle.pickup.security.service.JwtService;
 
@@ -39,10 +35,10 @@ public class UserController {
     }
 
     // 에러창
-    @GetMapping("/error")
+    @GetMapping("/errorPage")
     public ModelAndView error() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("error");
+        modelAndView.setViewName("errorPage");
 
         return modelAndView;
     }
@@ -60,11 +56,7 @@ public class UserController {
         CustomOauth2User customOauth2User = (CustomOauth2User) authentication.getPrincipal();
         if(customOauth2User != null){
             String token = jwtService.createAccessToken(customOauth2User.getName());
-            Map<String, String> response = new HashMap<>();
-            response.put("AccessToken", token);
-            String refreshToken = jwtService.createRefreshToken();
-
-            return ResponseEntity.ok().body(ApiUtils.success(response));
+            return ResponseEntity.ok().body(ApiUtils.success(AccessTokenRpDTO.builder().AccessToken(token).build()));
         } else {
             return ResponseEntity.badRequest().body(ApiUtils.error("인증에 실패하였습니다.", HttpStatus.UNAUTHORIZED));
         }

@@ -9,41 +9,39 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
-import pickup_shuttle.pickup._core.utils.ApiUtils;
 import pickup_shuttle.pickup.domain.refreshToken.RefreshToken;
 import pickup_shuttle.pickup.domain.refreshToken.RefreshTokenRepository;
 import pickup_shuttle.pickup.domain.user.User;
 import pickup_shuttle.pickup.domain.user.UserRepository;
 
-import java.time.Duration;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-@Service
 @Getter
 @Log4j2
+@Service
+@PropertySource("classpath:application.properties")
 public class JwtService {
 
-    //@Value("${jwt.secretKey}")
-    private String secretKey = "pickUpShuttle_SECRET_KEY";
+    @Value("${jwt.secret}")
+    private String secretKey;
 
-    //@Value("${jwt.access.expiration}")
-    private Long accessTokenExpirationPeriod = Duration.ofMinutes(30).toMillis(); // 만료시간 30분
+    @Value("${jwt.access.expiration}")
+    private Long accessTokenExpirationPeriod; // 만료시간 30분
 
 
-    //@Value("${jwt.refresh.expiration}")
-    private Long refreshTokenExpirationPeriod = Duration.ofDays(14).toMillis(); // 만료시간 2주
+    @Value("${jwt.refresh.expiration}")
+    private Long refreshTokenExpirationPeriod; // 만료시간 2주
 
-    //@Value("${jwt.access.header}")
-    private String accessHeader = "Authorization";
+    @Value("${jwt.access.header}")
+    private String accessHeader;
 
-    //@Value("${jwt.refresh.header}")
-    private String refreshHeader = "Authorization-refresh";
+    @Value("${jwt.refresh.header}")
+    private String refreshHeader;
 
     /**
      * JWT의 Subject와 Claim으로 email 사용 -> 클레임의 name을 "email"으로 설정
@@ -65,11 +63,9 @@ public class JwtService {
                 .withSubject(ACCESS_TOKEN_SUBJECT) // JWT의 Subject 지정 -> AccessToken이므로 AccessToken
                 .withExpiresAt(new Date(now.getTime() + accessTokenExpirationPeriod)) // 토큰 만료 시간 설정
 
-                //클레임으로는 저희는 email 하나만 사용합니다.
-                //추가적으로 식별자나, 이름 등의 정보를 더 추가하셔도 됩니다.
-                //추가하실 경우 .withClaim(클래임 이름, 클래임 값) 으로 설정해주시면 됩니다
+                //클레임으로는 저희는 PK 하나만 사용합니다.
                 .withClaim(userPKid, userid)
-                .sign(Algorithm.HMAC512(secretKey)); // HMAC512 알고리즘 사용, application-jwt.yml에서 지정한 secret 키로 암호화
+                .sign(Algorithm.HMAC512(secretKey)); // HMAC512 알고리즘 사용, application-jwt.properties에서 지정한 secret 키로 암호화
     }
 
     public String createRefreshToken() {
@@ -82,16 +78,16 @@ public class JwtService {
 
 
     /**
-     * Refresh Token, Body로 보내기
+     * Refresh Token, 쿠키 발급
      */
-    public void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken){
+    public void sendRefreshToken(HttpServletResponse response, String refreshToken){
         response.setStatus(HttpServletResponse.SC_OK);
         Cookie refreshCookie = new Cookie("refresh_token",refreshToken);
         refreshCookie.setMaxAge(60*60*24*14);
         refreshCookie.setHttpOnly(true);
         refreshCookie.setPath("/");
         response.addCookie(refreshCookie);
-        log.info("Access Token, Refresh Token 헤더 설정 완료");
+        log.info("Refresh Token 쿠키 발급 완료");
     }
 
     /**
@@ -129,7 +125,7 @@ public class JwtService {
      * AccessToken에서 Email 추출
      * 추출 전에 JWT.require()로 검증기 생성
      * verify로 AceessToken 검증 후
-     * 유효하다면 getClaim()으로 이메일 추출
+     * 유효하다면 getClaim()으로 PK 추출
      * 유효하지 않다면 빈 Optional 객체 반환
      */
     public Optional<String> extractUserID(String accessToken) {
@@ -138,7 +134,7 @@ public class JwtService {
             return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
                     .build() // 반환된 빌더로 JWT verifier 생성
                     .verify(accessToken) // accessToken을 검증하고 유효하지 않다면 예외 발생
-                    .getClaim(userPKid) // claim(Emial) 가져오기
+                    .getClaim(userPKid) // claim(PK) 가져오기
                     .asString());
         } catch (Exception e) {
             log.error("액세스 토큰이 유효하지 않습니다.");
