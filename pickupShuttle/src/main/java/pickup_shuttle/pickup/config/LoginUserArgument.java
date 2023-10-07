@@ -21,8 +21,8 @@ public class LoginUserArgument implements HandlerMethodArgumentResolver {
         // @Login 어노테이션이 붙어있어야 하고
         boolean hasLoginAnnotation = parameter.hasParameterAnnotation(Login.class);
         // @Login이 붙은 것은 타입이 Member 클래스여야 한다.
-        boolean hasStringType = String.class.isAssignableFrom(parameter.getParameterType());
-        return hasLoginAnnotation && hasStringType;
+        boolean hasLongType = Long.class.isAssignableFrom(parameter.getParameterType());
+        return hasLoginAnnotation && hasLongType;
     }
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
@@ -33,7 +33,7 @@ public class LoginUserArgument implements HandlerMethodArgumentResolver {
         String userId = jwtService.extractUserID(accessToken).orElseThrow(
                 () -> new Exception400("user의 Id를 추출하지 못했습니다")
         );
-        return userId;
+        return Long.valueOf(userId);
     }
 }
 

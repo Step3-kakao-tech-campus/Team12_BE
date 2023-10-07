@@ -17,8 +17,6 @@ import pickup_shuttle.pickup.domain.refreshToken.dto.response.AccessTokenRpDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 import pickup_shuttle.pickup.security.service.JwtService;
 
-import java.util.HashMap;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -63,8 +61,8 @@ public class UserController {
         }
     }
     @GetMapping("/mypage/auth")
-    public ResponseEntity<?> userAuthStatus(@Login String userId){
-        String status = userService.userAuthStatus(Long.parseLong(userId));
+    public ResponseEntity<?> userAuthStatus(@Login Long userId){
+        String status = userService.userAuthStatus(userId);
         return ResponseEntity.ok(ApiUtils.success(status));
     }
 
