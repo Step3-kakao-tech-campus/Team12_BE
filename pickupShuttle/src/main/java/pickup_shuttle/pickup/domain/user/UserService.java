@@ -27,7 +27,7 @@ public class UserService {
         user.get().setAccount(accountNum);
         return;
     }
-    public String userAuthStatus(long userId){
+    public String userAuthStatus(Long userId){
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new Exception400("유저를 찾을 수 없습니다")
         );

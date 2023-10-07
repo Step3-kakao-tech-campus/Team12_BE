@@ -61,7 +61,7 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardWriteRpDTO write(BoardWriteRqDTO requestDTO, long userId) {
+    public BoardWriteRpDTO write(BoardWriteRqDTO requestDTO, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new Exception400("유저가 존재하지 않습니다")
         );
@@ -129,7 +129,7 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardAgreeRpDTO boardAgree(BoardAgreeRqDTO requestDTo, Long boardId, long userId) {
+    public BoardAgreeRpDTO boardAgree(BoardAgreeRqDTO requestDTo, Long boardId, Long userId) {
         Board board = boardRepository.mfindByBoardId(boardId).orElseThrow(
                 () -> new Exception400("공고글을 찾을 수 업습니다")
         );
@@ -158,13 +158,13 @@ public class BoardService {
                 .build();
     }
     @Transactional
-    public void boardDelete(Long boardId, long userId){
+    public void boardDelete(Long boardId, Long userId){
         // 공고글 확인
         Board board = boardRepository.m3findByBoardId(boardId).orElseThrow(
                 () -> new Exception400("공고글을 찾을 수 없습니다")
         );
         // 공고글 작성자 확인
-        if(!(board.getUser().getUserId() == userId))
+        if(!(board.getUser().getUserId().equals(userId)))
             throw new Exception400("공고글의 작성자가 아닙니다");
         // 매칭되었는지 확인
         if(board.getMatch() != null)
