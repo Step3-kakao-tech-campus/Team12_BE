@@ -414,11 +414,9 @@ public class BoardControllerTest {
             // given
             Long boardId = 4L;
             String accessToken = jwtService.createAccessToken("2");
-            String requestBody = om.writeValueAsString(boardId);
             //when
             ResultActions resultActions = mvc.perform(
                     delete("/articles/delete/{boardId}", boardId)
-                            .content(requestBody)
                             .contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", accessToken)
             );
@@ -438,11 +436,9 @@ public class BoardControllerTest {
             // given
             Long boardId = 1L;
             String accessToken = jwtService.createAccessToken("1");
-            String requestBody = om.writeValueAsString(boardId);
             //when
             ResultActions resultActions = mvc.perform(
                     delete("/articles/delete/{boardId}", boardId)
-                            .content(requestBody)
                             .contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", accessToken)
             );
@@ -461,11 +457,9 @@ public class BoardControllerTest {
             // given
             Long boardId = 1L;
             String accessToken = jwtService.createAccessToken("2");
-            String requestBody = om.writeValueAsString(boardId);
             //when
             ResultActions resultActions = mvc.perform(
                     delete("/articles/delete/{boardId}", boardId)
-                            .content(requestBody)
                             .contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", accessToken)
             );
@@ -484,11 +478,9 @@ public class BoardControllerTest {
             // given
             Long boardId = 100L;
             String accessToken = jwtService.createAccessToken("2");
-            String requestBody = om.writeValueAsString(boardId);
             //when
             ResultActions resultActions = mvc.perform(
                     delete("/articles/delete/{boardId}", boardId)
-                            .content(requestBody)
                             .contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", accessToken)
             );
