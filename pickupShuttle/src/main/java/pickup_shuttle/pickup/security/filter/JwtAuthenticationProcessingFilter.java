@@ -71,7 +71,9 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         // RefreshToken까지 보낸 것이므로 리프레시 토큰이 DB의 리프레시 토큰과 일치하는지 판단 후,
         // 일치한다면 AccessToken을 재발급해준다.
         if (refreshToken != null) {
+            System.out.println("리프레시 토큰이 존재합니다.");
             checkRefreshTokenAndReIssueAccessToken(response, refreshToken);
+            filterChain.doFilter(request,response); // 다음 필터 호출
             return; // RefreshToken을 보낸 경우에는 AccessToken을 재발급 하고 인증 처리는 하지 않게 하기위해 바로 return으로 필터 진행 막기
         }
 
@@ -79,6 +81,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         // AccessToken이 없거나 유효하지 않다면, 인증 객체가 담기지 않은 상태로 다음 필터로 넘어가기 때문에 403 에러 발생
         // AccessToken이 유효하다면, 인증 객체가 담긴 상태로 다음 필터로 넘어가기 때문에 인증 성공
         if (refreshToken == null) {
+            System.out.println("리프레시 토큰이 존재하지 않습니다.");
             checkAccessTokenAndAuthentication(request, response, filterChain);
         }
     }
@@ -95,8 +98,12 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         refreshTokenRepository.findByRefreshToken(refreshToken)
                 .ifPresent(user -> {
                     String reIssuedRefreshToken = reIssueRefreshToken(user.getRefreshToken());
-                    jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(user.getUser().getUid()),
-                            reIssuedRefreshToken);
+                    try {
+                        jwtService.sendRefreshToken(response,
+                                reIssuedRefreshToken);
+                    } catch (Exception e){
+                        System.out.println(e.toString());
+                    }
                 });
     }
 
@@ -105,10 +112,12 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
      * jwtService.createRefreshToken()으로 리프레시 토큰 재발급 후
      * DB에 재발급한 리프레시 토큰 업데이트 후 Flush
      */
+
     private String reIssueRefreshToken(String refreshToken) {
         String reIssuedRefreshToken = jwtService.createRefreshToken();
         Optional<RefreshToken> oldRefreshToken = refreshTokenRepository.findByRefreshToken(refreshToken);
         oldRefreshToken.get().updateToken(reIssuedRefreshToken);
+        refreshTokenRepository.saveAndFlush(oldRefreshToken.get());
         return reIssuedRefreshToken;
     }
 
@@ -128,8 +137,8 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         }
         jwtService.extractAccessToken(request)
                 .filter(jwtService::isTokenValid)
-                .ifPresent(accessToken -> jwtService.extractEmail(accessToken)
-                        .ifPresent(email -> userRepository.findUserByEmail(email)
+                .ifPresent(accessToken -> jwtService.extractUserID(accessToken)
+                        .ifPresent(userID -> userRepository.findByUserId(Long.valueOf(userID))
                                 .ifPresent(this::saveAuthentication)));
 
         filterChain.doFilter(request, response);
