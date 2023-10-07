@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pickup_shuttle.pickup._core.errors.exception.Exception400;
 import pickup_shuttle.pickup._core.errors.exception.Exception500;
-import pickup_shuttle.pickup.config.Login;
 import pickup_shuttle.pickup.domain.beverage.BeverageRepository;
 import pickup_shuttle.pickup.domain.beverage.dto.BeverageDTO;
 import pickup_shuttle.pickup.domain.board.dto.request.BoardAgreeRqDTO;
@@ -159,10 +158,9 @@ public class BoardService {
                 .build();
     }
     public void checkListBlank(List<String> beverages) {
-        List<String> origin = beverages;
-        beverages.removeAll(Arrays.asList("",null));
-        if(origin.stream().count() != beverages.stream().count()) {
-            throw new Exception400("음료명에 빈 문자열 or null이 입력 되었습니다");
+        for(String b : beverages) {
+            if(b == null || b.isEmpty())
+                throw new Exception400("음료명에 빈 문자열 or null이 입력 되었습니다");
         }
     }
 }
