@@ -61,8 +61,8 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardWriteRpDTO write(BoardWriteRqDTO requestDTO, String userId) {
-        User user = userRepository.findBySocialId(userId).orElseThrow(
+    public BoardWriteRpDTO write(BoardWriteRqDTO requestDTO, long userId) {
+        User user = userRepository.findById(userId).orElseThrow(
                 () -> new Exception400("유저가 존재하지 않습니다")
         );
         Store store = storeRepository.findByName(requestDTO.store()).orElseThrow(
@@ -129,11 +129,11 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardAgreeRpDTO boardAgree(BoardAgreeRqDTO requestDTo, Long boardId, String socialId) {
+    public BoardAgreeRpDTO boardAgree(BoardAgreeRqDTO requestDTo, Long boardId, long userId) {
         Board board = boardRepository.mfindByBoardId(boardId).orElseThrow(
                 () -> new Exception400("공고글을 찾을 수 업습니다")
         );
-        User user = userRepository.findBySocialId(socialId).orElseThrow(
+        User user = userRepository.findById(userId).orElseThrow(
                 () -> new Exception400("유저가 존재하지 않습니다")
         );
         Match match = matchService.createMatch(requestDTo.arrivalTime(),user);
@@ -156,6 +156,25 @@ public class BoardService {
                 .request(board.getRequest())
                 .arrivalTime(board.getMatch().getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).toEpochSecond(ZoneOffset.UTC))
                 .build();
+    }
+    @Transactional
+    public void boardDelete(Long boardId, long userId){
+        // 공고글 확인
+        Board board = boardRepository.m3findByBoardId(boardId).orElseThrow(
+                () -> new Exception400("공고글을 찾을 수 없습니다")
+        );
+        // 공고글 작성자 확인
+        if(!(board.getUser().getUserId() == userId))
+            throw new Exception400("공고글의 작성자가 아닙니다");
+        // 매칭되었는지 확인
+        if(board.getMatch() != null)
+            throw new Exception400("이미 매칭된 공고글은 삭제 할 수 없습니다");
+        // 삭제
+        try {
+            boardRepository.delete(board);
+        } catch (Exception e){
+            throw new Exception500("unknown server error");
+        }
     }
     public void checkListBlank(List<String> beverages) {
         for(String b : beverages) {
