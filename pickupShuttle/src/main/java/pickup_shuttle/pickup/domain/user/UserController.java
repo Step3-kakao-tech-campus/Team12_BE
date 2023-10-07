@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import pickup_shuttle.pickup._core.utils.ApiUtils;
+import pickup_shuttle.pickup.config.Login;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
 import pickup_shuttle.pickup.domain.refreshToken.dto.response.AccessTokenRpDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
@@ -60,6 +61,11 @@ public class UserController {
         } else {
             return ResponseEntity.badRequest().body(ApiUtils.error("인증에 실패하였습니다.", HttpStatus.UNAUTHORIZED));
         }
+    }
+    @GetMapping("/mypage/auth")
+    public ResponseEntity<?> userAuthStatus(@Login String userId){
+        String status = userService.userAuthStatus(Long.parseLong(userId));
+        return ResponseEntity.ok(ApiUtils.success(status));
     }
 
 }
