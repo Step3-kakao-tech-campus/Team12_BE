@@ -16,7 +16,7 @@ import java.util.List;
 @Builder
 public record BoardWriteRqDTO(
         @NotBlank(message = "가게가 공백입니다") String store,
-        @NotEmpty(message = "음료가 공백입니다") List<String> beverage,
+        List<String> beverage,
         @NotBlank(message = "위치가 공백입니다") String destination,
         @PositiveOrZero(message = "픽업팁이 음수입니다") int tip,
         String request,
