@@ -55,6 +55,7 @@ public class BoardService {
                         .finishedAt(b.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
                         .tip(b.getTip())
                         .match(b.isMatch())
+                        .destination(b.getDestination())
                         .build())
                 .toList();
         return new SliceImpl<>(boardBoardListRpDTO,pageRequest,boardSlice.hasNext());
