@@ -29,9 +29,10 @@ public class BoardController {
     }
 
     @PostMapping("/write")
-    public ResponseEntity<?> write(@RequestBody @Valid BoardWriteRqDTO requestDTO, @Login String socialId){
+    public ResponseEntity<?> write(@RequestBody @Valid BoardWriteRqDTO requestDTO,
+                                   @Login Long userId){
         boardService.checkListBlank(requestDTO.beverage());
-        BoardWriteRpDTO responseDTO = boardService.write(requestDTO, socialId);
+        BoardWriteRpDTO responseDTO = boardService.write(requestDTO, userId);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 
@@ -49,9 +50,14 @@ public class BoardController {
     @PostMapping("/agree/{boardId}")
     public ResponseEntity<?> pickupAgree(@PathVariable("boardId") Long boardId,
                                          @RequestBody @Valid BoardAgreeRqDTO requestDTO,
-                                         @Login String socialId) {
-        BoardAgreeRpDTO responseDTO = boardService.boardAgree(requestDTO,boardId,socialId);
+                                         @Login Long userId) {
+        BoardAgreeRpDTO responseDTO = boardService.boardAgree(requestDTO,boardId,userId);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
-
+    @DeleteMapping("/delete/{boardId}")
+    public ResponseEntity<?> delete(@PathVariable("boardId") Long boardId,
+                                    @Login Long userId){
+        boardService.boardDelete(boardId, userId);
+        return ResponseEntity.ok(ApiUtils.success("공고글 삭제 완료"));
+    }
 }

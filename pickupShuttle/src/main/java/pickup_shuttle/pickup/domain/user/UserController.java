@@ -11,13 +11,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import pickup_shuttle.pickup._core.utils.ApiUtils;
+import pickup_shuttle.pickup.config.Login;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
 import pickup_shuttle.pickup.domain.refreshToken.dto.response.AccessTokenRpDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 import pickup_shuttle.pickup.security.service.JwtService;
 
-import java.util.HashMap;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -60,6 +59,11 @@ public class UserController {
         } else {
             return ResponseEntity.badRequest().body(ApiUtils.error("인증에 실패하였습니다.", HttpStatus.UNAUTHORIZED));
         }
+    }
+    @GetMapping("/mypage/auth")
+    public ResponseEntity<?> userAuthStatus(@Login Long userId){
+        String status = userService.userAuthStatus(userId);
+        return ResponseEntity.ok(ApiUtils.success(status));
     }
 
 }
