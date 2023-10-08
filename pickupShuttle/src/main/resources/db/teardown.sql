@@ -20,9 +20,9 @@ INSERT INTO user_tb (`uid`,`nickname`, `phone_number`, `name`, `bank`, `account`
 INSERT INTO user_tb (`uid`,`nickname`, `phone_number`, `name`, `bank`, `account`, `social_id`, `role`,`url`) VALUES ('honggildong4', 'student', '010-0000-1234','홍길동', '농협', '000-0000-0000-000', '5555', '2','https://aws.amazon.com/');
 
 insert into store_tb(`id`,`name`) values ('1', '전남대 후문 스타벅스');
+
 insert into store_tb(`name`) values ('starbucks');
 
-
 insert into board_tb(`tip`, `created_at`, `finished_at`, `is_match`, `destination`, `request`, `user_id`, `store_id`) values ('1000', '2023-09-30 00:14', '2023-09-30 02:24', 'N', '전남대 공대7 217호관', '빨리 와주세요', '1', '1');
 
 insert into board_tb(`tip`, `created_at`, `finished_at`, `is_match`, `destination`, `request`, `user_id`, `store_id`) values ('1000', '2023-09-30 00:14', '2023-09-30 02:24', 'N', '전남대 공대7 217호관', '빨리 와주세요', '1', '1');
@@ -32,8 +32,6 @@ insert into board_tb(`tip`, `created_at`, `finished_at`, `is_match`, `destinatio
 insert into board_tb(`tip`, `created_at`, `finished_at`, `is_match`, `destination`, `request`, `user_id`, `store_id`) values ('1000', '2023-09-30 00:14', '2023-09-30 02:24', 'N', '전남대 공대7 217호관', '빨리 와주세요', '2', '1');
 
 insert into board_tb(`tip`, `created_at`, `finished_at`, `is_match`, `destination`, `request`, `user_id`, `store_id`) values ('1000', '2023-09-30 00:14', '2023-09-30 02:24', 'N', '전남대 공대7 217호관', '빨리 와주세요', '2', '1');
-
-
 
 insert into beverage_tb(`board_id`, `name`) values ('1', '핫 아메리카노');
 

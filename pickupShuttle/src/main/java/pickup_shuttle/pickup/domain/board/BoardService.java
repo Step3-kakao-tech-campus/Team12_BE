@@ -134,6 +134,9 @@ public class BoardService {
         Board board = boardRepository.mfindByBoardId(boardId).orElseThrow(
                 () -> new Exception400("공고글을 찾을 수 업습니다")
         );
+        if(board.getMatch() != null) {
+            throw new Exception400("공고글이 이미 매칭 됐습니다");
+        }
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new Exception400("유저가 존재하지 않습니다")
         );
@@ -142,6 +145,7 @@ public class BoardService {
             throw new Exception400("공고글 작성자는 매칭 수락을 할 수 없습니다");
         }
         board.updateMatch(match);
+        board.updateIsMatch(true);
         List<BeverageDTO> beverageDTOS = board.getBeverages().stream().map(
                 b -> BeverageDTO.builder()
                         .name(b.getName())
