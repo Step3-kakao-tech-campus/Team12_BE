@@ -20,7 +20,7 @@ public class LoginUserArgument implements HandlerMethodArgumentResolver {
     public boolean supportsParameter(MethodParameter parameter) {
         // @Login 어노테이션이 붙어있어야 하고
         boolean hasLoginAnnotation = parameter.hasParameterAnnotation(Login.class);
-        // @Login이 붙은 것은 타입이 Member 클래스여야 한다.
+        // @Login이 붙은 것은 타입이 Long 클래스여야 한다.
         boolean hasLongType = Long.class.isAssignableFrom(parameter.getParameterType());
         return hasLoginAnnotation && hasLongType;
     }

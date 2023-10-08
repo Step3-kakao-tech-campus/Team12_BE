@@ -21,8 +21,7 @@ public class BoardController {
     private final JwtService jwtService;
     @GetMapping
     public ResponseEntity<?> getBoardList(
-            @RequestParam(value = "offset" +
-                    "", required = false) Long lastBoardId,
+            @RequestParam(value = "offset",required = false) Long lastBoardId,
             @RequestParam(value = "limit",defaultValue = "10") int size) {
         Slice<BoardListRpDTO> responseDTOSlice = boardService.boardList(lastBoardId, size);
         return ResponseEntity.ok(ApiUtils.success(responseDTOSlice));

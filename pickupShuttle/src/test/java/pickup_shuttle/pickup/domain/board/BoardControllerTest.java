@@ -349,6 +349,8 @@ public class BoardControllerTest {
     @Nested
     class testBoardAgree {
         @Test
+        @DisplayName("성공")
+        // teardown.sql의 44번째 , 46번째 Query를 주석처리 하고 테스트를 진행한다.
         void testBoardAgree() throws Exception{
             //given
             Long boardId = 1L;
@@ -402,6 +404,37 @@ public class BoardControllerTest {
             //then
             resultActions.andExpect(jsonPath("$.success").value("false"));
             resultActions.andExpect(jsonPath("$.error.message").value("공고글 작성자는 매칭 수락을 할 수 없습니다"));
+            resultActions.andExpect(jsonPath("$.error.status").value(400));
+
+        }
+
+        @Test
+        @DisplayName("공고글이 이미 매칭 된 경우")
+        // teardown.sql의 44번째 , 46번째 Query 주석을 풀고  테스트를 진행한다.
+        void testFailBoardAgree2() throws Exception{
+            //given
+            Long boardId = 1L;
+            String accessToken = jwtService.createAccessToken("2");
+            BoardAgreeRqDTO requestDTO = BoardAgreeRqDTO.builder()
+                    .arrivalTime(30)
+                    .build();
+            String requestBody = om.writeValueAsString(requestDTO);
+
+            //when
+            ResultActions resultActions = mvc.perform(
+                    post("/articles/agree/{boardId}", boardId)
+                            .content(requestBody)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", accessToken)
+            );
+
+            //eye
+            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+            System.out.println("testBoardAgree : " + responseBody);
+
+            //then
+            resultActions.andExpect(jsonPath("$.success").value("false"));
+            resultActions.andExpect(jsonPath("$.error.message").value("공고글이 이미 매칭 됐습니다"));
             resultActions.andExpect(jsonPath("$.error.status").value(400));
 
         }
