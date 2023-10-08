@@ -61,31 +61,31 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                 createdUser.getUserRole()
         );
     }
-        /**
-         * SocialType과 attributes에 들어있는 소셜 로그인의 식별값 id를 통해 회원을 찾아 반환하는 메소드
-         * 만약 찾은 회원이 있다면, 그대로 반환하고 없다면 saveUser()를 호출하여 회원을 저장한다.
-         */
+    /**
+     * SocialType과 attributes에 들어있는 소셜 로그인의 식별값 id를 통해 회원을 찾아 반환하는 메소드
+     * 만약 찾은 회원이 있다면, 그대로 반환하고 없다면 saveUser()를 호출하여 회원을 저장한다.
+     */
 
 
-        private User getUser(OAuthAttributes attributes) {
-            System.out.println("getId는: " + attributes.getKakaoOAuth2UserInfo().getId());
-            User findUser = userRepository.findBySocialId(attributes.getKakaoOAuth2UserInfo().getId()).orElse(null);
+    private User getUser(OAuthAttributes attributes) {
+        System.out.println("getId는: " + attributes.getKakaoOAuth2UserInfo().getId());
+        User findUser = userRepository.findBySocialId(attributes.getKakaoOAuth2UserInfo().getId()).orElse(null);
 
-            if (findUser == null) {
-                return saveUser(attributes);
-            }
-            return findUser;
+        if (findUser == null) {
+            return saveUser(attributes);
         }
-        /**
-         * OAuthAttributes의 toEntity() 메소드를 통해 빌더로 User 객체 생성 후 반환
-         * 생성된 User 객체를 DB에 저장 : socialType, socialId, email, role 값만 있는 상태
-         */
-
-        private User saveUser(OAuthAttributes attributes){
-            User createdUser = attributes.toEntity(attributes.getKakaoOAuth2UserInfo());
-            return userRepository.save(createdUser);
-        }
-
+        return findUser;
     }
+    /**
+     * OAuthAttributes의 toEntity() 메소드를 통해 빌더로 User 객체 생성 후 반환
+     * 생성된 User 객체를 DB에 저장 : socialType, socialId, email, role 값만 있는 상태
+     */
+
+    private User saveUser(OAuthAttributes attributes){
+        User createdUser = attributes.toEntity(attributes.getKakaoOAuth2UserInfo());
+        return userRepository.save(createdUser);
+    }
+
+}
 
 

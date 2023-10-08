@@ -13,6 +13,7 @@ import java.util.Map;
 @Getter
 public class CustomOauth2User extends DefaultOAuth2User {
 
+    // getName으로 가져온 정보는 USER 엔티티의 SocialID랑 같다.
     private String email;
     private String bankName;
     private String accountNum;

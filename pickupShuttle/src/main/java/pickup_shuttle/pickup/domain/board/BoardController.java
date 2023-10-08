@@ -1,20 +1,15 @@
 package pickup_shuttle.pickup.domain.board;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pickup_shuttle.pickup._core.errors.exception.Exception400;
 import pickup_shuttle.pickup._core.utils.ApiUtils;
-
 import pickup_shuttle.pickup.config.Login;
 import pickup_shuttle.pickup.domain.board.dto.request.BoardAgreeRqDTO;
 import pickup_shuttle.pickup.domain.board.dto.request.BoardWriteRqDTO;
 import pickup_shuttle.pickup.domain.board.dto.response.*;
-
-import pickup_shuttle.pickup.domain.user.User;
 import pickup_shuttle.pickup.security.service.JwtService;
 
 
@@ -26,17 +21,17 @@ public class BoardController {
     private final JwtService jwtService;
     @GetMapping
     public ResponseEntity<?> getBoardList(
-            @RequestParam(value = "offset" +
-                    "", required = false) Long lastBoardId,
+            @RequestParam(value = "offset",required = false) Long lastBoardId,
             @RequestParam(value = "limit",defaultValue = "10") int size) {
         Slice<BoardListRpDTO> responseDTOSlice = boardService.boardList(lastBoardId, size);
         return ResponseEntity.ok(ApiUtils.success(responseDTOSlice));
     }
 
     @PostMapping("/write")
-    public ResponseEntity<?> write(@RequestBody @Valid BoardWriteRqDTO requestDTO, @Login String socialId){
+    public ResponseEntity<?> write(@RequestBody @Valid BoardWriteRqDTO requestDTO,
+                                   @Login Long userId){
         boardService.checkListBlank(requestDTO.beverage());
-        BoardWriteRpDTO responseDTO = boardService.write(requestDTO, socialId);
+        BoardWriteRpDTO responseDTO = boardService.write(requestDTO, userId);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 
@@ -54,9 +49,14 @@ public class BoardController {
     @PostMapping("/agree/{boardId}")
     public ResponseEntity<?> pickupAgree(@PathVariable("boardId") Long boardId,
                                          @RequestBody @Valid BoardAgreeRqDTO requestDTO,
-                                         @Login String socialId) {
-        BoardAgreeRpDTO responseDTO = boardService.boardAgree(requestDTO,boardId,socialId);
+                                         @Login Long userId) {
+        BoardAgreeRpDTO responseDTO = boardService.boardAgree(requestDTO,boardId,userId);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
-
+    @DeleteMapping("/delete/{boardId}")
+    public ResponseEntity<?> delete(@PathVariable("boardId") Long boardId,
+                                    @Login Long userId){
+        boardService.boardDelete(boardId, userId);
+        return ResponseEntity.ok(ApiUtils.success("공고글 삭제 완료"));
+    }
 }
