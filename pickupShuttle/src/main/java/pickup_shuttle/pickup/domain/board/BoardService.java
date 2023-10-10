@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pickup_shuttle.pickup._core.errors.exception.Exception400;
 import pickup_shuttle.pickup._core.errors.exception.Exception500;
+import pickup_shuttle.pickup.config.ErrorMessage;
 import pickup_shuttle.pickup.domain.beverage.BeverageRepository;
 import pickup_shuttle.pickup.domain.beverage.dto.BeverageDTO;
 import pickup_shuttle.pickup.domain.board.dto.request.BoardAgreeRqDTO;
@@ -25,7 +26,6 @@ import pickup_shuttle.pickup.domain.user.UserRepository;
 import pickup_shuttle.pickup.security.service.JwtService;
 
 import java.time.ZoneOffset;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -64,10 +64,10 @@ public class BoardService {
     @Transactional
     public BoardWriteRpDTO write(BoardWriteRqDTO requestDTO, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new Exception400("유저가 존재하지 않습니다")
+                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
         );
         Store store = storeRepository.findByName(requestDTO.store()).orElseThrow(
-                () -> new Exception400("가게가 존재하지 않습니다")
+                () -> new Exception400(ErrorMessage.UNKNOWN_STORE)
         );
         Board board = requestDTO.toBoard(user, store);
         try {
@@ -80,7 +80,7 @@ public class BoardService {
     }
     public BoardDetailBeforeRpDTO boardDetailBefore(Long boardId) {
         Board board = boardRepository.mfindByBoardId(boardId).orElseThrow(
-                () -> new Exception400("공고글을 찾을 수 없습니다")
+                () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
         );
         List<BeverageDTO> beverageDTOS = board.getBeverages().stream().map(
                 b -> BeverageDTO.builder()
@@ -101,7 +101,7 @@ public class BoardService {
     //select 2번
     public BoardDetailAfterRpDTO boardDetailAfter(Long boardId) {
         Board board = boardRepository.m2findByBoardId(boardId).orElseThrow(
-                () -> new Exception400("공고글을 찾을 수 없습니다")
+                () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
         );
         User user = userRepository.findByUserId(board.getMatch().getUser().getUserId()).orElseThrow(
                 () -> new Exception400("매칭 된 picker를 찾을 수 없습니다")
@@ -132,7 +132,7 @@ public class BoardService {
     @Transactional
     public BoardAgreeRpDTO boardAgree(BoardAgreeRqDTO requestDTo, Long boardId, Long userId) {
         Board board = boardRepository.mfindByBoardId(boardId).orElseThrow(
-                () -> new Exception400("공고글을 찾을 수 업습니다")
+                () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
         );
         if(board.getMatch() != null) {
             throw new Exception400("공고글이 이미 매칭 됐습니다");
@@ -166,7 +166,7 @@ public class BoardService {
     public void boardDelete(Long boardId, Long userId){
         // 공고글 확인
         Board board = boardRepository.m3findByBoardId(boardId).orElseThrow(
-                () -> new Exception400("공고글을 찾을 수 없습니다")
+                () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
         );
         // 공고글 작성자 확인
         if(!(board.getUser().getUserId().equals(userId)))

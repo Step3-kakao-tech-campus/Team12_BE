@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pickup_shuttle.pickup._core.errors.exception.Exception400;
+import pickup_shuttle.pickup.config.ErrorMessage;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 
@@ -29,7 +30,7 @@ public class UserService {
     }
     public String userAuthStatus(Long userId){
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new Exception400("유저를 찾을 수 없습니다")
+                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
         );
         String userRole = user.getUserRole().getValue();
         String userUrl = user.getUrl();

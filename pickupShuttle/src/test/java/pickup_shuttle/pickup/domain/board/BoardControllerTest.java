@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import pickup_shuttle.pickup.config.ErrorMessage;
 import pickup_shuttle.pickup.domain.board.dto.request.BoardAgreeRqDTO;
 import pickup_shuttle.pickup.domain.board.dto.request.BoardWriteRqDTO;
 import pickup_shuttle.pickup.security.service.JwtService;
@@ -180,7 +181,7 @@ public class BoardControllerTest {
 
             //then
             resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("가게가 존재하지 않습니다"));
+            resultActions.andExpect(jsonPath("$.error.message").value(ErrorMessage.UNKNOWN_STORE));
             resultActions.andExpect(jsonPath("$.error.status").value(400));
         }
         @Test
@@ -381,6 +382,7 @@ public class BoardControllerTest {
 
         @Test()
         @DisplayName("공고글 작성자가 매칭 수락 한 경우")
+        // teardown.sql의 44번째 , 46번째 Query를 주석처리 하고 테스트를 진행한다.
         void testFailBoardAgree() throws Exception {
             Long boardId = 1L;
             String accessToken = "Bearer " + jwtService.createAccessToken("1");
@@ -524,7 +526,7 @@ public class BoardControllerTest {
 
             //then
             resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("공고글을 찾을 수 없습니다"));
+            resultActions.andExpect(jsonPath("$.error.message").value(ErrorMessage.UNKNOWN_BOARD));
         }
     }
 }
