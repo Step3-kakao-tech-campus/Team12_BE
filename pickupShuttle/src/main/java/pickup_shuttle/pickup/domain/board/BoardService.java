@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pickup_shuttle.pickup._core.errors.exception.Exception400;
 import pickup_shuttle.pickup._core.errors.exception.Exception500;
-import pickup_shuttle.pickup.config.Login;
 import pickup_shuttle.pickup.domain.beverage.BeverageRepository;
 import pickup_shuttle.pickup.domain.beverage.dto.BeverageDTO;
 import pickup_shuttle.pickup.domain.board.dto.request.BoardAgreeRqDTO;
@@ -56,14 +55,15 @@ public class BoardService {
                         .finishedAt(b.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
                         .tip(b.getTip())
                         .match(b.isMatch())
+                        .destination(b.getDestination())
                         .build())
                 .toList();
         return new SliceImpl<>(boardBoardListRpDTO,pageRequest,boardSlice.hasNext());
     }
 
     @Transactional
-    public BoardWriteRpDTO write(BoardWriteRqDTO requestDTO, String userId) {
-        User user = userRepository.findBySocialId(userId).orElseThrow(
+    public BoardWriteRpDTO write(BoardWriteRqDTO requestDTO, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(
                 () -> new Exception400("유저가 존재하지 않습니다")
         );
         Store store = storeRepository.findByName(requestDTO.store()).orElseThrow(
@@ -130,11 +130,14 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardAgreeRpDTO boardAgree(BoardAgreeRqDTO requestDTo, Long boardId, String socialId) {
+    public BoardAgreeRpDTO boardAgree(BoardAgreeRqDTO requestDTo, Long boardId, Long userId) {
         Board board = boardRepository.mfindByBoardId(boardId).orElseThrow(
                 () -> new Exception400("공고글을 찾을 수 업습니다")
         );
-        User user = userRepository.findBySocialId(socialId).orElseThrow(
+        if(board.getMatch() != null) {
+            throw new Exception400("공고글이 이미 매칭 됐습니다");
+        }
+        User user = userRepository.findById(userId).orElseThrow(
                 () -> new Exception400("유저가 존재하지 않습니다")
         );
         Match match = matchService.createMatch(requestDTo.arrivalTime(),user);
@@ -142,6 +145,7 @@ public class BoardService {
             throw new Exception400("공고글 작성자는 매칭 수락을 할 수 없습니다");
         }
         board.updateMatch(match);
+        board.updateIsMatch(true);
         List<BeverageDTO> beverageDTOS = board.getBeverages().stream().map(
                 b -> BeverageDTO.builder()
                         .name(b.getName())
@@ -158,11 +162,29 @@ public class BoardService {
                 .arrivalTime(board.getMatch().getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).toEpochSecond(ZoneOffset.UTC))
                 .build();
     }
+    @Transactional
+    public void boardDelete(Long boardId, Long userId){
+        // 공고글 확인
+        Board board = boardRepository.m3findByBoardId(boardId).orElseThrow(
+                () -> new Exception400("공고글을 찾을 수 없습니다")
+        );
+        // 공고글 작성자 확인
+        if(!(board.getUser().getUserId().equals(userId)))
+            throw new Exception400("공고글의 작성자가 아닙니다");
+        // 매칭되었는지 확인
+        if(board.getMatch() != null)
+            throw new Exception400("이미 매칭된 공고글은 삭제 할 수 없습니다");
+        // 삭제
+        try {
+            boardRepository.delete(board);
+        } catch (Exception e){
+            throw new Exception500("unknown server error");
+        }
+    }
     public void checkListBlank(List<String> beverages) {
-        List<String> origin = beverages;
-        beverages.removeAll(Arrays.asList("",null));
-        if(origin.stream().count() != beverages.stream().count()) {
-            throw new Exception400("음료명에 빈 문자열 or null이 입력 되었습니다");
+        for(String b : beverages) {
+            if(b == null || b.isEmpty())
+                throw new Exception400("음료명에 빈 문자열 or null이 입력 되었습니다");
         }
     }
 }

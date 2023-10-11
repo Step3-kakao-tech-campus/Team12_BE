@@ -12,5 +12,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     Optional<Board> mfindByBoardId(@Param("boardId") Long boardId);
     @Query("select b from Board b join fetch b.store join fetch b.match where b.boardId =:boardId")
     Optional<Board> m2findByBoardId(@Param("boardId") Long boardId);
-
+    @Query("select b from Board b join fetch b.beverages where b.boardId =:boardId")
+    Optional<Board> m3findByBoardId(@Param("boardId") Long boardId);
 }
