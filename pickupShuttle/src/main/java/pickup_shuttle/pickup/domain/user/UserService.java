@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pickup_shuttle.pickup._core.errors.exception.Exception400;
 import pickup_shuttle.pickup.config.ErrorMessage;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
+import pickup_shuttle.pickup.domain.user.dto.request.ModifyUserRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 
 import java.util.Optional;
@@ -40,5 +41,29 @@ public class UserService {
             default : return "미인증";
         }
     }
+
+    @Transactional
+    public boolean modifyUser(ModifyUserRqDTO modifyUserRqDTO, Long userId){
+        Optional<User> user = userRepository.findByUserId(userId);
+        if(user.isEmpty()){
+            return false;
+        }
+        String userBankName = user.get().getBank();
+        String userAccountNum = user.get().getAccount();
+        if(modifyUserRqDTO.account() != userAccountNum){
+            user.get().setAccount(modifyUserRqDTO.account());
+        }
+        if(modifyUserRqDTO.bank() != userBankName){
+            user.get().setBank(modifyUserRqDTO.bank());
+        }
+        return true;
+    }
+
+    public long userPK(CustomOauth2User customOauth2User){
+        Optional<User> user = userRepository.findBySocialId(customOauth2User.getName());
+        long userPK = user.get().getUserId();
+        return userPK;
+    }
+
 
 }

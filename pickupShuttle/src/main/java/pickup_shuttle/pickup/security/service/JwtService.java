@@ -12,6 +12,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pickup_shuttle.pickup.domain.refreshToken.RefreshToken;
 import pickup_shuttle.pickup.domain.refreshToken.RefreshTokenRepository;
 import pickup_shuttle.pickup.domain.user.User;
@@ -24,6 +25,7 @@ import java.util.Optional;
 @Getter
 @Log4j2
 @Service
+@Transactional
 @PropertySource("classpath:application.properties")
 public class JwtService {
 
