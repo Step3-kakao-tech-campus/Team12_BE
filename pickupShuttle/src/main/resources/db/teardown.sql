@@ -41,6 +41,6 @@ insert into beverage_tb(`board_id`, `name`) values ('4', '핫 아메리카노');
 
 insert into beverage_tb(`board_id`, `name`) values ('4', '아이스 아메리카노');
 
-insert into match_tb(`id`, `arrival_time`, `match_time`, `user_id`) values ('1', '5', '2023-09-30 02:34', '2');
-
-update board_tb set `is_match` = 'Y', `match_id` = '1' where `id` = '1';
+# insert into match_tb(`id`, `arrival_time`, `match_time`, `user_id`) values ('1', '5', '2023-09-30 02:34', '2');
+#
+# update board_tb set `is_match` = 'Y', `match_id` = '1' where `id` = '1';
