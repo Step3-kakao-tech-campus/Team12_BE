@@ -46,7 +46,7 @@ public class JwtService {
     private String refreshHeader;
 
     /**
-     * JWT의 Subject와 Claim으로 email 사용 -> 클레임의 name을 "email"으로 설정
+     * JWT의 Subject와 Claim으로 email 사용 -> 클레임의 name을 "userPKID"으로 설정
      * JWT의 헤더에 들어오는 값 : 'Authorization(Key) = Bearer {토큰} (Value)' 형식
      */
     private static final String ACCESS_TOKEN_SUBJECT = "AccessToken";
@@ -79,7 +79,7 @@ public class JwtService {
 
 
     /**
-     * Refresh Token, 쿠키 발급
+     * Refresh Token, 쿠키로 구워줌.
      */
     public void sendRefreshToken(HttpServletResponse response, String refreshToken){
         response.setStatus(HttpServletResponse.SC_OK);
@@ -92,9 +92,7 @@ public class JwtService {
     }
 
     /**
-     * 헤더에서 RefreshToken 추출
-     * 토큰 형식 : Bearer XXX에서 Bearer를 제외하고 순수 토큰만 가져오기 위해서
-     * 헤더를 가져온 후 "Bearer"를 삭제(""로 replace)
+     * 쿠키에서 RefreshToken 추출
      */
     public Optional<String> extractRefreshToken(HttpServletRequest request) {
         Cookie[] cookies=request.getCookies(); // 모든 쿠키 가져오기
@@ -124,10 +122,10 @@ public class JwtService {
     }
 
     /**
-     * AccessToken에서 Email 추출
+     * AccessToken에서 userPK 추출
      * 추출 전에 JWT.require()로 검증기 생성
      * verify로 AceessToken 검증 후
-     * 유효하다면 getClaim()으로 PK 추출
+     * 유효하다면 getClaim()으로 userPK 추출
      * 유효하지 않다면 빈 Optional 객체 반환
      */
     public Optional<String> extractUserID(String accessToken) {

@@ -55,7 +55,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     /**
      *  [리프레시 토큰으로 유저 정보 찾기 & 액세스 토큰/리프레시 토큰 재발급 메소드]
      *  파라미터로 들어온 헤더에서 추출한 리프레시 토큰으로 DB에서 유저를 찾고, 해당 유저가 있다면
-     *  리프레시 토큰과 함께 엑세스 토큰 생성,
+     *  리프레시 토큰과 함께 엑세스 토큰 생성, (주석 처리 한 곳이 무한 리다이렉트 현상 발생, 수정 예정)
      */
 
     public void checkRefreshTokenAndReIssueAccessToken(HttpServletRequest request,HttpServletResponse response, String refreshToken) throws IOException, ServletException{
