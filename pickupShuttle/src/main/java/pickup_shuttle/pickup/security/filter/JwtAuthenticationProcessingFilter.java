@@ -42,7 +42,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if(request.getRequestURI().equals(NO_CHECK_URL)){
-            filterChain.doFilter(request,response); // "/login" 요청이 들어오면, 다음 필터 호출
+            filterChain.doFilter(request,response); // "/login/callback" 요청이 들어오면, 다음 필터 호출
             return;  // return으로 이후 현재 필터 진행 막기 (안해주면 아래로 내려가서 계속 필터 진행시킴)
         }
 
@@ -97,6 +97,10 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
             System.out.println("추출된 엑세스 토큰: " + jwtService.extractAccessToken(request).get());
         }
         try {
+            Optional<String> accessTokenStr = jwtService.extractAccessToken(request).filter(jwtService::isTokenValid);
+            if(accessTokenStr.isEmpty()){
+                throw new Exception("유효하지 않은 엑세스 토큰입니다.");
+            }
             jwtService.extractAccessToken(request)
                     .filter(jwtService::isTokenValid)
                     .ifPresent(accessToken -> jwtService.extractUserID(accessToken)
@@ -121,6 +125,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
             }
         }
     }
+
 
 
     public void saveAuthentication(User myUser) {
