@@ -50,7 +50,7 @@ public class SecurityConfig {
                         .requestMatchers(new AntPathRequestMatcher("/admin")).hasAuthority("ROLE_ADMIN")
                         .requestMatchers(new AntPathRequestMatcher("/users/register/input")).hasAuthority("ROLE_GUEST")
                         .requestMatchers(
-                                new AntPathRequestMatcher("/**"),
+                                new AntPathRequestMatcher("/"),
                                 new AntPathRequestMatcher("/css/**"),
                                 new AntPathRequestMatcher("/images/**"),
                                 new AntPathRequestMatcher("/js/**"),

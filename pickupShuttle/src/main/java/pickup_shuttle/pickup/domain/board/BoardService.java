@@ -103,7 +103,7 @@ public class BoardService {
         Board board = boardRepository.m2findByBoardId(boardId).orElseThrow(
                 () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
         );
-        User user = userRepository.findByUserId(board.getMatch().getUser().getUserId()).orElseThrow(
+        User user = userRepository.findById(board.getMatch().getUser().getUserId()).orElseThrow(
                 () -> new Exception400("매칭 된 picker를 찾을 수 없습니다")
         );
         List<BeverageDTO> beverageDTOS = board.getBeverages().stream().map(

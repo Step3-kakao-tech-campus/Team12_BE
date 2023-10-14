@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pickup_shuttle.pickup._core.errors.exception.Exception400;
 import pickup_shuttle.pickup.config.ErrorMessage;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
-import pickup_shuttle.pickup.domain.user.dto.request.ModifyUserRqDTO;
+import pickup_shuttle.pickup.domain.user.dto.request.UserModifyRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 
 import java.util.Optional;
@@ -43,18 +43,18 @@ public class UserService {
     }
 
     @Transactional
-    public boolean modifyUser(ModifyUserRqDTO modifyUserRqDTO, Long userId){
-        Optional<User> user = userRepository.findByUserId(userId);
+    public boolean modifyUser(UserModifyRqDTO userModifyRqDTO, Long userId){
+        Optional<User> user = userRepository.findById(userId);
         if(user.isEmpty()){
             return false;
         }
         String userBankName = user.get().getBank();
         String userAccountNum = user.get().getAccount();
-        if(modifyUserRqDTO.account() != userAccountNum){
-            user.get().setAccount(modifyUserRqDTO.account());
+        if(userModifyRqDTO.account() != userAccountNum){
+            user.get().setAccount(userModifyRqDTO.account());
         }
-        if(modifyUserRqDTO.bank() != userBankName){
-            user.get().setBank(modifyUserRqDTO.bank());
+        if(userModifyRqDTO.bank() != userBankName){
+            user.get().setBank(userModifyRqDTO.bank());
         }
         return true;
     }

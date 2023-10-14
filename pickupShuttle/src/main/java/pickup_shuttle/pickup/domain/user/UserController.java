@@ -1,21 +1,20 @@
 package pickup_shuttle.pickup.domain.user;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import pickup_shuttle.pickup._core.utils.ApiUtils;
 import pickup_shuttle.pickup.config.Login;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
 import pickup_shuttle.pickup.domain.refreshToken.dto.response.AccessTokenRpDTO;
 import pickup_shuttle.pickup.domain.refreshToken.dto.response.RefreshTokenRpDTO;
-import pickup_shuttle.pickup.domain.user.dto.request.ModifyUserRqDTO;
+import pickup_shuttle.pickup.domain.user.dto.request.UserModifyRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.response.ModifyUserRpDTO;
 import pickup_shuttle.pickup.security.service.JwtService;
@@ -65,10 +64,6 @@ public class UserController {
         }
     }
 
-    @GetMapping("/login/expire")
-    public ResponseEntity<?> expireRefreshToken(Authentication authentication){
-        return ResponseEntity.ok().body(ApiUtils.success(RefreshTokenRpDTO.builder().RefreshToken("RefreshToken이 잘못되었거나 만료되었습니다.").build()));
-    }
 
     @GetMapping("/mypage/auth")
     public ResponseEntity<?> userAuthStatus(@Login Long userId){
@@ -84,9 +79,9 @@ public class UserController {
         return modelAndView;
     }
 
-    @PostMapping("/mypage/modify")
-    public ResponseEntity<?> userModify(@Login Long id , ModifyUserRqDTO modifyUserRqDTO){
-        boolean authUser = userService.modifyUser(modifyUserRqDTO, id);
+    @PutMapping("/mypage/modify")
+    public ResponseEntity<?> userModify(@Login Long id ,@RequestBody @Valid UserModifyRqDTO userModifyRqDTO){
+        boolean authUser = userService.modifyUser(userModifyRqDTO, id);
         if(authUser){
             return ResponseEntity.ok().body(ApiUtils.success(ModifyUserRpDTO.builder().response("회원 수정이 완료되었습니다").build()));
         } else {

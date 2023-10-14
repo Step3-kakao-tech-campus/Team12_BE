@@ -30,7 +30,7 @@ import java.util.Optional;
 @Log4j2
 public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
-    private static final String NO_CHECK_URL = "/login";
+    private static final String NO_CHECK_URL = "/login/callback";
 
     private final JwtService jwtService;
     private final UserRepository userRepository;
@@ -66,10 +66,9 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                     try {
                         jwtService.sendRefreshToken(response,
                                 reIssuedRefreshToken);
-                  //      redirectStrategy.sendRedirect(request,response, "/login/callback");
+                        redirectStrategy.sendRedirect(request,response, "/login/callback");
                     } catch (Exception e){
                         new Exception400("해당 리프레시 토큰으로 회원 정보를 찾을 수 없습니다.");
-                        return; // 필터 진행을 막습니다.
                     }
                 });
     }
@@ -101,12 +100,14 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
             jwtService.extractAccessToken(request)
                     .filter(jwtService::isTokenValid)
                     .ifPresent(accessToken -> jwtService.extractUserID(accessToken)
-                            .ifPresent(userID -> userRepository.findByUserId(Long.valueOf(userID))
+                            .ifPresent(userID -> userRepository.findById(Long.valueOf(userID))
                                     .ifPresent(this::saveAuthentication)));
             // 엑세스 토큰 인증되었으면 로그인 처리 (다음 필터 진행)
+            System.out.println("엑세스 토큰이 인증되었습니다.");
             filterChain.doFilter(request, response);
         } catch (Exception e){
             // 엑세스 토큰 검증 실패 후 리프레시 토큰 확인
+            System.out.println("엑세스 토큰 인증 실패!" + e.getMessage() + " " + e.getStackTrace() + " " + e.getLocalizedMessage());
             String refreshToken = jwtService.extractRefreshToken(request)
                     .filter(jwtService::isTokenValid)
                     .orElse(null);
@@ -116,29 +117,31 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
             } else {
                 // 올바르지 않은 리프레시 토큰에 대한 예외처리 (관련 페이지 리다이렉트)
-                redirectStrategy.sendRedirect(request,response, "/login/expire");
-                return; // 필터 진행을 막는다.
+                new Exception400("RefreshToken이 잘못되었거나 만료되었습니다");
             }
         }
     }
 
 
     public void saveAuthentication(User myUser) {
+        System.out.println("saveAuthentication 실행");
+        System.out.println("유저 이름: " + myUser.getName());
         String password = myUser.getPwd();
         if (password == null) { // 소셜 로그인 유저의 비밀번호 임의로 설정 하여 소셜 로그인 유저도 인증 되도록 설정
             password = PasswordUtil.generateRandomPassword();
         }
 
         UserDetails userDetailsUser = org.springframework.security.core.userdetails.User.builder()
-                .username(myUser.getUid())
+                .username(myUser.getSocialId()) // 식별값인 SocialId를 userDetails의 username에 저장하여 인증처리
                 .password(password)
                 .roles(myUser.getUserRole().name())
                 .build();
-
+        System.out.println("saveAuthentication userDetailsUser.getUsername(): " + userDetailsUser.getUsername());
         Authentication authentication =
                 new UsernamePasswordAuthenticationToken(userDetailsUser, null,
                         authoritiesMapper.mapAuthorities(userDetailsUser.getAuthorities()));
 
+        System.out.println("saveAuthentication 인증 성공");
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 

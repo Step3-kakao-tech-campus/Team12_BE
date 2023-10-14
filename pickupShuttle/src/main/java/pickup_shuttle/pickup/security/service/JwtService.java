@@ -25,7 +25,7 @@ import java.util.Optional;
 @Getter
 @Log4j2
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @PropertySource("classpath:application.properties")
 public class JwtService {
 
