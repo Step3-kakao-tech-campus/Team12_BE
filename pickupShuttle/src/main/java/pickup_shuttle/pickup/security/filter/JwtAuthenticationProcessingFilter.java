@@ -121,7 +121,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
             } else {
                 // 올바르지 않은 리프레시 토큰에 대한 예외처리 (관련 페이지 리다이렉트)
-                new Exception400("RefreshToken이 잘못되었거나 만료되었습니다");
+                throw new Exception400("RefreshToken이 잘못되었거나 만료되었습니다");
             }
         }
     }
