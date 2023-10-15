@@ -12,7 +12,6 @@ import pickup_shuttle.pickup._core.errors.exception.Exception400;
 import pickup_shuttle.pickup._core.errors.exception.Exception500;
 import pickup_shuttle.pickup.config.ErrorMessage;
 import pickup_shuttle.pickup.domain.beverage.Beverage;
-import pickup_shuttle.pickup.domain.beverage.BeverageRepository;
 import pickup_shuttle.pickup.domain.beverage.dto.BeverageDTO;
 import pickup_shuttle.pickup.domain.board.dto.request.BoardAgreeRqDTO;
 import pickup_shuttle.pickup.domain.board.dto.request.BoardModifyRqDTO;
@@ -26,7 +25,6 @@ import pickup_shuttle.pickup.domain.store.Store;
 import pickup_shuttle.pickup.domain.store.StoreRepository;
 import pickup_shuttle.pickup.domain.user.User;
 import pickup_shuttle.pickup.domain.user.UserRepository;
-import pickup_shuttle.pickup.security.service.JwtService;
 
 import java.lang.reflect.Field;
 import java.time.ZoneOffset;
@@ -41,8 +39,6 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final StoreRepository storeRepository;
-    private final BeverageRepository beverageRepository;
-    private final JwtService jwtService;
     private final MatchService matchService;
 
     public Slice<BoardListRpDTO> boardList(Long lastBoardId, int limit) {
@@ -143,7 +139,7 @@ public class BoardService {
             throw new Exception400("공고글이 이미 매칭 됐습니다");
         }
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new Exception400("유저가 존재하지 않습니다")
+                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
         );
         Match match = matchService.createMatch(requestDTo.arrivalTime(),user);
         if(match.getUser().getUserId() == board.getUser().getUserId()) {
@@ -190,7 +186,7 @@ public class BoardService {
     public BoardModifyRpDTO modify(BoardModifyRqDTO requestDTO, Long boardId, Long userId){
         // 공고글 확인
         Board board = boardRepository.m4findByBoardId(boardId).orElseThrow(
-                () -> new Exception400("공고글을 찾을 수 없습니다")
+                () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
         );
         // 공고글 작성자 확인
         if(!(board.getUser().getUserId().equals(userId)))
@@ -202,7 +198,7 @@ public class BoardService {
         Store store = null;
         if(requestDTO.store() != null){
             store = storeRepository.findByName(requestDTO.store()).orElseThrow(
-                    () -> new Exception400("가게가 존재하지 않습니다"));
+                    () -> new Exception400(ErrorMessage.UNKNOWN_STORE));
         }
         // 공고 수정
         Map<String, Object> mapToPatch = requestDTO.patchValues(store); // null 삭제

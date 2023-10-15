@@ -116,7 +116,7 @@ public class UserService {
 
     public UserGetImageUrlRpDTO getImageUrl(Long userId){
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new Exception400(ErrorMe  u   ssage.UNKNOWN_USER)
+                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
         );
         if(user.getUrl().equals("")){
             throw new Exception400("등록된 이미지가 존재하지 않습니다");
