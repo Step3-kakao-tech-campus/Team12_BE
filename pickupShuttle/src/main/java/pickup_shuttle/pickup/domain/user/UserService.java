@@ -87,7 +87,10 @@ public class UserService {
         // 메타 데이터 설정
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(multipartFile.getSize());
-        metadata.setContentType(multipartFile.getContentType());
+        String contentType = multipartFile.getContentType();
+        if(!isImage(contentType)){
+            throw new Exception400("이미지 파일이 아닙니다");
+        }
         // 파일 읽기
         InputStream inputStream;
         try{
@@ -97,7 +100,7 @@ public class UserService {
         }
         // 유저 검증
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new Exception400("유저를 찾을 수 없습니다")
+                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
         );
         if(user.getUserRole().getValue().equals("ROLE_STUDENT"))
             throw new Exception400("이미 인증된 유저입니다");
@@ -113,7 +116,7 @@ public class UserService {
 
     public UserGetImageUrlRpDTO getImageUrl(Long userId){
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new Exception400("유저를 찾을 수 없습니다")
+                () -> new Exception400(ErrorMe  u   ssage.UNKNOWN_USER)
         );
         if(user.getUrl().equals("")){
             throw new Exception400("등록된 이미지가 존재하지 않습니다");
@@ -128,7 +131,6 @@ public class UserService {
         GeneratePresignedUrlRequest generatePresignedUrlRequest = getGeneratePreSignedUrlRequest(bucket, fileName);
         try{
             String presignedUrl = amazonS3.generatePresignedUrl(generatePresignedUrlRequest).toString();
-            System.out.println(presignedUrl); // 발급 확인용 (배포 전 삭제)
             return presignedUrl;
         }catch (Exception e){
             throw new Exception500("presigned url 발급을 실패했습니다");
@@ -154,6 +156,16 @@ public class UserService {
         expTimeMillis += 1000 * 60 * 5; // 5분
         expiration.setTime(expTimeMillis);
         return expiration;
+    }
+
+    private boolean isImage(String fileType){
+        String[] imageTypes = {"image/jpeg", "image/png", "image/gif"};
+        for (String type : imageTypes) {
+            if (type.equals(fileType)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
