@@ -4,3 +4,4 @@ spring:
       - local
     include:
       - prod
+      - aws

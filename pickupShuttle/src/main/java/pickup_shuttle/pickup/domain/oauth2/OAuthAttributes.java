@@ -25,12 +25,7 @@ public class OAuthAttributes {
         this.kakaoOAuth2UserInfo = kakaoOAuth2UserInfo;
     }
 
-    /**
-     * SocialType에 맞는 메소드 호출하여 OAuthAttributes 객체 반환
-     * 파라미터 : userNameAttributeName -> OAuth2 로그인 시 키(PK)가 되는 값 / attributes : OAuth 서비스의 유저 정보들
-     * 소셜별 of 메소드(ofGoogle, ofKaKao, ofNaver)들은 각각 소셜 로그인 API에서 제공하는
-     * 회원의 식별값(id), attributes, nameAttributeKey를 저장 후 build
-     */
+
     public static OAuthAttributes of(String userNameAttributeName, Map<String, Object> attributes){
         return ofKakao(userNameAttributeName, attributes);
     }
@@ -44,7 +39,7 @@ public class OAuthAttributes {
 
     /**
      * of메소드로 OAuthAttributes 객체가 생성되어, 유저 정보들이 담긴 OAuth2UserInfo가 소셜 타입별로 주입된 상태
-     * OAuth2UserInfo에서 socialId(식별값), nickname, imageUrl을 가져와서 build
+     * OAuth2UserInfo에서 socialId(식별값), name, nickname, PhoneNumber 가져와서 build
      * email에는 UUID로 중복 없는 랜덤 값 생성
      * role은 GUEST로 설정
      */
@@ -52,7 +47,7 @@ public class OAuthAttributes {
         return User.builder()
                 .socialId(kakaoOAuth2UserInfo.getId())
                 .nickname(kakaoOAuth2UserInfo.getNickname())
-                .name(kakaoOAuth2UserInfo.getNickname())
+                .name(kakaoOAuth2UserInfo.getName())
                 .phoneNumber(kakaoOAuth2UserInfo.getPhoneNumber())
                 .userRole(UserRole.GUEST) // JWT 발급용
                 .email(UUID.randomUUID() + "@kakao.com") // JWT Token 발급용
