@@ -13,10 +13,11 @@ import pickup_shuttle.pickup._core.utils.ApiUtils;
 import pickup_shuttle.pickup.config.Login;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
 import pickup_shuttle.pickup.domain.refreshToken.dto.response.AccessTokenRpDTO;
-import pickup_shuttle.pickup.domain.refreshToken.dto.response.RefreshTokenRpDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserModifyRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
+import pickup_shuttle.pickup.domain.user.dto.request.UserUploadImageRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.response.ModifyUserRpDTO;
+import pickup_shuttle.pickup.domain.user.dto.response.UserGetImageUrlRpDTO;
 import pickup_shuttle.pickup.security.service.JwtService;
 
 
@@ -64,7 +65,7 @@ public class UserController {
         }
     }
 
-
+    // 유저 인증 상태 (인증/미인증/인증 진행 중) 반환
     @GetMapping("/mypage/auth")
     public ResponseEntity<?> userAuthStatus(@Login Long userId){
         String status = userService.userAuthStatus(userId);
@@ -88,5 +89,17 @@ public class UserController {
             return ResponseEntity.ok().body(ApiUtils.error("인증되지 않은 사용자입니다.", HttpStatus.UNAUTHORIZED));
         }
     }
-
+    // 이미지 업로드
+    @PutMapping("/mypage/image/url")
+    public ResponseEntity<?> uploadImage(@ModelAttribute @Valid UserUploadImageRqDTO requestDTO,
+                                       @Login Long userId) {
+        userService.uploadImage(requestDTO.image(), userId);
+        return ResponseEntity.ok(ApiUtils.success("이미지 url 저장이 완료되었습니다"));
+    }
+    // presigendUrl(GET) 발급
+    @GetMapping("/mypage/image/url")
+    public ResponseEntity<?> getImageUrl(@Login Long userId) {
+        UserGetImageUrlRpDTO responseDTO = userService.getImageUrl(userId);
+        return ResponseEntity.ok(ApiUtils.success(responseDTO));
+    }
 }

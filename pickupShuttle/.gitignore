@@ -204,6 +204,7 @@ $RECYCLE.BIN/
 *.lnk
 
 application-prod.yml
+application-aws.yml
 
 .gradle
 **/build/
