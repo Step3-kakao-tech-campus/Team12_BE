@@ -87,8 +87,7 @@ public class UserService {
         // 메타 데이터 설정
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(multipartFile.getSize());
-        String contentType = multipartFile.getContentType();
-        if(!isImage(contentType)){
+        if(!isImage(multipartFile.getContentType())){
             throw new Exception400("이미지 파일이 아닙니다");
         }
         // 파일 읽기
@@ -125,7 +124,7 @@ public class UserService {
     }
 
     // PreSigned URL 발급
-    public String getPresignedUrl(Long userId) {
+    private String getPresignedUrl(Long userId) {
 
         String fileName = dir + userId + ".jpg";
         GeneratePresignedUrlRequest generatePresignedUrlRequest = getGeneratePreSignedUrlRequest(bucket, fileName);
