@@ -1,20 +1,22 @@
 package pickup_shuttle.pickup.domain.user;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import pickup_shuttle.pickup._core.utils.ApiUtils;
 import pickup_shuttle.pickup.config.Login;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
 import pickup_shuttle.pickup.domain.refreshToken.dto.response.AccessTokenRpDTO;
+import pickup_shuttle.pickup.domain.refreshToken.dto.response.RefreshTokenRpDTO;
+import pickup_shuttle.pickup.domain.user.dto.request.UserModifyRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
+import pickup_shuttle.pickup.domain.user.dto.response.ModifyUserRpDTO;
 import pickup_shuttle.pickup.security.service.JwtService;
 
 
@@ -53,17 +55,38 @@ public class UserController {
     @GetMapping("/login/callback")
     public ResponseEntity<?> callBack(Authentication authentication){
         CustomOauth2User customOauth2User = (CustomOauth2User) authentication.getPrincipal();
+        String userPK = Long.toString(userService.userPK(customOauth2User));
         if(customOauth2User != null){
-            String token = jwtService.createAccessToken(customOauth2User.getName());
+            String token = jwtService.createAccessToken(userPK);
             return ResponseEntity.ok().body(ApiUtils.success(AccessTokenRpDTO.builder().AccessToken(token).build()));
         } else {
             return ResponseEntity.badRequest().body(ApiUtils.error("인증에 실패하였습니다.", HttpStatus.UNAUTHORIZED));
         }
     }
+
+
     @GetMapping("/mypage/auth")
     public ResponseEntity<?> userAuthStatus(@Login Long userId){
         String status = userService.userAuthStatus(userId);
         return ResponseEntity.ok(ApiUtils.success(status));
+    }
+
+    @GetMapping("/modify")
+    public ModelAndView userModify() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("userModify");
+
+        return modelAndView;
+    }
+
+    @PutMapping("/mypage/modify")
+    public ResponseEntity<?> userModify(@Login Long id ,@RequestBody @Valid UserModifyRqDTO userModifyRqDTO){
+        boolean authUser = userService.modifyUser(userModifyRqDTO, id);
+        if(authUser){
+            return ResponseEntity.ok().body(ApiUtils.success(ModifyUserRpDTO.builder().response("회원 수정이 완료되었습니다").build()));
+        } else {
+            return ResponseEntity.ok().body(ApiUtils.error("인증되지 않은 사용자입니다.", HttpStatus.UNAUTHORIZED));
+        }
     }
 
 }
