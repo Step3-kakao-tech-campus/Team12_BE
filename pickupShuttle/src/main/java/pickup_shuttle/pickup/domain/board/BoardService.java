@@ -7,12 +7,15 @@ import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ReflectionUtils;
 import pickup_shuttle.pickup._core.errors.exception.Exception400;
 import pickup_shuttle.pickup._core.errors.exception.Exception500;
 import pickup_shuttle.pickup.config.ErrorMessage;
+import pickup_shuttle.pickup.domain.beverage.Beverage;
 import pickup_shuttle.pickup.domain.beverage.BeverageRepository;
 import pickup_shuttle.pickup.domain.beverage.dto.BeverageDTO;
 import pickup_shuttle.pickup.domain.board.dto.request.BoardAgreeRqDTO;
+import pickup_shuttle.pickup.domain.board.dto.request.BoardModifyRqDTO;
 import pickup_shuttle.pickup.domain.board.dto.request.BoardWriteRqDTO;
 import pickup_shuttle.pickup.domain.board.dto.response.*;
 import pickup_shuttle.pickup.domain.board.repository.BoardRepository;
@@ -25,8 +28,10 @@ import pickup_shuttle.pickup.domain.user.User;
 import pickup_shuttle.pickup.domain.user.UserRepository;
 import pickup_shuttle.pickup.security.service.JwtService;
 
+import java.lang.reflect.Field;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -172,7 +177,7 @@ public class BoardService {
         if(!(board.getUser().getUserId().equals(userId)))
             throw new Exception400("공고글의 작성자가 아닙니다");
         // 매칭되었는지 확인
-        if(board.getMatch() != null)
+        if(board.isMatch())
             throw new Exception400("이미 매칭된 공고글은 삭제 할 수 없습니다");
         // 삭제
         try {
@@ -180,6 +185,51 @@ public class BoardService {
         } catch (Exception e){
             throw new Exception500("unknown server error");
         }
+    }
+    @Transactional
+    public BoardModifyRpDTO modify(BoardModifyRqDTO requestDTO, Long boardId, Long userId){
+        // 공고글 확인
+        Board board = boardRepository.m4findByBoardId(boardId).orElseThrow(
+                () -> new Exception400("공고글을 찾을 수 없습니다")
+        );
+        // 공고글 작성자 확인
+        if(!(board.getUser().getUserId().equals(userId)))
+            throw new Exception400("공고글의 작성자가 아닙니다");
+        // 매칭 여부 확인
+        if(board.isMatch())
+            throw new Exception400("이미 매칭된 공고글은 수정 할 수 없습니다");
+        // 가게 확인
+        Store store = null;
+        if(requestDTO.store() != null){
+            store = storeRepository.findByName(requestDTO.store()).orElseThrow(
+                    () -> new Exception400("가게가 존재하지 않습니다"));
+        }
+        // 공고 수정
+        Map<String, Object> mapToPatch = requestDTO.patchValues(store); // null 삭제
+        if (mapToPatch.size() > 0){
+            updatePatch(board, mapToPatch);
+        } else{
+            throw new Exception400("수정할 값이 없습니다");
+        }
+
+        List<String> beverages = board.getBeverages().stream().map(Beverage::getName).toList();
+        return BoardModifyRpDTO.builder()
+                .boardId(board.getBoardId())
+                .store(board.getStore().getName())
+                .beverage(beverages)
+                .destination(board.getDestination())
+                .tip(board.getTip())
+                .request(board.getRequest())
+                .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                .match(board.isMatch())
+                .build();
+    }
+    public void updatePatch(Board board, Map<String, Object> mapToPatch){
+        mapToPatch.forEach((k, v) -> {
+            Field field = ReflectionUtils.findField(Board.class, k);
+            field.setAccessible(true);
+            ReflectionUtils.setField(field, board, v);
+        });
     }
     public void checkListBlank(List<String> beverages) {
         for(String b : beverages) {
