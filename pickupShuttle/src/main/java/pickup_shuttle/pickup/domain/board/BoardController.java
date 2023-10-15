@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import pickup_shuttle.pickup._core.utils.ApiUtils;
 import pickup_shuttle.pickup.config.Login;
 import pickup_shuttle.pickup.domain.board.dto.request.BoardAgreeRqDTO;
+import pickup_shuttle.pickup.domain.board.dto.request.BoardModifyRqDTO;
 import pickup_shuttle.pickup.domain.board.dto.request.BoardWriteRqDTO;
 import pickup_shuttle.pickup.domain.board.dto.response.*;
 import pickup_shuttle.pickup.security.service.JwtService;
@@ -58,5 +59,12 @@ public class BoardController {
                                     @Login Long userId){
         boardService.boardDelete(boardId, userId);
         return ResponseEntity.ok(ApiUtils.success("공고글 삭제 완료"));
+    }
+    @PatchMapping("/modify/{boardId}")
+    public ResponseEntity<?> modify(@PathVariable("boardId") Long boardId,
+                                    @RequestBody @Valid BoardModifyRqDTO requestDTO,
+                                    @Login Long userId){
+        BoardModifyRpDTO responseDTO = boardService.modify(requestDTO,boardId, userId);
+        return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 }
