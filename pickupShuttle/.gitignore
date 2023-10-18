@@ -228,7 +228,11 @@ gradle-app.setting
 
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+
 # Lock 파일
 *.lock
+
+# log
+**/*.log
 
 # End of https://www.toptal.com/developers/gitignore/api/java,intellij,macos,windows

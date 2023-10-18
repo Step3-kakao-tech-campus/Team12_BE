@@ -203,7 +203,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-application-prod.yml
+application-db.yml
 
 .gradle
 **/build/
@@ -230,4 +230,9 @@ gradle-app.setting
 # Lock 파일
 *.lock
 
+# docker Compose 
+docker-compose.yml
+
+# log
+**/*.log
 # End of https://www.toptal.com/developers/gitignore/api/java,intellij,macos,windows
