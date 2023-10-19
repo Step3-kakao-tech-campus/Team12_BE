@@ -18,6 +18,7 @@ import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
 import pickup_shuttle.pickup.domain.user.dto.request.UserModifyRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.response.UserGetImageUrlRpDTO;
+import pickup_shuttle.pickup.domain.user.dto.response.UserMyPageRpDTO;
 
 import java.io.InputStream;
 import java.util.Date;
@@ -166,5 +167,13 @@ public class UserService {
         }
         return false;
     }
-
+    public UserMyPageRpDTO myPage(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
+        );
+        return UserMyPageRpDTO.builder()
+                .role(user.getUserRole().getValue())
+                .name(user.getName())
+                .build();
+    }
 }

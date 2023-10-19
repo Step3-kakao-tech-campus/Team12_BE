@@ -18,6 +18,7 @@ import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserUploadImageRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.response.ModifyUserRpDTO;
 import pickup_shuttle.pickup.domain.user.dto.response.UserGetImageUrlRpDTO;
+import pickup_shuttle.pickup.domain.user.dto.response.UserMyPageRpDTO;
 import pickup_shuttle.pickup.security.service.JwtService;
 
 
@@ -100,6 +101,13 @@ public class UserController {
     @GetMapping("/mypage/image/url")
     public ResponseEntity<?> getImageUrl(@Login Long userId) {
         UserGetImageUrlRpDTO responseDTO = userService.getImageUrl(userId);
+        return ResponseEntity.ok(ApiUtils.success(responseDTO));
+    }
+
+
+    @GetMapping("/mypage")
+    public ResponseEntity<?> myPage(@Login Long userId) {
+        UserMyPageRpDTO responseDTO = userService.myPage(userId);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 }
