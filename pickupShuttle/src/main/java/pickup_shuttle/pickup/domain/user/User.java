@@ -79,7 +79,7 @@ public class User {
         this.nickname = nickname;
     }
 
-    public void updateRole(String role) {
+    public void updateRole(UserRole userRole) {
         this.userRole = userRole;
     }
 

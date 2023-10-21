@@ -18,6 +18,7 @@ import pickup_shuttle.pickup.config.ErrorMessage;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
 import pickup_shuttle.pickup.domain.user.dto.repository.UserRepository;
 import pickup_shuttle.pickup.domain.user.dto.repository.UserRepositoryCustom;
+import pickup_shuttle.pickup.domain.user.dto.request.UserAuthApproveRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserModifyRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.response.UserAuthDetailRpDTO;
@@ -207,6 +208,17 @@ public class UserService {
                 .nickname(user.getNickname())
                 .url(getPresignedUrl(userId))
                 .build();
+    }
+    @Transactional
+    public String authApprove(UserAuthApproveRqDTO requestDTO){
+        User user = userRepository.findById(requestDTO.userId()).orElseThrow(
+                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
+        );
+        switch (requestDTO.role()){
+            case "ROLE_STUDENT" : user.updateRole(UserRole.STUDENT); return "학생 인증이 승인되었습니다";
+            case "ROLE_USER" : return "학생 인증이 거절되었습니다";
+        }
+        throw new Exception400("잘못된 권한입니다");
     }
 }
 

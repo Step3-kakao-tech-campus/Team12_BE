@@ -15,9 +15,11 @@ INSERT INTO user_tb (`uid`,`pwd`,`nickname`, `phone_number`, `name`, `bank`, `ac
 
 INSERT INTO user_tb (`uid`,`pwd`,`nickname`, `phone_number`, `name`, `bank`, `account`, `social_id`, `role`,`url`) VALUES ('honggildong3', 'pwd','user', '010-0000-1234','홍길동', '농협', '000-0000-0000-000', '3333', '1','https://aws.amazon.com/');
 
-INSERT INTO user_tb (`uid`,`pwd`,`nickname`, `phone_number`, `name`, `bank`, `account`, `social_id`, `role`) VALUES ('honggildong3', 'pwd','user', '010-0000-1234','홍길동', '농협', '000-0000-0000-000', '4444', '1');
+INSERT INTO user_tb (`uid`,`pwd`,`nickname`, `phone_number`, `name`, `bank`, `account`, `social_id`, `role`) VALUES ('honggildong4', 'pwd','user', '010-0000-1234','홍길동', '농협', '000-0000-0000-000', '4444', '1');
 
-INSERT INTO user_tb (`uid`,`pwd`,`nickname`, `phone_number`, `name`, `bank`, `account`, `social_id`, `role`,`url`) VALUES ('honggildong4', 'pwd','student', '010-0000-1234','홍길동', '농협', '000-0000-0000-000', '5555', '2','https://aws.amazon.com/');
+INSERT INTO user_tb (`uid`,`pwd`,`nickname`, `phone_number`, `name`, `bank`, `account`, `social_id`, `role`,`url`) VALUES ('honggildong5', 'pwd','student', '010-0000-1234','홍길동', '농협', '000-0000-0000-000', '5555', '2','https://aws.amazon.com/');
+
+INSERT INTO user_tb (`uid`,`pwd`,`nickname`, `phone_number`, `name`, `bank`, `account`, `social_id`, `role`) VALUES ('honggildong6', 'pwd','amin', '010-0000-1234','홍길동', '농협', '000-0000-0000-000', '6666', '0');
 
 insert into store_tb(`id`,`name`) values ('1', '전남대 후문 스타벅스');
 

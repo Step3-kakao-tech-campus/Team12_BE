@@ -14,6 +14,7 @@ import pickup_shuttle.pickup._core.utils.ApiUtils;
 import pickup_shuttle.pickup.config.Login;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
 import pickup_shuttle.pickup.domain.refreshToken.dto.response.AccessTokenRpDTO;
+import pickup_shuttle.pickup.domain.user.dto.request.UserAuthApproveRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserModifyRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserUploadImageRqDTO;
@@ -122,5 +123,10 @@ public class UserController {
     public ResponseEntity<?> getAuthDetail(@PathVariable("userId") Long userId){
         UserAuthDetailRpDTO responseDTO = userService.getAuthDetail(userId);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
+    }
+    @PatchMapping("/admin/auth/approval")
+    public ResponseEntity<?> authApprove(@RequestBody @Valid UserAuthApproveRqDTO requestDTO){
+        String message = userService.authApprove(requestDTO);
+        return ResponseEntity.ok(ApiUtils.success(message));
     }
 }
