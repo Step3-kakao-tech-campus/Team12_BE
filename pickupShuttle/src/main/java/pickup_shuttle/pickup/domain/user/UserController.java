@@ -92,16 +92,14 @@ public class UserController {
     }
     // 이미지 업로드
     @PutMapping("/mypage/image/url")
-    public ResponseEntity<?> uploadImage(@ModelAttribute @Valid UserUploadImageRqDTO requestDTO){
-                                       //@Login Long userId) {
-        Long userId = 1L;
+    public ResponseEntity<?> uploadImage(@ModelAttribute @Valid UserUploadImageRqDTO requestDTO,
+                                       @Login Long userId) {
         userService.uploadImage(requestDTO.image(), userId);
         return ResponseEntity.ok(ApiUtils.success("이미지 url 저장이 완료되었습니다"));
     }
     // presigendUrl(GET) 발급
     @GetMapping("/mypage/image/url")
-    public ResponseEntity<?> getImageUrl(){//@Login Long userId) {
-        Long userId = 1L;
+    public ResponseEntity<?> getImageUrl(@Login Long userId) {
         UserGetImageUrlRpDTO responseDTO = userService.getImageUrl(userId);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
