@@ -141,5 +141,25 @@ class UserControllerTest {
         resultActions.andExpect(jsonPath("$.response.content[0].name").value("홍길동"));
 
     }
+    @Test
+    @DisplayName("성공 : 학생 인증 상세보기")
+    void testGetAuthDetail() throws Exception {
+        //given
+        String accessToken = "Bearer " + jwtService.createAccessToken("6"); //ADMIN
+        Long userId = 3L; // 학생 인증을 신청한 일반회원
+        //when
+        ResultActions resultActions = mvc.perform(
+                get("/admin/auth/list/{userId}", userId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", accessToken)
+        );
+
+        //eye
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("testGetAuthDetail : " + responseBody);
+        //then
+        resultActions.andExpect(jsonPath("$.success").value("true"));
+        resultActions.andExpect(jsonPath("$.response.nickname").value("user"));
+    }
 
 }

@@ -20,6 +20,7 @@ import pickup_shuttle.pickup.domain.user.dto.repository.UserRepository;
 import pickup_shuttle.pickup.domain.user.dto.repository.UserRepositoryCustom;
 import pickup_shuttle.pickup.domain.user.dto.request.UserModifyRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
+import pickup_shuttle.pickup.domain.user.dto.response.UserAuthDetailRpDTO;
 import pickup_shuttle.pickup.domain.user.dto.response.UserAuthListRpDTO;
 import pickup_shuttle.pickup.domain.user.dto.response.UserGetImageUrlRpDTO;
 import pickup_shuttle.pickup.domain.user.dto.response.UserMyPageRpDTO;
@@ -195,6 +196,17 @@ public class UserService {
                 .toList();
         return new SliceImpl<>(userAuthListRpDTOList, pageRequest, userSlice.hasNext());
     }
-
+    public UserAuthDetailRpDTO getAuthDetail(Long userId){
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
+        );
+        if(user.getUrl().equals("")){
+            throw new Exception400("등록된 이미지가 존재하지 않습니다");
+        }
+        return UserAuthDetailRpDTO.builder()
+                .nickname(user.getNickname())
+                .url(getPresignedUrl(userId))
+                .build();
+    }
 }
 

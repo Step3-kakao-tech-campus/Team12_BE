@@ -118,6 +118,9 @@ public class UserController {
         Slice<UserAuthListRpDTO> responseDTOSlice = userService.getAuthList(lastUserId, size);
         return ResponseEntity.ok(ApiUtils.success(responseDTOSlice));
     }
-
-
+    @GetMapping("/admin/auth/list/{userId}")
+    public ResponseEntity<?> getAuthDetail(@PathVariable("userId") Long userId){
+        UserAuthDetailRpDTO responseDTO = userService.getAuthDetail(userId);
+        return ResponseEntity.ok(ApiUtils.success(responseDTO));
+    }
 }
