@@ -2,6 +2,7 @@ package pickup_shuttle.pickup.domain.user;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -16,9 +17,7 @@ import pickup_shuttle.pickup.domain.refreshToken.dto.response.AccessTokenRpDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserModifyRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserUploadImageRqDTO;
-import pickup_shuttle.pickup.domain.user.dto.response.ModifyUserRpDTO;
-import pickup_shuttle.pickup.domain.user.dto.response.UserGetImageUrlRpDTO;
-import pickup_shuttle.pickup.domain.user.dto.response.UserMyPageRpDTO;
+import pickup_shuttle.pickup.domain.user.dto.response.*;
 import pickup_shuttle.pickup.security.service.JwtService;
 
 
@@ -92,14 +91,16 @@ public class UserController {
     }
     // 이미지 업로드
     @PutMapping("/mypage/image/url")
-    public ResponseEntity<?> uploadImage(@ModelAttribute @Valid UserUploadImageRqDTO requestDTO,
-                                       @Login Long userId) {
+    public ResponseEntity<?> uploadImage(@ModelAttribute @Valid UserUploadImageRqDTO requestDTO){
+                                       //@Login Long userId) {
+        Long userId = 1L;
         userService.uploadImage(requestDTO.image(), userId);
         return ResponseEntity.ok(ApiUtils.success("이미지 url 저장이 완료되었습니다"));
     }
     // presigendUrl(GET) 발급
     @GetMapping("/mypage/image/url")
-    public ResponseEntity<?> getImageUrl(@Login Long userId) {
+    public ResponseEntity<?> getImageUrl(){//@Login Long userId) {
+        Long userId = 1L;
         UserGetImageUrlRpDTO responseDTO = userService.getImageUrl(userId);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
@@ -110,4 +111,13 @@ public class UserController {
         UserMyPageRpDTO responseDTO = userService.myPage(userId);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
+    @GetMapping("/admin/auth/list")
+    public ResponseEntity<?> getAuthList(
+            @RequestParam(value = "offset",required = false) Long lastUserId,
+            @RequestParam(value = "limit",defaultValue = "10") int size){
+        Slice<UserAuthListRpDTO> responseDTOSlice = userService.getAuthList(lastUserId, size);
+        return ResponseEntity.ok(ApiUtils.success(responseDTOSlice));
+    }
+
+
 }

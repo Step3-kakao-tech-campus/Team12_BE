@@ -94,28 +94,52 @@ class UserControllerTest {
             resultActions.andExpect(jsonPath("$.success").value("true"));
             resultActions.andExpect(jsonPath("$.response").value("인증"));
         }
-
-        @Test
-        @DisplayName("성공 : 마이페이지 조회")
-        void tesMyPage() throws Exception{
-            //given
-            String accessToken = "Bearer " + jwtService.createAccessToken("4"); //ADMIN
-
-            //when
-            ResultActions resultActions = mvc.perform(
-                    get("/mypage")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
-
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testMyPage : " + responseBody);
-
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("true"));
-            resultActions.andExpect(jsonPath("$.response.role").value("ROLE_USER"));
-            resultActions.andExpect(jsonPath("$.response.name").value("홍길동"));
-        }
     }
+    @Test
+    @DisplayName("성공 : 마이페이지 조회")
+    void tesMyPage() throws Exception{
+        //given
+        String accessToken = "Bearer " + jwtService.createAccessToken("4"); //ADMIN
+
+        //when
+        ResultActions resultActions = mvc.perform(
+                get("/mypage")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", accessToken)
+        );
+
+        //eye
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("testMyPage : " + responseBody);
+
+        //then
+        resultActions.andExpect(jsonPath("$.success").value("true"));
+        resultActions.andExpect(jsonPath("$.response.role").value("ROLE_USER"));
+        resultActions.andExpect(jsonPath("$.response.name").value("홍길동"));
+    }
+
+    @Test
+    @DisplayName("성공 : 학생 인증 목록 보기")
+    void testGetAuthList() throws Exception {
+        //given
+        String accessToken = "Bearer " + jwtService.createAccessToken("6"); //ADMIN
+
+        //when
+        ResultActions resultActions = mvc.perform(
+                get("/admin/auth/list")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", accessToken)
+        );
+
+        //eye
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("testGetAuthList : " + responseBody);
+
+        //then
+        resultActions.andExpect(jsonPath("$.success").value("true"));
+        resultActions.andExpect(jsonPath("$.response.content[0].userId").value(3));
+        resultActions.andExpect(jsonPath("$.response.content[0].name").value("홍길동"));
+
+    }
+
 }

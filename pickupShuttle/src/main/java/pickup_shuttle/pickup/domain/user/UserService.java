@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,13 +16,17 @@ import pickup_shuttle.pickup._core.errors.exception.Exception400;
 import pickup_shuttle.pickup._core.errors.exception.Exception500;
 import pickup_shuttle.pickup.config.ErrorMessage;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
+import pickup_shuttle.pickup.domain.user.dto.repository.UserRepository;
+import pickup_shuttle.pickup.domain.user.dto.repository.UserRepositoryCustom;
 import pickup_shuttle.pickup.domain.user.dto.request.UserModifyRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
+import pickup_shuttle.pickup.domain.user.dto.response.UserAuthListRpDTO;
 import pickup_shuttle.pickup.domain.user.dto.response.UserGetImageUrlRpDTO;
 import pickup_shuttle.pickup.domain.user.dto.response.UserMyPageRpDTO;
 
 import java.io.InputStream;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Transactional(readOnly = true)
@@ -30,7 +35,7 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final AmazonS3 amazonS3;
-
+    private final UserRepositoryCustom userRepositoryCustom;
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
     @Value("${cloud.aws.s3.dir}")
@@ -91,6 +96,7 @@ public class UserService {
         if(!isImage(multipartFile.getContentType())){
             throw new Exception400("이미지 파일이 아닙니다");
         }
+        metadata.setContentType(multipartFile.getContentType());
         // 파일 읽기
         InputStream inputStream;
         try{
@@ -176,4 +182,19 @@ public class UserService {
                 .name(user.getName())
                 .build();
     }
+
+    public Slice<UserAuthListRpDTO> getAuthList(Long lastUserId, int size){
+        PageRequest pageRequest = PageRequest.of(0, size);
+        Slice<User> userSlice = userRepositoryCustom.searchAuthList(lastUserId, pageRequest);
+
+        List<UserAuthListRpDTO> userAuthListRpDTOList = userSlice.getContent().stream()
+                .map(u -> UserAuthListRpDTO.builder()
+                            .userId(u.getUserId())
+                            .name(u.getName())
+                            .build())
+                .toList();
+        return new SliceImpl<>(userAuthListRpDTOList, pageRequest, userSlice.hasNext());
+    }
+
 }
+
