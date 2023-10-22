@@ -2,6 +2,7 @@ package pickup_shuttle.pickup.domain.board.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Builder;
 import pickup_shuttle.pickup.domain.beverage.Beverage;
@@ -18,7 +19,9 @@ public record BoardWriteRqDTO(
         @NotBlank(message = "가게가 공백입니다") String store,
         List<String> beverage,
         @NotBlank(message = "위치가 공백입니다") String destination,
-        @PositiveOrZero(message = "픽업팁이 음수입니다") int tip,
+        @PositiveOrZero(message = "픽업팁이 음수입니다")
+        @NotNull(message = "픽업팁이 없습니다")
+        Integer tip,
         String request,
         @NotBlank(message = "마감기간이 공백입니다") String finishedAt
 ){

@@ -13,11 +13,11 @@ INSERT INTO user_tb (`uid`,`pwd`,`nickname`, `phone_number`, `name`, `bank`, `ac
 
 INSERT INTO user_tb (`uid`,`pwd`,`nickname`, `phone_number`, `name`, `bank`, `account`, `social_id`) VALUES ('honggildong2', '{bcrypt}$2a$10$8H0OT8wgtALJkig6fmypi.Y7jzI5Y7W9PGgRKqnVeS2cLWGifwHF2', 'pickupmaster1', '010-0000-1234','홍길동', '농협', '000-0000-0000-000', '2222');
 
-INSERT INTO user_tb (`uid`,`nickname`, `phone_number`, `name`, `bank`, `account`, `social_id`, `role`,`url`) VALUES ('honggildong3', 'user', '010-0000-1234','홍길동', '농협', '000-0000-0000-000', '3333', '1','https://aws.amazon.com/');
+INSERT INTO user_tb (`uid`,`pwd`,`nickname`, `phone_number`, `name`, `bank`, `account`, `social_id`, `role`,`url`) VALUES ('honggildong3', 'pwd','user', '010-0000-1234','홍길동', '농협', '000-0000-0000-000', '3333', '1','https://aws.amazon.com/');
 
-INSERT INTO user_tb (`uid`,`nickname`, `phone_number`, `name`, `bank`, `account`, `social_id`, `role`) VALUES ('honggildong3', 'user', '010-0000-1234','홍길동', '농협', '000-0000-0000-000', '4444', '1');
+INSERT INTO user_tb (`uid`,`pwd`,`nickname`, `phone_number`, `name`, `bank`, `account`, `social_id`, `role`) VALUES ('honggildong3', 'pwd','user', '010-0000-1234','홍길동', '농협', '000-0000-0000-000', '4444', '1');
 
-INSERT INTO user_tb (`uid`,`nickname`, `phone_number`, `name`, `bank`, `account`, `social_id`, `role`,`url`) VALUES ('honggildong4', 'student', '010-0000-1234','홍길동', '농협', '000-0000-0000-000', '5555', '2','https://aws.amazon.com/');
+INSERT INTO user_tb (`uid`,`pwd`,`nickname`, `phone_number`, `name`, `bank`, `account`, `social_id`, `role`,`url`) VALUES ('honggildong4', 'pwd','student', '010-0000-1234','홍길동', '농협', '000-0000-0000-000', '5555', '2','https://aws.amazon.com/');
 
 insert into store_tb(`id`,`name`) values ('1', '전남대 후문 스타벅스');
 
@@ -36,6 +36,10 @@ insert into board_tb(`tip`, `created_at`, `finished_at`, `is_match`, `destinatio
 insert into beverage_tb(`board_id`, `name`) values ('1', '핫 아메리카노');
 
 insert into beverage_tb(`board_id`, `name`) values ('1', '아이스 아메리카노');
+
+insert into beverage_tb(`board_id`, `name`) values ('2', '핫 아메리카노');
+
+insert into beverage_tb(`board_id`, `name`) values ('3', '아이스 아메리카노');
 
 insert into beverage_tb(`board_id`, `name`) values ('4', '핫 아메리카노');
 

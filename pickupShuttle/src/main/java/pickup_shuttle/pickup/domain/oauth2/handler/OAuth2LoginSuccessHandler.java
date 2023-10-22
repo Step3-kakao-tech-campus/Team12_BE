@@ -35,12 +35,9 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             CustomOauth2User oauth2User = (CustomOauth2User) authentication.getPrincipal();
             // User의 Role이 Guest일 경우에 처음 요청한 회원이므로 회원가입 페이지로 리다이렉트
             if(oauth2User.getUserRole() == UserRole.GUEST){
-                //String loginId, String key, long expireTimeMs
                 User findUser = userRepository.findBySocialId(oauth2User.getName())
                         .orElseThrow(() -> new IllegalArgumentException("socialID에 해당하는 유저가 없습니다."));
-                // oauthUser.getName()은 socialID를 불러옵니다.
                 String accessToken = jwtService.createAccessToken(findUser.getUserId().toString());
-                // response.addHeader(jwtService.getAccessHeader(),"Bearer " + accessToken);
                 response.sendRedirect("/users/register/input"); // 리다이렉트 주소 (계좌번호 입력)
                 jwtService.sendRefreshToken(response, null);
                 findUser.authorizeUser();
