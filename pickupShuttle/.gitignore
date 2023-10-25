@@ -6,8 +6,7 @@
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # 추가 작성
-application.properties
-application-oauth.yml
+
 
 # User-specific stuff
 .idea/**/workspace.xml
@@ -203,8 +202,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-application-prod.yml
-application-aws.yml
+
 
 .gradle
 **/build/
