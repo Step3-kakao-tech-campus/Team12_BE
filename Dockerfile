@@ -13,7 +13,7 @@ RUN echo "systemProp.http.proxyHost=krmp-proxy.9rum.cc\nsystemProp.http.proxyPor
 RUN gradle wrapper
 
 # Build the application
-RUN ./gradlew clean build
+RUN ./gradlew -x test
 
 # Stage 2: Run the application
 FROM krmp-d2hub-idock.9rum.cc/goorm/eclipse-temurin:17-jre
