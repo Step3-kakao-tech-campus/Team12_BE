@@ -1,5 +1,5 @@
 # Stage 1: Build the application
-FROM krmp-d2hub-idock.9rum.cc/goorm/gradle:7.4-jdk17 AS build
+FROM krmp-d2hub-idock.9rum.cc/goorm/gradle:7.4.0-jdk17 AS build
 
 # Set the working directory in the container
 WORKDIR /workspace/Team12_BE
