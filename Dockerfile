@@ -2,7 +2,7 @@
 FROM krmp-d2hub-idock.9rum.cc/goorm/gradle:7.3.1-jdk17 AS build
 
 # Set the working directory in the container
-WORKDIR /usr/src/app
+WORKDIR /workspace/Team12_BE/pickupShuttle
 
 # Copy local code to the container
 COPY . .
@@ -20,7 +20,7 @@ FROM krmp-d2hub-idock.9rum.cc/goorm/eclipse-temurin:17-jre
 
 
 # Copy the built jar file from the build stage into the current stage
-COPY --from=build /usr/src/app/pickupShuttle/build/libs/pickupShuttle-0.0.1-SNAPSHOT.jar .
+COPY --from=build /workspace/Team12_BE/pickupShuttle/build/libs/pickupShuttle-0.0.1-SNAPSHOT.jar .
 
 # Set environment variables
 ENV DATABASE_URL=jdbc:mysql://pickup-mysql-dev/pickup
