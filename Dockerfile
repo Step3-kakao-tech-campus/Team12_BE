@@ -2,10 +2,11 @@
 FROM krmp-d2hub-idock.9rum.cc/goorm/gradle:7.3.1-jdk17 AS build
 
 # Set the working directory in the container
-WORKDIR /pickupShuttle
+# WORKDIR /workspace/Team12_BEls/pickupShuttle
+WORKDIR /usr/src/app
 
 # Copy local code to the container
-COPY . .
+COPY krampoline/ ./
 
 # If you're behind a proxy, set the proxy settings
 RUN echo "systemProp.http.proxyHost=krmp-proxy.9rum.cc\nsystemProp.http.proxyPort=3128\nsystemProp.https.proxyHost=krmp-proxy.9rum.cc\nsystemProp.https.proxyPort=3128" > /root/.gradle/gradle.properties
@@ -20,7 +21,7 @@ FROM krmp-d2hub-idock.9rum.cc/goorm/eclipse-temurin:17-jre
 
 
 # Copy the built jar file from the build stage into the current stage
-COPY --from=build /workspace/Team12_BE/pickupShuttle/build/libs/pickupShuttle-0.0.1-SNAPSHOT.jar .
+COPY --from=build /usr/src/app/pickupShuttle/build/libs/pickupShuttle-0.0.1-SNAPSHOT.jar .
 
 # Set environment variables
 ENV DATABASE_URL=jdbc:mysql://pickup-mysql-dev/pickup
