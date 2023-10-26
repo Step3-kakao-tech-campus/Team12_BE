@@ -7,6 +7,8 @@ WORKDIR /workspace/Team12_BE
 # Copy local code to the container
 COPY . .
 
+RUN chmod 777 /workspace/Team12_BE
+
 # If you're behind a proxy, set the proxy settings
 RUN echo "systemProp.http.proxyHost=krmp-proxy.9rum.cc\nsystemProp.http.proxyPort=3128\nsystemProp.https.proxyHost=krmp-proxy.9rum.cc\nsystemProp.https.proxyPort=3128" > /root/.gradle/gradle.properties
 
