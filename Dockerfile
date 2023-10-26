@@ -26,4 +26,4 @@ COPY --from=build /workspace/Team12_BE/build/libs/pickupShuttle-0.0.1-SNAPSHOT.j
 ENV DATABASE_URL=jdbc:mysql://pickup-mysql-dev/pickup
 
 # Start the application
-CMD ["java", "-jar", "-Dspring.profiles.active=local,prod,aws", "pickupShuttle-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "-Dspring.profiles.active=dev", "pickupShuttle-0.0.1-SNAPSHOT.jar"]

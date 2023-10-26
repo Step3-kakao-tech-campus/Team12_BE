@@ -1,6 +1,0 @@
-spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/pickup?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}

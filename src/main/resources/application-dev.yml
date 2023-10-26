@@ -10,7 +10,7 @@ spring:
       enabled: true
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
@@ -21,23 +21,22 @@ logging:
   level:
     '[pickup_shuttle.pickup]': DEBUG
     '[org.hibernate.type]': TRACE
-
 ---
 spring:
   config:
     activate:
-      on-profile: local-db
+      on-profile: dev-db
   datasource:
-    url: jdbc:h2:mem:test;MODE=MySQL
-    driver-class-name: org.h2.Driver
-    username: root
-    password: root
+    url: jdbc:mysql://localhost:3306/pickup?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
 
 ---
 spring:
   config:
     activate:
-      on-profile: local-aws
+      on-profile: dev-aws
 cloud:
   aws:
     s3:
@@ -55,7 +54,7 @@ cloud:
 spring:
   config:
     activate:
-      on-profile: local-oauth
+      on-profile: dev-oauth
   security:
     oauth2:
       client:

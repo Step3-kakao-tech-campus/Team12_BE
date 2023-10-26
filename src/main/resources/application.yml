@@ -1,7 +1,12 @@
 spring:
   profiles:
-    active:
-      - local
-    include:
-      - prod
-      - aws
+    group:
+      local:
+        - local-db
+        - local-oauth
+        - local-aws
+      dev:
+        - dev-db
+        - dev-oauth
+        - dev-aws
+    active: dev
