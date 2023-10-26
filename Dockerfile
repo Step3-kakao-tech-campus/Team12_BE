@@ -21,10 +21,10 @@ FROM krmp-d2hub-idock.9rum.cc/goorm/eclipse-temurin:17-jre
 
 
 # Copy the built jar file from the build stage into the current stage
-COPY --from=build /workspace/Team12_BE/build/libs/pickupShuttle-0.0.1-SNAPSHOT.jar .
+COPY --from=build /workspace/Team12_BE/build/libs/Team12_BE-0.0.1-SNAPSHOT.jar .
 
 # Set environment variables
 ENV DATABASE_URL=jdbc:mysql://pickup-mysql-dev/pickup
 
 # Start the application
-CMD ["java", "-jar", "-Dspring.profiles.active=dev", "pickupShuttle-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "-Dspring.profiles.active=dev", "Team12_BE-0.0.1-SNAPSHOT.jar"]
