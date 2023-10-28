@@ -4,6 +4,11 @@ resources:
   - backend-service.yml
   - mysql-deployment.yml
   - mysql-service.yml
+  - configs/aws-secret.yml
+  - configs/backend-secret.yml
+  - configs/jwt-secret-key-secret.yml
+  - configs/mysql-secret.yml
+  - configs/oauth-secret.yml
 configMapGenerator:
   - name: nginx
     files:
