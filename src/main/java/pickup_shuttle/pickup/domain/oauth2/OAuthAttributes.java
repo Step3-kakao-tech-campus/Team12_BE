@@ -47,7 +47,6 @@ public class OAuthAttributes {
         return User.builder()
                 .socialId(kakaoOAuth2UserInfo.getId())
                 .nickname(kakaoOAuth2UserInfo.getNickname())
-                .name(kakaoOAuth2UserInfo.getName())
                 .phoneNumber(kakaoOAuth2UserInfo.getPhoneNumber())
                 .userRole(UserRole.GUEST) // JWT 발급용
                 .email(UUID.randomUUID() + "@kakao.com") // JWT Token 발급용
