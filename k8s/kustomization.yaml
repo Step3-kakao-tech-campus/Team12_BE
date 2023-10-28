@@ -1,14 +1,14 @@
 namespace: default
 resources:
   - backend-deployment,yml
-  - backend-service.yml
-  - mysql-deployment.yml
-  - mysql-service.yml
-  - configs/aws-secret.yml
-  - configs/backend-secret.yml
-  - configs/jwt-secret-key-secret.yml
-  - configs/mysql-secret.yml
-  - configs/oauth-secret.yml
+  - backend-service.yaml
+  - mysql-deployment.yaml
+  - mysql-service.yaml
+  - configs/aws-secret.yaml
+  - configs/backend-secret.yaml
+  - configs/jwt-secret-key-secret.yaml
+  - configs/mysql-secret.yaml
+  - configs/oauth-secret.yaml
 configMapGenerator:
   - name: nginx
     files:

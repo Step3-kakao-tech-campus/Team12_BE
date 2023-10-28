@@ -229,9 +229,9 @@ gradle-app.setting
 *.lock
 
 #쿠버네티스 secret file
-backend-secret.yml
-mysql-secret.yml
-aws-secret.yml
-oauth-secret.yml
-k8s/secrets/jwt-secret-tKey-secret.yml
+backend-secret.yaml
+mysql-secret.yaml
+aws-secret.yaml
+oauth-secret.yaml
+k8s/configs/jwt-secret-key-secret.yaml
 # End of https://www.toptal.com/developers/gitignore/api/java,intellij,macos,windows
