@@ -1,6 +1,6 @@
 namespace: default
 resources:
-  - backend-deployment,yml
+  - backend-deployment.yml
   - backend-service.yaml
   - mysql-deployment.yaml
   - mysql-service.yaml
