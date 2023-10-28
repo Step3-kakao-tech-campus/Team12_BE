@@ -233,5 +233,5 @@ backend-secret.yml
 mysql-secret.yml
 aws-secret.yml
 oauth-secret.yml
-
+k8s/secrets/jwt-secret-tKey-secret.yml
 # End of https://www.toptal.com/developers/gitignore/api/java,intellij,macos,windows
