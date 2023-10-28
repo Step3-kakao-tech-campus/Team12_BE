@@ -1,0 +1,5 @@
+CREATE SCHEMA IF NOT EXISTS `pickup` DEFAULT CHARACTER SET utf8mb4;
+
+GRANT ALL ON *.* TO 'kakao12'@'localhost' IDENTIFIED BY 'root' WITH GRANT OPTION;
+GRANT ALL ON pickup.* TO 'kakao12'@'localhost';
+FLUSH PRIVILEGES;
