@@ -9,42 +9,43 @@ truncate table match_tb;
 
 SET foreign_key_checks = 1;
 
-INSERT INTO user_tb (`uid`,`pwd`,`nickname`, `phone_number`, `name`, `bank`, `account`, `social_id`) VALUES ('honggildong', '{bcrypt}$2a$10$8H0OT8wgtALJkig6fmypi.Y7jzI5Y7W9PGgRKqnVeS2cLWGifwHF2', 'pickupmaster', '010-0000-0000','홍길동', '농협', '000-0000-0000-000', '1111');
+insert into user_tb(role, id, account, bank, email, nickname, phone_number, pwd, social_id, uid, url)
+values
+    (0,1,'000-0000-0000','신한은행','','노인','010-0000-0000','pwd','1111','pickup1','https://aws.amazon.com1/'),
+    (1,2,'000-0000-0000','신한은행','','배경','010-0000-0000','pwd','1112','pickup2','https://aws.amazon.com2/'),
+    (2,3,'000-0000-0000','신한은행','','기준','010-0000-0000','pwd','1113','pickup3','https://aws.amazon.com3/'),
+    (0,4,'000-0000-0000','신한은행','','효원','010-0000-0000','pwd','1114','pickup4','https://aws.amazon.com4/'),
+    (1,5,'000-0000-0000','신한은행','','단빈','010-0000-0000','pwd','1115','pickup5','https://aws.amazon.com5/'),
+    (2,6,'000-0000-0000','신한은행','','주현','010-0000-0000','pwd','1116','pickup6','https://aws.amazon.com6/'),
+    (3,7,'000-0000-0000','신한은행','','일반인','010-0000-0000','pwd','1117','pickup7','');
 
-INSERT INTO user_tb (`uid`,`pwd`,`nickname`, `phone_number`, `name`, `bank`, `account`, `social_id`) VALUES ('honggildong2', '{bcrypt}$2a$10$8H0OT8wgtALJkig6fmypi.Y7jzI5Y7W9PGgRKqnVeS2cLWGifwHF2', 'pickupmaster1', '010-0000-1234','홍길동', '농협', '000-0000-0000-000', '2222');
+insert into store_tb(id, name)
+VALUES
+    (1, '스타벅스'),
+    (2, '컴포즈'),
+    (3, '더벤티'),
+    (4, '이디야'),
+    (5, '메가MGC');
 
-INSERT INTO user_tb (`uid`,`pwd`,`nickname`, `phone_number`, `name`, `bank`, `account`, `social_id`, `role`,`url`) VALUES ('honggildong3', 'pwd','user', '010-0000-1234','홍길동', '농협', '000-0000-0000-000', '3333', '1','https://aws.amazon.com/');
+insert into board_tb (tip, created_at, finished_at, id, match_id, store_id, user_id, destination, is_match, request)
+VALUES
+    (1000, current_time,date_add(current_time, interval 30 minute), 1, null, 1, 1, '전남대 공대7 217호관', 'N', '빨리 와주세요1'),
+    (1500, current_time,date_add(current_time, interval 30 minute), 2, null, 2, 2, '전남대 공대7 218호관', 'N', '빨리 와주세요2'),
+    (2000, current_time,date_add(current_time, interval 30 minute), 3, null, 3, 3, '전남대 공대7 219호관', 'N', '빨리 와주세요3'),
+    (1000, current_time,date_add(current_time, interval 30 minute), 4, null, 4, 4, '전남대 공대7 220호관', 'N', '빨리 와주세요4'),
+    (1500, current_time,date_add(current_time, interval 30 minute), 5, null, 5, 5, '전남대 공대7 221호관', 'N', '빨리 와주세요5'),
+    (2000, current_time,date_add(current_time, interval 30 minute), 6, null, 5, 6, '전남대 공대7 222호관', 'N', '빨리 와주세요6');
 
-INSERT INTO user_tb (`uid`,`pwd`,`nickname`, `phone_number`, `name`, `bank`, `account`, `social_id`, `role`) VALUES ('honggildong3', 'pwd','user', '010-0000-1234','홍길동', '농협', '000-0000-0000-000', '4444', '1');
+insert into beverage_tb(id, name)
+values
+    (1, '아메리카노'),
+    (2, '카페라떼'),
+    (3, '카페모카'),
+    (4, '초코라떼'),
+    (5, '딸기라');
 
-INSERT INTO user_tb (`uid`,`pwd`,`nickname`, `phone_number`, `name`, `bank`, `account`, `social_id`, `role`,`url`) VALUES ('honggildong4', 'pwd','student', '010-0000-1234','홍길동', '농협', '000-0000-0000-000', '5555', '2','https://aws.amazon.com/');
+insert into match_tb (arrival_time, id, match_time, user_id)
+VALUES
+    (date_add(current_time(), interval 15 minute), 1, now(),2);
 
-insert into store_tb(`id`,`name`) values ('1', '전남대 후문 스타벅스');
-
-insert into store_tb(`name`) values ('starbucks');
-
-insert into board_tb(`tip`, `created_at`, `finished_at`, `is_match`, `destination`, `request`, `user_id`, `store_id`) values ('1000', '2023-09-30 00:14', '2023-09-30 02:24', 'N', '전남대 공대7 217호관', '빨리 와주세요', '1', '1');
-
-insert into board_tb(`tip`, `created_at`, `finished_at`, `is_match`, `destination`, `request`, `user_id`, `store_id`) values ('1000', '2023-09-30 00:14', '2023-09-30 02:24', 'N', '전남대 공대7 217호관', '빨리 와주세요', '1', '1');
-
-insert into board_tb(`tip`, `created_at`, `finished_at`, `is_match`, `destination`, `request`, `user_id`, `store_id`) values ('1000', '2023-09-30 00:14', '2023-09-30 02:24', 'N', '전남대 공대7 217호관', '빨리 와주세요', '1', '1');
-
-insert into board_tb(`tip`, `created_at`, `finished_at`, `is_match`, `destination`, `request`, `user_id`, `store_id`) values ('1000', '2023-09-30 00:14', '2023-09-30 02:24', 'N', '전남대 공대7 217호관', '빨리 와주세요', '2', '1');
-
-insert into board_tb(`tip`, `created_at`, `finished_at`, `is_match`, `destination`, `request`, `user_id`, `store_id`) values ('1000', '2023-09-30 00:14', '2023-09-30 02:24', 'N', '전남대 공대7 217호관', '빨리 와주세요', '2', '1');
-
-insert into beverage_tb(`board_id`, `name`) values ('1', '핫 아메리카노');
-
-insert into beverage_tb(`board_id`, `name`) values ('1', '아이스 아메리카노');
-
-insert into beverage_tb(`board_id`, `name`) values ('2', '핫 아메리카노');
-
-insert into beverage_tb(`board_id`, `name`) values ('3', '아이스 아메리카노');
-
-insert into beverage_tb(`board_id`, `name`) values ('4', '핫 아메리카노');
-
-insert into beverage_tb(`board_id`, `name`) values ('4', '아이스 아메리카노');
-
-insert into match_tb(`id`, `arrival_time`, `match_time`, `user_id`) values ('1', '5', '2023-09-30 02:34', '2');
-
-update board_tb set `is_match` = 'Y', `match_id` = '1' where `id` = '1';
+update board_tb set match_id = 1 , is_match = 'Y' where id = 1;
