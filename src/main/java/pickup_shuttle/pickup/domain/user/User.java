@@ -41,9 +41,11 @@ public class User {
     // private String refreshToken; // 리프레시 토큰
     private String email; // 처음 OAuth 로그인 한 사람 식별용
     private String socialId; // 카카오 고유 ID로 식별용
-    @Column(name = "bank")
+    @Column(name = "bank", nullable = false)
+    @ColumnDefault("''")
     private String bank;
-    @Column(name = "account")
+    @Column(name = "account", nullable = false)
+    @ColumnDefault("''")
     private String account;
 
     @Builder
