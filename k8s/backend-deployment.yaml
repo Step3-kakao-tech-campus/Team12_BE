@@ -52,6 +52,11 @@ spec:
                 key: MYSQL_ROOT_PASSWORD
           - name: SPRING_PROFILES_ACTIVE
             value: "dev"
+          - name: JWT_SECRETKEY
+            valueFrom:
+              secretKeyRef:
+                name: jwt-secret-key-secret
+                key: secretKey
         resources:
           requests:
             memory: 1Gi
