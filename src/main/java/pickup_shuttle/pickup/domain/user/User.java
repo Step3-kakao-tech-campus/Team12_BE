@@ -35,8 +35,7 @@ public class User {
     @ColumnDefault("''") // 임시
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
-    @Column(name = "name", nullable = false)
-    private String name;
+
 
     // private String refreshToken; // 리프레시 토큰
     private String email; // 처음 OAuth 로그인 한 사람 식별용
@@ -50,13 +49,12 @@ public class User {
 
     @Builder
     public User(String socialId, String email,UserRole userRole, String nickname,
-                String phoneNumber, String name, String bank, String account) {
+                String phoneNumber,  String bank, String account) {
         this.socialId = socialId;
         this.email = email;
         this.nickname = nickname;
         this.phoneNumber = phoneNumber;
         this.userRole = userRole;
-        this.name = name;
         this.bank = bank;
         this.account = account;
     }
