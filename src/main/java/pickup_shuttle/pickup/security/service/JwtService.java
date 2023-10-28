@@ -26,7 +26,7 @@ import java.util.Optional;
 @Log4j2
 @Service
 @Transactional(readOnly = true)
-@PropertySource("classpath:application.properties")
+@PropertySource("classpath:application-local-oauth.yml")
 public class JwtService {
 
     @Value("${jwt.secret}")
