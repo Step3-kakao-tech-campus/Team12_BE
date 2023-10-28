@@ -4,3 +4,12 @@ resources:
   - backend-service.yml
   - mysql-deployment.yml
   - mysql-service.yml
+configMapGenerator:
+  - name: nginx
+    files:
+      - configs/default.conf
+  - name: init-db
+    files:
+      - mysql-init/01_init.sql
+      - mysql-init/02_create_table.sql
+      - mysql-init/03_insert_data.sql
