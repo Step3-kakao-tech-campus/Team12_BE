@@ -8,6 +8,6 @@ configMapGenerator:
       - configs/default.conf
   - name: init-db
     files:
-      - mysql-init/01_init.sql
-      - mysql-init/02_create_table.sql
-      - mysql-init/03_insert_data.sql
+      - mysql-init.d/01_init.sql
+      - mysql-init.d/02_create_table.sql
+      - mysql-init.d/03_insert_data.sql
