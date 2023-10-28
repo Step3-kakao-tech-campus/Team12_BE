@@ -14,5 +14,6 @@ public record BoardDetailBeforeRpDTO(
         int tip,
         String request,
         Long finishedAt,
-        boolean isMatch
+        boolean isMatch,
+        boolean overDeadline
 ) { }

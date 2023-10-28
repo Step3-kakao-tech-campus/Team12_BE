@@ -18,5 +18,7 @@ public record BoardDetailAfterRpDTO (
         String pickerBank,
         String pickerAccount,
         Long arrivalTime,
-        String pickerPhoneNumber
+        String pickerPhoneNumber,
+        boolean overDeadline
+
 ) { }
