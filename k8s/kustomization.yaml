@@ -2,7 +2,7 @@ namespace: default
 resources:
   - backend-deployment.yml
   - backend-service.yaml
-  - mysql-deployment.yaml
+  - mysql.yaml
   - mysql-service.yaml
   - configs/aws-secret.yaml
   - configs/backend-secret.yaml
