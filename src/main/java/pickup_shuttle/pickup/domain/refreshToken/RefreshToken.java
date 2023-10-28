@@ -9,15 +9,17 @@ import pickup_shuttle.pickup.domain.user.User;
 @Getter
 @Entity
 @NoArgsConstructor
+@Table(name = "refresh_token_tb")
 public class RefreshToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "refresh_token", nullable = false)
     private String refreshToken;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     public RefreshToken(String token, User user) {
