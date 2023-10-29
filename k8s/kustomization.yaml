@@ -2,6 +2,7 @@ namespace: default
 resources:
   - backend-deployment.yaml
   - mysql.yaml
+  - ingress.yaml
 configMapGenerator:
   - name: nginx
     files:
