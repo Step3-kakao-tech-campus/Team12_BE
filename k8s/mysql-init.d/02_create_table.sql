@@ -1,4 +1,4 @@
-use pickup_shuttle;
+use pickup;
 create table beverage_tb
 (
     board_id bigint null,
