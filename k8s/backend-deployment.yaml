@@ -44,12 +44,12 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: mysql-secret
-                key: MYSQL_USER
+                key: USER
           - name: SPRING_DATASOURCE_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: mysql-secret
-                key: MYSQL_ROOT_PASSWORD
+                key: PASSWORD
           - name: SPRING_PROFILES_ACTIVE
             value: "dev"
           - name: JWT_SECRETKEY
