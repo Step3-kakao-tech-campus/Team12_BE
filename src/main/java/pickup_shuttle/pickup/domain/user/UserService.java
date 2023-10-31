@@ -173,7 +173,7 @@ public class UserService {
         );
         return UserMyPageRpDTO.builder()
                 .role(user.getUserRole().getValue())
-                .name(user.getName())
+                .name(user.getNickname())
                 .build();
     }
 }
