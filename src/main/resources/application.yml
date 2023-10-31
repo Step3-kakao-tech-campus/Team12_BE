@@ -1,0 +1,14 @@
+spring:
+ profiles:
+  group:
+   local:
+    - common
+    - local-db
+    - local-oauth
+    - local-aws
+   dev:
+    - common
+    - dev-db
+    - dev-oauth
+    - dev-aws
+  active: dev
