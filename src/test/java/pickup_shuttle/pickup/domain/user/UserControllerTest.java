@@ -37,7 +37,7 @@ class UserControllerTest {
         @DisplayName("성공 : 학생증 인증을 신청한 일반회원의 경우")
         void testUserAuthStatus1() throws Exception{
             //given
-            String accessToken = jwtService.createAccessToken("3"); //USER
+            String accessToken = "Bearer " + jwtService.createAccessToken("2"); //USER
 
             //when
             ResultActions resultActions = mvc.perform(
@@ -58,7 +58,7 @@ class UserControllerTest {
         @DisplayName("성공 : 학생증 인증을 신청하지 않은 일반회원의 경우")
         void testUserAuthStatus2() throws Exception{
             //given
-            String accessToken = jwtService.createAccessToken("4"); //USER
+            String accessToken = "Bearer " + jwtService.createAccessToken("7");
 
             //when
             ResultActions resultActions = mvc.perform(
@@ -79,7 +79,7 @@ class UserControllerTest {
         @DisplayName("성공 : 학생회원의 경우")
         void testUserAuthStatus3() throws Exception{
             //given
-            String accessToken = jwtService.createAccessToken("5"); //STUDENT
+            String accessToken = "Bearer " + jwtService.createAccessToken("3"); //STUDENT
 
             //when
             ResultActions resultActions = mvc.perform(
@@ -101,7 +101,7 @@ class UserControllerTest {
     @DisplayName("성공 : 마이페이지 조회")
     void tesMyPage() throws Exception{
         //given
-        String accessToken = "Bearer " + jwtService.createAccessToken("4"); //ADMIN
+        String accessToken = "Bearer " + jwtService.createAccessToken("2"); //USER
 
         //when
         ResultActions resultActions = mvc.perform(
@@ -117,14 +117,14 @@ class UserControllerTest {
         //then
         resultActions.andExpect(jsonPath("$.success").value("true"));
         resultActions.andExpect(jsonPath("$.response.role").value("ROLE_USER"));
-        resultActions.andExpect(jsonPath("$.response.name").value("홍길동"));
+        resultActions.andExpect(jsonPath("$.response.name").value("배경"));
     }
 
     @Test
     @DisplayName("성공 : 학생 인증 목록 보기")
     void testGetAuthList() throws Exception {
         //given
-        String accessToken = "Bearer " + jwtService.createAccessToken("6"); //ADMIN
+        String accessToken = "Bearer " + jwtService.createAccessToken("1"); //ADMIN
 
         //when
         ResultActions resultActions = mvc.perform(
@@ -139,16 +139,16 @@ class UserControllerTest {
 
         //then
         resultActions.andExpect(jsonPath("$.success").value("true"));
-        resultActions.andExpect(jsonPath("$.response.content[0].userId").value(3));
-        resultActions.andExpect(jsonPath("$.response.content[0].name").value("홍길동"));
+        resultActions.andExpect(jsonPath("$.response.content[0].userId").value(2));
+        resultActions.andExpect(jsonPath("$.response.content[0].name").value("배경"));
 
     }
     @Test
     @DisplayName("성공 : 학생 인증 상세보기")
     void testGetAuthDetail() throws Exception {
         //given
-        String accessToken = "Bearer " + jwtService.createAccessToken("6"); //ADMIN
-        Long userId = 3L; // 학생 인증을 신청한 일반회원
+        String accessToken = "Bearer " + jwtService.createAccessToken("1"); //ADMIN
+        Long userId = 2L; // 학생 인증을 신청한 일반회원
         //when
         ResultActions resultActions = mvc.perform(
                 get("/admin/auth/list/{userId}", userId)
@@ -161,7 +161,7 @@ class UserControllerTest {
         System.out.println("testGetAuthDetail : " + responseBody);
         //then
         resultActions.andExpect(jsonPath("$.success").value("true"));
-        resultActions.andExpect(jsonPath("$.response.nickname").value("user"));
+        resultActions.andExpect(jsonPath("$.response.nickname").value("배경"));
     }
     @Nested
     class testAuthApprove{
@@ -169,8 +169,8 @@ class UserControllerTest {
         @DisplayName("성공 : 학생 인증 승인")
         void testAuthApprove1() throws Exception {
             //given
-            String accessToken = "Bearer " + jwtService.createAccessToken("6"); //ADMIN
-            Long userId = 3L; // 학생 인증을 신청한 일반회원
+            String accessToken = "Bearer " + jwtService.createAccessToken("1"); //ADMIN
+            Long userId = 2L; // 학생 인증을 신청한 일반회원
             UserAuthApproveRqDTO requestDTO = UserAuthApproveRqDTO.builder()
                     .userId(userId)
                     .role("ROLE_STUDENT")
@@ -196,8 +196,8 @@ class UserControllerTest {
         @DisplayName("성공 : 학생 인증 거절")
         void testAuthApprove2() throws Exception {
             //given
-            String accessToken = "Bearer " + jwtService.createAccessToken("6"); //ADMIN
-            Long userId = 3L; // 학생 인증을 신청한 일반회원
+            String accessToken = "Bearer " + jwtService.createAccessToken("1"); //ADMIN
+            Long userId = 2L; // 학생 인증을 신청한 일반회원
             UserAuthApproveRqDTO requestDTO = UserAuthApproveRqDTO.builder()
                     .userId(userId)
                     .role("ROLE_USER")
@@ -224,8 +224,8 @@ class UserControllerTest {
         @DisplayName("실패 : 잘못된 권한 요청")
         void testAuthApproveInvalidRole() throws Exception {
             //given
-            String accessToken = "Bearer " + jwtService.createAccessToken("6"); //ADMIN
-            Long userId = 3L; // 학생 인증을 신청한 일반회원
+            String accessToken = "Bearer " + jwtService.createAccessToken("1"); //ADMIN
+            Long userId = 2L; // 학생 인증을 신청한 일반회원
             UserAuthApproveRqDTO requestDTO = UserAuthApproveRqDTO.builder()
                     .userId(userId)
                     .role("ROLE_ADMIN")
