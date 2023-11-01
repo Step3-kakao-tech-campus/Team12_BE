@@ -16,8 +16,6 @@ import pickup_shuttle.pickup._core.errors.exception.Exception400;
 import pickup_shuttle.pickup._core.errors.exception.Exception500;
 import pickup_shuttle.pickup.config.ErrorMessage;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
-import pickup_shuttle.pickup.domain.user.dto.repository.UserRepository;
-import pickup_shuttle.pickup.domain.user.dto.repository.UserRepositoryCustom;
 import pickup_shuttle.pickup.domain.user.dto.request.UserAuthApproveRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserModifyRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
@@ -25,6 +23,8 @@ import pickup_shuttle.pickup.domain.user.dto.response.UserAuthDetailRpDTO;
 import pickup_shuttle.pickup.domain.user.dto.response.UserAuthListRpDTO;
 import pickup_shuttle.pickup.domain.user.dto.response.UserGetImageUrlRpDTO;
 import pickup_shuttle.pickup.domain.user.dto.response.UserMyPageRpDTO;
+import pickup_shuttle.pickup.domain.user.repository.UserRepository;
+import pickup_shuttle.pickup.domain.user.repository.UserRepositoryCustom;
 
 import java.io.InputStream;
 import java.util.Date;
@@ -181,7 +181,7 @@ public class UserService {
         );
         return UserMyPageRpDTO.builder()
                 .role(user.getUserRole().getValue())
-                .name(user.getName())
+                .nickname(user.getNickname())
                 .build();
     }
 
@@ -192,7 +192,7 @@ public class UserService {
         List<UserAuthListRpDTO> userAuthListRpDTOList = userSlice.getContent().stream()
                 .map(u -> UserAuthListRpDTO.builder()
                             .userId(u.getUserId())
-                            .name(u.getName())
+                            .nickname(u.getNickname())
                             .build())
                 .toList();
         return new SliceImpl<>(userAuthListRpDTOList, pageRequest, userSlice.hasNext());
