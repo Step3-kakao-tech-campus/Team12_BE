@@ -31,6 +31,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom{
                         user.userRole.eq(UserRole.USER)
                 )
                 .limit(pageable.getPageSize()+1)
+
                 .fetch();
 
         boolean hasNext = content.size() > pageable.getPageSize();
@@ -41,6 +42,6 @@ public class UserRepositoryImpl implements UserRepositoryCustom{
     }
 
     private BooleanExpression ltUserId(Long userId){
-        return userId == null? null : user.userId.lt(userId);
+        return userId == null? null : user.userId.gt(userId);
     }
 }
