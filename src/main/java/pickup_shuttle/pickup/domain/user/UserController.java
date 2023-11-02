@@ -11,6 +11,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import pickup_shuttle.pickup._core.utils.ApiUtils;
+import pickup_shuttle.pickup._core.utils.CustomPage;
 import pickup_shuttle.pickup.config.Login;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
 import pickup_shuttle.pickup.domain.refreshToken.dto.response.AccessTokenRpDTO;
@@ -115,7 +116,7 @@ public class UserController {
             @RequestParam(value = "offset",required = false) Long lastUserId,
             @RequestParam(value = "limit",defaultValue = "10") int size){
         Slice<UserAuthListRpDTO> responseDTOSlice = userService.getAuthList(lastUserId, size);
-        return ResponseEntity.ok(ApiUtils.success(responseDTOSlice));
+        return ResponseEntity.ok(ApiUtils.success(new CustomPage(responseDTOSlice)));
     }
     @GetMapping("/admin/auth/list/{userId}")
     public ResponseEntity<?> getAuthDetail(@PathVariable("userId") Long userId){
