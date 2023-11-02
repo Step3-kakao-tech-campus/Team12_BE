@@ -215,10 +215,17 @@ public class UserService {
                 () -> new Exception400(ErrorMessage.UNKNOWN_USER)
         );
         switch (requestDTO.role()){
-            case "ROLE_STUDENT" : user.updateRole(UserRole.STUDENT); return "학생 인증이 승인되었습니다";
-            case "ROLE_USER" : return "학생 인증이 거절되었습니다";
+            case "ROLE_STUDENT" :
+                if(user.getUserRole() == UserRole.USER){
+                    user.updateRole(UserRole.STUDENT);
+                    return "학생 인증이 승인되었습니다";
+                }
+                else throw new Exception400("일반 회원이 아닙니다");
+            case "ROLE_USER" :
+                return "학생 인증이 거절되었습니다";
+            default :
+                throw new Exception400("잘못된 권한입니다");
         }
-        throw new Exception400("잘못된 권한입니다");
     }
 }
 
