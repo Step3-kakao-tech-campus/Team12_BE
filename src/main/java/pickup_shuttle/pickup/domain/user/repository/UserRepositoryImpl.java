@@ -27,7 +27,6 @@ public class UserRepositoryImpl implements UserRepositoryCustom{
                 .selectFrom(user)
                 .where(
                         ltUserId(lastUserId),
-                        user.url.isNotEmpty(),
                         user.userRole.eq(UserRole.USER)
                 )
                 .limit(pageable.getPageSize()+1)

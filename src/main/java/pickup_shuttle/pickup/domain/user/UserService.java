@@ -190,6 +190,7 @@ public class UserService {
         Slice<User> userSlice = userRepositoryCustom.searchAuthList(lastUserId, pageRequest);
 
         List<UserAuthListRpDTO> userAuthListRpDTOList = userSlice.getContent().stream()
+                .filter(u -> !u.getUrl().isEmpty())
                 .map(u -> UserAuthListRpDTO.builder()
                             .userId(u.getUserId())
                             .nickname(u.getNickname())
