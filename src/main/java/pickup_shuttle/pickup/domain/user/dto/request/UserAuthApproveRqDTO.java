@@ -6,7 +6,6 @@ import lombok.Builder;
 
 @Builder
 public record UserAuthApproveRqDTO(
-        @NotNull(message = "유저를 특정할 수 없습니다")Long userId,
-        @NotBlank(message = "역할이 공백입니다")String role
+        @NotNull(message = "유저를 특정할 수 없습니다")Long userId
 ) {
 }

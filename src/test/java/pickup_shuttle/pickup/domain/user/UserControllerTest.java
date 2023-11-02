@@ -118,7 +118,7 @@ class UserControllerTest {
         //then
         resultActions.andExpect(jsonPath("$.success").value("true"));
         resultActions.andExpect(jsonPath("$.response.role").value("ROLE_USER"));
-        resultActions.andExpect(jsonPath("$.response.name").value("배경"));
+        resultActions.andExpect(jsonPath("$.response.nickname").value("배경"));
     }
 
     @Test
@@ -141,7 +141,7 @@ class UserControllerTest {
         //then
         resultActions.andExpect(jsonPath("$.success").value("true"));
         resultActions.andExpect(jsonPath("$.response.content[0].userId").value(2));
-        resultActions.andExpect(jsonPath("$.response.content[0].name").value("배경"));
+        resultActions.andExpect(jsonPath("$.response.content[0].nickname").value("배경"));
 
     }
     @Test
@@ -164,19 +164,16 @@ class UserControllerTest {
         resultActions.andExpect(jsonPath("$.success").value("true"));
         resultActions.andExpect(jsonPath("$.response.nickname").value("배경"));
     }
-    @Autowired
-    private UserRepository userRepository;
     @Nested
     class testAuthApprove{
         @Test
         @DisplayName("성공 : 학생 인증 승인")
-        void testAuthApprove1() throws Exception {
+        void testAuthApprove() throws Exception {
             //given
             String accessToken = "Bearer " + jwtService.createAccessToken("1"); //ADMIN
             Long userId = 2L; // 학생 인증을 신청한 일반회원
             UserAuthApproveRqDTO requestDTO = UserAuthApproveRqDTO.builder()
                     .userId(userId)
-                    .role("ROLE_STUDENT")
                     .build();
             String requestBody = om.writeValueAsString(requestDTO);
             //when
@@ -189,75 +186,20 @@ class UserControllerTest {
 
             //eye
             String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testAuthApprove1 : " + responseBody);
+            System.out.println("testAuthApprove : " + responseBody);
 
             //then
             resultActions.andExpect(jsonPath("$.success").value("true"));
             resultActions.andExpect(jsonPath("$.response").value("학생 인증이 승인되었습니다"));
         }
         @Test
-        @DisplayName("성공 : 학생 인증 거절")
-        void testAuthApprove2() throws Exception {
-            //given
-            String accessToken = "Bearer " + jwtService.createAccessToken("1"); //ADMIN
-            Long userId = 2L; // 학생 인증을 신청한 일반회원
-            UserAuthApproveRqDTO requestDTO = UserAuthApproveRqDTO.builder()
-                    .userId(userId)
-                    .role("ROLE_USER")
-                    .build();
-            String requestBody = om.writeValueAsString(requestDTO);
-            //when
-            ResultActions resultActions = mvc.perform(
-                    patch("/admin/auth/approval")
-                            .content(requestBody)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
-
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testAuthApprove2 : " + responseBody);
-
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("true"));
-            resultActions.andExpect(jsonPath("$.response").value("학생 인증이 거절되었습니다"));
-        }
-        @Test
-        @DisplayName("실패 : 잘못된 권한 요청")
-        void testAuthApproveInvalidRole1() throws Exception {
-            //given
-            String accessToken = "Bearer " + jwtService.createAccessToken("1"); //ADMIN
-            Long userId = 2L; // 학생 인증을 신청한 일반회원
-            UserAuthApproveRqDTO requestDTO = UserAuthApproveRqDTO.builder()
-                    .userId(userId)
-                    .role("ROLE_ADMIN")
-                    .build();
-            String requestBody = om.writeValueAsString(requestDTO);
-            //when
-            ResultActions resultActions = mvc.perform(
-                    patch("/admin/auth/approval")
-                            .content(requestBody)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
-
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testAuthApproveInvalidRole1 : " + responseBody);
-
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("잘못된 권한입니다"));
-        }
-        @Test
         @DisplayName("실패 : 일반 등급이 아닌 회원의 학생 인증을 시도하는 경우")
-        void testAuthApproveInvalidRole2() throws Exception {
+        void testAuthApproveInvalidRole() throws Exception {
             //given
             String accessToken = "Bearer " + jwtService.createAccessToken("1"); //ADMIN
             Long userId = 7L; // GUEST
             UserAuthApproveRqDTO requestDTO = UserAuthApproveRqDTO.builder()
                     .userId(userId)
-                    .role("ROLE_STUDENT")
                     .build();
             String requestBody = om.writeValueAsString(requestDTO);
             //when
@@ -270,7 +212,7 @@ class UserControllerTest {
 
             //eye
             String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testAuthApproveInvalidRole2 : " + responseBody);
+            System.out.println("testAuthApproveInvalidRole : " + responseBody);
 
             //then
             resultActions.andExpect(jsonPath("$.success").value("false"));
