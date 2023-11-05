@@ -15,18 +15,18 @@ import org.springframework.web.multipart.MultipartFile;
 import pickup_shuttle.pickup._core.errors.exception.Exception400;
 import pickup_shuttle.pickup._core.errors.exception.Exception500;
 import pickup_shuttle.pickup.config.ErrorMessage;
+import pickup_shuttle.pickup.domain.board.Board;
+import pickup_shuttle.pickup.domain.board.repository.BoardRepository;
+import pickup_shuttle.pickup.domain.match.MatchRepository;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
 import pickup_shuttle.pickup.domain.user.dto.request.UserAuthApproveRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserModifyRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
-import pickup_shuttle.pickup.domain.user.dto.response.UserAuthDetailRpDTO;
-import pickup_shuttle.pickup.domain.user.dto.response.UserAuthListRpDTO;
-import pickup_shuttle.pickup.domain.user.dto.response.UserGetImageUrlRpDTO;
-import pickup_shuttle.pickup.domain.user.dto.response.UserMyPageRpDTO;
+import pickup_shuttle.pickup.domain.user.dto.response.*;
 import pickup_shuttle.pickup.domain.user.repository.UserRepository;
 import pickup_shuttle.pickup.domain.user.repository.UserRepositoryCustom;
-
 import java.io.InputStream;
+import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -36,8 +36,11 @@ import java.util.Optional;
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    private final AmazonS3 amazonS3;
     private final UserRepositoryCustom userRepositoryCustom;
+    private final BoardRepository boardRepository;
+    private final MatchRepository matchRepository;
+    private final AmazonS3 amazonS3;
+
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
     @Value("${cloud.aws.s3.dir}")
@@ -221,5 +224,22 @@ public class UserService {
         }
         else throw new Exception400("일반 회원이 아닙니다");
     }
+    public Slice<UserGetRequesterListRpDTO> getRequesterList(Long userId, Long lastBoardId, int size){
+        PageRequest pageRequest = PageRequest.of(0, size);
+        Slice<Board> boardSlice = userRepositoryCustom.searchRequesterList(userId, lastBoardId, pageRequest);
+        List<UserGetRequesterListRpDTO> responseDTOList = boardSlice.getContent().stream()
+                .map(b -> UserGetRequesterListRpDTO.builder()
+                        .boardId(b.getBoardId())
+                        .shopName(b.getStore().getName())
+                        .destination(b.getDestination())
+                        .finishedAt(b.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                        .tip(b.getTip())
+                        .match(b.isMatch())
+                        .build())
+                .toList();
+        return new SliceImpl<>(responseDTOList, pageRequest, boardSlice.hasNext());
+    }
+
+
 }
 

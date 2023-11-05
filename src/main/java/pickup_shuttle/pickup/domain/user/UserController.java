@@ -128,4 +128,13 @@ public class UserController {
         String message = userService.authApprove(requestDTO);
         return ResponseEntity.ok(ApiUtils.success(message));
     }
+    @GetMapping("/mypage/requester/list")
+    public ResponseEntity<?> getRequesterList(
+            @Login Long userId,
+            @RequestParam(value = "offset",required = false) Long lastBoardId,
+            @RequestParam(value = "limit",defaultValue = "10") int size){
+        Slice<UserGetRequesterListRpDTO> responseDTO = userService.getRequesterList(userId, lastBoardId, size);
+        return ResponseEntity.ok(ApiUtils.success(new CustomPage(responseDTO)));
+    }
+
 }
