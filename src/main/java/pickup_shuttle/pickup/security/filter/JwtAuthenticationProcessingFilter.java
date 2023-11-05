@@ -19,7 +19,7 @@ import pickup_shuttle.pickup._core.errors.exception.Exception400;
 import pickup_shuttle.pickup.domain.refreshToken.RefreshToken;
 import pickup_shuttle.pickup.domain.refreshToken.RefreshTokenRepository;
 import pickup_shuttle.pickup.domain.user.User;
-import pickup_shuttle.pickup.domain.user.UserRepository;
+import pickup_shuttle.pickup.domain.user.repository.UserRepository;
 import pickup_shuttle.pickup.security.service.JwtService;
 import pickup_shuttle.pickup.security.util.PasswordUtil;
 
@@ -41,7 +41,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if(request.getRequestURI().equals(NO_CHECK_URL)){
+        if(request.getRequestURI().equals("/")||request.getRequestURI().equals("/login/callback") ||request.getRequestURI().equals("/signup") || request.getRequestURI().equals("/login/oauth2/code/kakao")|| request.getRequestURI().equals("/users/register/input")){
             filterChain.doFilter(request,response); // "/login/callback" 요청이 들어오면, 다음 필터 호출
             return;  // return으로 이후 현재 필터 진행 막기 (안해주면 아래로 내려가서 계속 필터 진행시킴)
         }

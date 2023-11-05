@@ -27,4 +27,4 @@ COPY --from=build /workspace/Team12_BE/build/libs/Team12_BE-0.0.1-SNAPSHOT.jar .
 ENV DATABASE_URL=jdbc:mysql://pickup-mysql-dev/pickup
 
 # Start the application
-CMD ["java", "-jar", "-Dspring.profiles.active=dev", "Team12_BE-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-Dhttp.proxyHost=krmp-proxy.9rum.cc", "-Dhttp.proxyPort=3128","-Dhttps.proxyHost=krmp-proxy.9rum.cc", "-Dhttps.proxyPort=3128", "-Dspring.profiles.active=dev", "-jar", "Team12_BE-0.0.1-SNAPSHOT.jar"]
