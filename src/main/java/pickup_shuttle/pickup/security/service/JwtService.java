@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pickup_shuttle.pickup.domain.refreshToken.RefreshToken;
 import pickup_shuttle.pickup.domain.refreshToken.RefreshTokenRepository;
 import pickup_shuttle.pickup.domain.user.User;
-import pickup_shuttle.pickup.domain.user.UserRepository;
+import pickup_shuttle.pickup.domain.user.repository.UserRepository;
 
 import java.util.Date;
 import java.util.Optional;

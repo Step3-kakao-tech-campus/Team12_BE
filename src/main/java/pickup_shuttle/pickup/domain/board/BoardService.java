@@ -24,7 +24,7 @@ import pickup_shuttle.pickup.domain.match.MatchService;
 import pickup_shuttle.pickup.domain.store.Store;
 import pickup_shuttle.pickup.domain.store.StoreRepository;
 import pickup_shuttle.pickup.domain.user.User;
-import pickup_shuttle.pickup.domain.user.UserRepository;
+import pickup_shuttle.pickup.domain.user.repository.UserRepository;
 import pickup_shuttle.pickup.domain.utils.Utils;
 
 import java.lang.reflect.Field;
