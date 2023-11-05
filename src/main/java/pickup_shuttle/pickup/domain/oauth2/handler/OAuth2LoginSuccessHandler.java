@@ -12,8 +12,8 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
 import pickup_shuttle.pickup.domain.user.User;
-import pickup_shuttle.pickup.domain.user.UserRepository;
 import pickup_shuttle.pickup.domain.user.UserRole;
+import pickup_shuttle.pickup.domain.user.repository.UserRepository;
 import pickup_shuttle.pickup.security.service.JwtService;
 
 import java.io.IOException;
