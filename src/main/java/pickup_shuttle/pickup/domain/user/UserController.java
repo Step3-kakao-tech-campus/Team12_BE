@@ -136,5 +136,9 @@ public class UserController {
         Slice<UserGetRequesterListRpDTO> responseDTO = userService.getRequesterList(userId, lastBoardId, size);
         return ResponseEntity.ok(ApiUtils.success(new CustomPage(responseDTO)));
     }
-
+    @GetMapping("/mypage/requester/detail/{boardId}")
+    public ResponseEntity<?> getRequesterDetail(@PathVariable("boardId") Long boardId){
+        UserGetRequesterDetailRpDTO responseDTO = userService.getRequesterDetail(boardId);
+        return ResponseEntity.ok(ApiUtils.success(responseDTO));
+    }
 }

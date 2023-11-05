@@ -15,8 +15,10 @@ import org.springframework.web.multipart.MultipartFile;
 import pickup_shuttle.pickup._core.errors.exception.Exception400;
 import pickup_shuttle.pickup._core.errors.exception.Exception500;
 import pickup_shuttle.pickup.config.ErrorMessage;
+import pickup_shuttle.pickup.domain.beverage.dto.BeverageDTO;
 import pickup_shuttle.pickup.domain.board.Board;
 import pickup_shuttle.pickup.domain.board.repository.BoardRepository;
+import pickup_shuttle.pickup.domain.match.Match;
 import pickup_shuttle.pickup.domain.match.MatchRepository;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
 import pickup_shuttle.pickup.domain.user.dto.request.UserAuthApproveRqDTO;
@@ -239,7 +241,48 @@ public class UserService {
                 .toList();
         return new SliceImpl<>(responseDTOList, pageRequest, boardSlice.hasNext());
     }
+    public UserGetRequesterDetailRpDTO getRequesterDetail(Long boardId){
+        Board board = boardRepository.m4findByBoardId(boardId).orElseThrow(
+                () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
+        );
+        List<BeverageDTO> beverage = board.getBeverages().stream()
+                .map(b -> BeverageDTO.builder()
+                        .name(b.getName())
+                        .build()
+                )
+                .toList();
+        if(board.isMatch()){
+            Match match = matchRepository.mfindByMatchId(board.getMatch().getMatchId()).orElseThrow(
+                    () -> new Exception400("매칭 정보를 찾을 수 없습니다")
+            );
+            return UserGetRequesterDetailRpDTO.builder()
+                    .boardId(boardId)
+                    .shopName(board.getStore().getName())
+                    .destination(board.getDestination())
+                    .beverage(beverage)
+                    .tip(board.getTip())
+                    .request(board.getRequest())
+                    .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                    .isMatch(board.isMatch())
+                    .pickerBank(match.getUser().getBank())
+                    .pickerAccount(match.getUser().getAccount())
+                    .arrivalTime(match.getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).toEpochSecond(ZoneOffset.UTC))
+                    .pickerPhoneNumber(match.getUser().getPhoneNumber())
+                    .build();
+        }else{
+            return UserGetRequesterDetailRpDTO.builder()
+                    .boardId(boardId)
+                    .shopName(board.getStore().getName())
+                    .destination(board.getDestination())
+                    .beverage(beverage)
+                    .tip(board.getTip())
+                    .request(board.getRequest())
+                    .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                    .isMatch(board.isMatch())
+                    .build();
+        }
 
+    }
 
 }
 
