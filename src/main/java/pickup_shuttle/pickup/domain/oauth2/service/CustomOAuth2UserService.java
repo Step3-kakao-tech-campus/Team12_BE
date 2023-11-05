@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
 import pickup_shuttle.pickup.domain.oauth2.OAuthAttributes;
 import pickup_shuttle.pickup.domain.user.User;
-import pickup_shuttle.pickup.domain.user.UserRepository;
+import pickup_shuttle.pickup.domain.user.repository.UserRepository;
 
 import java.util.Collections;
 import java.util.Map;

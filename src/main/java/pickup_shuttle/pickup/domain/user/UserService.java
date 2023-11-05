@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,13 +16,19 @@ import pickup_shuttle.pickup._core.errors.exception.Exception400;
 import pickup_shuttle.pickup._core.errors.exception.Exception500;
 import pickup_shuttle.pickup.config.ErrorMessage;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
+import pickup_shuttle.pickup.domain.user.dto.request.UserAuthApproveRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserModifyRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
+import pickup_shuttle.pickup.domain.user.dto.response.UserAuthDetailRpDTO;
+import pickup_shuttle.pickup.domain.user.dto.response.UserAuthListRpDTO;
 import pickup_shuttle.pickup.domain.user.dto.response.UserGetImageUrlRpDTO;
 import pickup_shuttle.pickup.domain.user.dto.response.UserMyPageRpDTO;
+import pickup_shuttle.pickup.domain.user.repository.UserRepository;
+import pickup_shuttle.pickup.domain.user.repository.UserRepositoryCustom;
 
 import java.io.InputStream;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Transactional(readOnly = true)
@@ -30,7 +37,7 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final AmazonS3 amazonS3;
-
+    private final UserRepositoryCustom userRepositoryCustom;
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
     @Value("${cloud.aws.s3.dir}")
@@ -91,6 +98,7 @@ public class UserService {
         if(!isImage(multipartFile.getContentType())){
             throw new Exception400("이미지 파일이 아닙니다");
         }
+        metadata.setContentType(multipartFile.getContentType());
         // 파일 읽기
         InputStream inputStream;
         try{
@@ -173,7 +181,45 @@ public class UserService {
         );
         return UserMyPageRpDTO.builder()
                 .role(user.getUserRole().getValue())
-                .name(user.getNickname())
+                .nickname(user.getNickname())
                 .build();
     }
+
+    public Slice<UserAuthListRpDTO> getAuthList(Long lastUserId, int size){
+        PageRequest pageRequest = PageRequest.of(0, size);
+        Slice<User> userSlice = userRepositoryCustom.searchAuthList(lastUserId, pageRequest);
+
+        List<UserAuthListRpDTO> userAuthListRpDTOList = userSlice.getContent().stream()
+                .filter(u -> !u.getUrl().isEmpty())
+                .map(u -> UserAuthListRpDTO.builder()
+                            .userId(u.getUserId())
+                            .nickname(u.getNickname())
+                            .build())
+                .toList();
+        return new SliceImpl<>(userAuthListRpDTOList, pageRequest, userSlice.hasNext());
+    }
+    public UserAuthDetailRpDTO getAuthDetail(Long userId){
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
+        );
+        if(user.getUrl().equals("")){
+            throw new Exception400("등록된 이미지가 존재하지 않습니다");
+        }
+        return UserAuthDetailRpDTO.builder()
+                .nickname(user.getNickname())
+                .url(getPresignedUrl(userId))
+                .build();
+    }
+    @Transactional
+    public String authApprove(UserAuthApproveRqDTO requestDTO){
+        User user = userRepository.findById(requestDTO.userId()).orElseThrow(
+                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
+        );
+        if(user.getUserRole() == UserRole.USER){
+            user.updateRole(UserRole.STUDENT);
+            return "학생 인증이 승인되었습니다";
+        }
+        else throw new Exception400("일반 회원이 아닙니다");
+    }
 }
+

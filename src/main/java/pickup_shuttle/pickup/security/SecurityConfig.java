@@ -21,7 +21,7 @@ import pickup_shuttle.pickup.domain.oauth2.handler.OAuth2LoginFailureHandler;
 import pickup_shuttle.pickup.domain.oauth2.handler.OAuth2LoginSuccessHandler;
 import pickup_shuttle.pickup.domain.oauth2.service.CustomOAuth2UserService;
 import pickup_shuttle.pickup.domain.refreshToken.RefreshTokenRepository;
-import pickup_shuttle.pickup.domain.user.UserRepository;
+import pickup_shuttle.pickup.domain.user.repository.UserRepository;
 import pickup_shuttle.pickup.security.filter.JwtAuthenticationProcessingFilter;
 import pickup_shuttle.pickup.security.service.JwtService;
 
@@ -51,6 +51,8 @@ public class SecurityConfig {
                         .requestMatchers(new AntPathRequestMatcher("/users/register/input")).hasAuthority("ROLE_GUEST")
                         .requestMatchers(
                                 new AntPathRequestMatcher("/"),
+                                new AntPathRequestMatcher("/login/callback"),
+                                new AntPathRequestMatcher("/users/register/input"),
                                 new AntPathRequestMatcher("/css/**"),
                                 new AntPathRequestMatcher("/images/**"),
                                 new AntPathRequestMatcher("/js/**"),
