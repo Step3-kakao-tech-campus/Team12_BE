@@ -5,4 +5,7 @@
       <sourceFolder url="file://$MODULE_DIR$/../../pickupShuttle/build/generated/querydsl" isTestSource="false" generated="true" />
     </content>
   </component>
+  <component name="SonarLintModuleSettings">
+    <option name="uniqueId" value="ab705e23-ab68-44d5-b956-4fab04b7c28c" />
+  </component>
 </module>
