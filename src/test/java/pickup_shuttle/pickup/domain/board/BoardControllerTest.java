@@ -350,7 +350,6 @@ public class BoardControllerTest {
     class testBoardAgree {
         @Test
         @DisplayName("성공")
-            // teardown.sql의 44번째 , 46번째 Query를 주석처리 하고 테스트를 진행한다.
         void testBoardAgree() throws Exception{
             //given
             Long boardId = 6L;
@@ -380,7 +379,6 @@ public class BoardControllerTest {
 
         @Test()
         @DisplayName("공고글 작성자가 매칭 수락 한 경우")
-            // teardown.sql의 44번째 , 46번째 Query를 주석처리 하고 테스트를 진행한다.
         void testFailBoardAgree() throws Exception {
             Long boardId = 6L;
             String accessToken = "Bearer " + jwtService.createAccessToken("6");
@@ -410,7 +408,6 @@ public class BoardControllerTest {
 
         @Test
         @DisplayName("공고글이 이미 매칭 된 경우")
-            // teardown.sql의 44번째 , 46번째 Query 주석을 풀고  테스트를 진행한다.
         void testFailBoardAgree2() throws Exception{
             //given
             Long boardId = 3L;
