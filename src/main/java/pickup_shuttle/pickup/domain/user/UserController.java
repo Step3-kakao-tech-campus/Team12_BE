@@ -2,6 +2,7 @@ package pickup_shuttle.pickup.domain.user;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -10,14 +11,15 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import pickup_shuttle.pickup._core.utils.ApiUtils;
+import pickup_shuttle.pickup._core.utils.CustomPage;
 import pickup_shuttle.pickup.config.Login;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
 import pickup_shuttle.pickup.domain.refreshToken.dto.response.AccessTokenRpDTO;
+import pickup_shuttle.pickup.domain.user.dto.request.UserAuthApproveRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserModifyRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserUploadImageRqDTO;
-import pickup_shuttle.pickup.domain.user.dto.response.ModifyUserRpDTO;
-import pickup_shuttle.pickup.domain.user.dto.response.UserGetImageUrlRpDTO;
+import pickup_shuttle.pickup.domain.user.dto.response.*;
 import pickup_shuttle.pickup.security.service.JwtService;
 
 
@@ -101,5 +103,29 @@ public class UserController {
     public ResponseEntity<?> getImageUrl(@Login Long userId) {
         UserGetImageUrlRpDTO responseDTO = userService.getImageUrl(userId);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
+    }
+
+
+    @GetMapping("/mypage")
+    public ResponseEntity<?> myPage(@Login Long userId) {
+        UserMyPageRpDTO responseDTO = userService.myPage(userId);
+        return ResponseEntity.ok(ApiUtils.success(responseDTO));
+    }
+    @GetMapping("/admin/auth/list")
+    public ResponseEntity<?> getAuthList(
+            @RequestParam(value = "offset",required = false) Long lastUserId,
+            @RequestParam(value = "limit",defaultValue = "10") int size){
+        Slice<UserAuthListRpDTO> responseDTOSlice = userService.getAuthList(lastUserId, size);
+        return ResponseEntity.ok(ApiUtils.success(new CustomPage(responseDTOSlice)));
+    }
+    @GetMapping("/admin/auth/list/{userId}")
+    public ResponseEntity<?> getAuthDetail(@PathVariable("userId") Long userId){
+        UserAuthDetailRpDTO responseDTO = userService.getAuthDetail(userId);
+        return ResponseEntity.ok(ApiUtils.success(responseDTO));
+    }
+    @PatchMapping("/admin/auth/approval")
+    public ResponseEntity<?> authApprove(@RequestBody @Valid UserAuthApproveRqDTO requestDTO){
+        String message = userService.authApprove(requestDTO);
+        return ResponseEntity.ok(ApiUtils.success(message));
     }
 }

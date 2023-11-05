@@ -1,11 +1,11 @@
 package pickup_shuttle.pickup.domain.board.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Builder;
 import org.springframework.util.ReflectionUtils;
 import pickup_shuttle.pickup.config.NotSpace;
 import pickup_shuttle.pickup.domain.beverage.Beverage;
-import pickup_shuttle.pickup.domain.board.Board;
 import pickup_shuttle.pickup.domain.store.Store;
 
 import java.time.LocalDateTime;
@@ -18,7 +18,7 @@ import java.util.Map;
 public record BoardModifyRqDTO(
         @NotSpace(message = "가게가 공백입니다")
         String store,
-        List<@NotSpace(message = "음료가 공백입니다") String> beverage,
+        List<@NotBlank(message = "음료가 공백입니다") String> beverage,
         @NotSpace
         String destination,
         @PositiveOrZero(message = "픽업팁이 음수입니다")

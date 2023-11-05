@@ -1,4 +1,4 @@
-package pickup_shuttle.pickup.domain.user;
+package pickup_shuttle.pickup.domain.user.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

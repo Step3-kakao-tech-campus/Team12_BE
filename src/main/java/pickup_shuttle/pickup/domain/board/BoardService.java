@@ -227,15 +227,29 @@ public class BoardService {
     }
     public void updatePatch(Board board, Map<String, Object> mapToPatch){
         mapToPatch.forEach((k, v) -> {
-            Field field = ReflectionUtils.findField(Board.class, k);
-            field.setAccessible(true);
-            ReflectionUtils.setField(field, board, v);
+            if (k.equals("beverages")){
+                board.getBeverages().clear();
+                board.getBeverages().addAll((List<Beverage>)v);
+                board.getBeverages().forEach(b -> {b.setBoard(board);});
+            }
+            else{
+                Field field = ReflectionUtils.findField(Board.class, k);
+                field.setAccessible(true);
+                ReflectionUtils.setField(field, board, v);
+            }
+
         });
     }
+
     public void checkListBlank(List<String> beverages) {
         for(String b : beverages) {
             if(b == null || b.isEmpty())
                 throw new Exception400("음료명에 빈 문자열 or null이 입력 되었습니다");
+        }
+    }
+    public void checkListEmpty(List<String> beverages){
+        if(beverages != null && beverages.size() == 0){
+            throw new Exception400("음료를 입력하지 않았습니다");
         }
     }
 }

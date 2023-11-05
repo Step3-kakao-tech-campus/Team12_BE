@@ -36,16 +36,18 @@ VALUES
     (1500, current_time,date_add(current_time, interval 30 minute), 5, null, 5, 5, '전남대 공대7 221호관', 'N', '빨리 와주세요5'),
     (2000, current_time,date_add(current_time, interval 30 minute), 6, null, 5, 6, '전남대 공대7 222호관', 'N', '빨리 와주세요6');
 
+insert into beverage_tb(id, name, board_id)
+values
+    (1, '아메리카노', 3),
+    (2, '카페라떼', 6);
 insert into beverage_tb(id, name)
 values
-    (1, '아메리카노'),
-    (2, '카페라떼'),
     (3, '카페모카'),
     (4, '초코라떼'),
-    (5, '딸기라');
+    (5, '딸기라떼');
 
 insert into match_tb (arrival_time, id, match_time, user_id)
 VALUES
     (date_add(current_time(), interval 15 minute), 1, now(),2);
 
-update board_tb set match_id = 1 , is_match = 'Y' where id = 1;
+update board_tb set match_id = 1 , is_match = 'Y' where id = 3;

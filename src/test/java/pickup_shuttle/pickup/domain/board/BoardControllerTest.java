@@ -88,15 +88,15 @@ public class BoardControllerTest {
         //then
         resultActions.andExpect(jsonPath("$.success").value("true"));
         resultActions.andExpect(jsonPath("$.response.boardId").value("1"));
-        resultActions.andExpect(jsonPath("$.response.shopName").value("전남대 후문 스타벅스"));
+        resultActions.andExpect(jsonPath("$.response.shopName").value("스타벅스"));
         resultActions.andExpect(jsonPath("$.response.tip").value("1000"));
     }
 
     @Test // 공고글 상세 조회 (매칭 후)
     void testBoardDetailAfter() throws Exception {
         //given
-        String accessToken = "Bearer " + jwtService.createAccessToken("1");
-        Long boardId = 1L;
+        String accessToken = "Bearer " + jwtService.createAccessToken("3");
+        Long boardId = 3L;
 
         //when
         ResultActions resultActions = mvc.perform(
@@ -111,11 +111,11 @@ public class BoardControllerTest {
 
         //then
         resultActions.andExpect(jsonPath("$.success").value("true"));
-        resultActions.andExpect(jsonPath("$.response.boardId").value("1"));
-        resultActions.andExpect(jsonPath("$.response.shopName").value("전남대 후문 스타벅스"));
-        resultActions.andExpect(jsonPath("$.response.tip").value("1000"));
+        resultActions.andExpect(jsonPath("$.response.boardId").value("3"));
+        resultActions.andExpect(jsonPath("$.response.shopName").value("더벤티"));
+        resultActions.andExpect(jsonPath("$.response.tip").value("2000"));
         resultActions.andExpect(jsonPath("$.response.isMatch").value("true"));
-        resultActions.andExpect(jsonPath("$.response.pickerPhoneNumber").value("010-0000-1234"));
+        resultActions.andExpect(jsonPath("$.response.pickerPhoneNumber").value("010-0000-0000"));
     }
 
     @Nested
@@ -124,15 +124,14 @@ public class BoardControllerTest {
         @DisplayName("성공")
         void testWrite() throws Exception{
             //given
-            String accessToken = "Bearer " + jwtService.createAccessToken("1");
-            System.out.println("accessToken은 " + accessToken);
+            String accessToken = "Bearer " + jwtService.createAccessToken("3");
             BoardWriteRqDTO boardWriteRqDTO = BoardWriteRqDTO.builder()
-                    .store("starbucks")
+                    .store("스타벅스")
                     .beverage(beverags)
-                    .destination("공과대학 7호관 팬도로시")
+                    .destination("전남대 공대 시계탑")
                     .tip(1000)
                     .request("후딱후딱 갖다주십쇼!!!!!!!!!!!!!!")
-                    .finishedAt("2023-10-01 19:00")
+                    .finishedAt("2023-11-18 19:00")
                     .build();
             String requestBody = om.writeValueAsString(boardWriteRqDTO);
 
@@ -150,20 +149,20 @@ public class BoardControllerTest {
 
             //then
             resultActions.andExpect(jsonPath("$.success").value("true"));
-            resultActions.andExpect(jsonPath("$.response.boardId").value("6"));
+            resultActions.andExpect(jsonPath("$.response.boardId").value("7"));
         }
         @Test
         @DisplayName("실패 : 서비스에서 제공하지 않는 가게의 경우")
         void testWriteNotFoundStore() throws Exception{
             //given
-            String accessToken = "Bearer " + jwtService.createAccessToken("1");
+            String accessToken = "Bearer " + jwtService.createAccessToken("3");
             BoardWriteRqDTO boardWriteRqDTO = BoardWriteRqDTO.builder()
                     .store("팬도로시")
                     .beverage(beverags)
-                    .destination("공과대학 7호관 팬도로시")
+                    .destination("전남대 공대 시계탑")
                     .tip(1000)
                     .request("후딱후딱 갖다주십쇼!!!!!!!!!!!!!!")
-                    .finishedAt("2023-10-01 19:00")
+                    .finishedAt("2023-11-18 19:00")
                     .build();
             String requestBody = om.writeValueAsString(boardWriteRqDTO);
 
@@ -188,14 +187,14 @@ public class BoardControllerTest {
         @DisplayName("실패 : 가게가 공백인 경우")
         void testWriteBlankStore() throws Exception{
             //given
-            String accessToken = "Bearer " + jwtService.createAccessToken("1");
+            String accessToken = "Bearer " + jwtService.createAccessToken("3");
             BoardWriteRqDTO boardWriteRqDTO = BoardWriteRqDTO.builder()
                     .store(" ")
                     .beverage(beverags)
-                    .destination("공과대학 7호관 팬도로시")
+                    .destination("전남대 공대 시계탑")
                     .tip(1000)
                     .request("후딱후딱 갖다주십쇼!!!!!!!!!!!!!!")
-                    .finishedAt("2023-10-01 19:00")
+                    .finishedAt("2023-11-18 19:00")
                     .build();
             String requestBody = om.writeValueAsString(boardWriteRqDTO);
 
@@ -220,15 +219,15 @@ public class BoardControllerTest {
         @DisplayName("실패 : 음료가 공백인 경우")
         void testWriteBlankBeverage() throws Exception{
             //given
-            String accessToken = "Bearer " + jwtService.createAccessToken("1");
+            String accessToken = "Bearer " + jwtService.createAccessToken("3");
             beverags.add("");
             BoardWriteRqDTO boardWriteRqDTO = BoardWriteRqDTO.builder()
-                    .store("starbucks")
+                    .store("스타벅스")
                     .beverage(beverags)
-                    .destination("공과대학 7호관 팬도로시")
+                    .destination("전남대 공대 시계탑")
                     .tip(1000)
                     .request("후딱후딱 갖다주십쇼!!!!!!!!!!!!!!")
-                    .finishedAt("2023-10-01 19:00")
+                    .finishedAt("2023-11-18 19:00")
                     .build();
             String requestBody = om.writeValueAsString(boardWriteRqDTO);
 
@@ -253,14 +252,14 @@ public class BoardControllerTest {
         @DisplayName("실패 : 위치가 공백인 경우")
         void testWriteBlankDestination() throws Exception{
             //given
-            String accessToken = "Bearer " + jwtService.createAccessToken("1");
+            String accessToken = "Bearer " + jwtService.createAccessToken("3");
             BoardWriteRqDTO boardWriteRqDTO = BoardWriteRqDTO.builder()
-                    .store("starbucks")
+                    .store("스타벅스")
                     .beverage(beverags)
                     .destination(" ")
                     .tip(1000)
                     .request("후딱후딱 갖다주십쇼!!!!!!!!!!!!!!")
-                    .finishedAt("2023-10-01 19:00")
+                    .finishedAt("2023-11-18 19:00")
                     .build();
             String requestBody = om.writeValueAsString(boardWriteRqDTO);
 
@@ -285,14 +284,14 @@ public class BoardControllerTest {
         @DisplayName("실패 : 픽업팁이 음수인 경우")
         void testWriteInvalidTip() throws Exception{
             //given
-            String accessToken = "Bearer " + jwtService.createAccessToken("1");
+            String accessToken = "Bearer " + jwtService.createAccessToken("3");
             BoardWriteRqDTO boardWriteRqDTO = BoardWriteRqDTO.builder()
-                    .store("starbucks")
+                    .store("스타벅스")
                     .beverage(beverags)
-                    .destination("공과대학 7호관 팬도로시")
-                    .tip(-100)
+                    .destination("전남대 공대 시계탑")
+                    .tip(-1)
                     .request("후딱후딱 갖다주십쇼!!!!!!!!!!!!!!")
-                    .finishedAt("2023-10-01 19:00")
+                    .finishedAt("2023-11-18 19:00")
                     .build();
             String requestBody = om.writeValueAsString(boardWriteRqDTO);
 
@@ -317,14 +316,14 @@ public class BoardControllerTest {
         @DisplayName("실패 : 마감기간이 공백인 경우")
         void testWriteBlankFinishAt() throws Exception{
             //given
-            String accessToken = "Bearer " + jwtService.createAccessToken("1");
+            String accessToken = "Bearer " + jwtService.createAccessToken("3");
             BoardWriteRqDTO boardWriteRqDTO = BoardWriteRqDTO.builder()
-                    .store("starbucks")
+                    .store("스타벅스")
                     .beverage(beverags)
-                    .destination("공과대학 7호관 팬도로시")
+                    .destination("전남대 공대 시계탑")
                     .tip(1000)
                     .request("후딱후딱 갖다주십쇼!!!!!!!!!!!!!!")
-                    .finishedAt(" ")
+                    .finishedAt("")
                     .build();
             String requestBody = om.writeValueAsString(boardWriteRqDTO);
 
@@ -354,8 +353,8 @@ public class BoardControllerTest {
         // teardown.sql의 44번째 , 46번째 Query를 주석처리 하고 테스트를 진행한다.
         void testBoardAgree() throws Exception{
             //given
-            Long boardId = 1L;
-            String accessToken =  "Bearer " + jwtService.createAccessToken("2");
+            Long boardId = 6L;
+            String accessToken =  "Bearer " + jwtService.createAccessToken("3");
             BoardAgreeRqDTO requestDTO = BoardAgreeRqDTO.builder()
                     .arrivalTime(30)
                     .build();
@@ -375,8 +374,7 @@ public class BoardControllerTest {
 
             //then
             resultActions.andExpect(jsonPath("$.success").value("true"));
-            resultActions.andExpect(jsonPath("$.response.beverage[0].name").value("핫 아메리카노"));
-            resultActions.andExpect(jsonPath("$.response.beverage[1].name").value("아이스 아메리카노"));
+            resultActions.andExpect(jsonPath("$.response.beverage[0].name").value("카페라떼"));
 
         }
 
@@ -384,8 +382,8 @@ public class BoardControllerTest {
         @DisplayName("공고글 작성자가 매칭 수락 한 경우")
         // teardown.sql의 44번째 , 46번째 Query를 주석처리 하고 테스트를 진행한다.
         void testFailBoardAgree() throws Exception {
-            Long boardId = 1L;
-            String accessToken = "Bearer " + jwtService.createAccessToken("1");
+            Long boardId = 6L;
+            String accessToken = "Bearer " + jwtService.createAccessToken("6");
             BoardAgreeRqDTO requestDTO = BoardAgreeRqDTO.builder()
                     .arrivalTime(30)
                     .build();
@@ -415,8 +413,8 @@ public class BoardControllerTest {
         // teardown.sql의 44번째 , 46번째 Query 주석을 풀고  테스트를 진행한다.
         void testFailBoardAgree2() throws Exception{
             //given
-            Long boardId = 1L;
-            String accessToken = "Bearer " + jwtService.createAccessToken("2");
+            Long boardId = 3L;
+            String accessToken = "Bearer " + jwtService.createAccessToken("6");
             BoardAgreeRqDTO requestDTO = BoardAgreeRqDTO.builder()
                     .arrivalTime(30)
                     .build();
@@ -447,8 +445,8 @@ public class BoardControllerTest {
         @DisplayName("성공")
         void testBoardDelete() throws Exception {
             // given
-            Long boardId = 4L;
-            String accessToken = "Bearer " + jwtService.createAccessToken("2");
+            Long boardId = 6L;
+            String accessToken = "Bearer " + jwtService.createAccessToken("6");
             //when
             ResultActions resultActions = mvc.perform(
                     delete("/articles/delete/{boardId}", boardId)
@@ -469,8 +467,8 @@ public class BoardControllerTest {
         @DisplayName("실패 : 이미 매칭된 공고를 삭제하려는 경우")
         void testBoardDeleteMatch() throws Exception {
             // given
-            Long boardId = 1L;
-            String accessToken = "Bearer " + jwtService.createAccessToken("1");
+            Long boardId = 3L;
+            String accessToken = "Bearer " + jwtService.createAccessToken("3");
             //when
             ResultActions resultActions = mvc.perform(
                     delete("/articles/delete/{boardId}", boardId)
@@ -490,8 +488,8 @@ public class BoardControllerTest {
         @DisplayName("실패 : 공고글의 작성자가 아닌 경우")
         void testBoardDeleteInvalidUser() throws Exception {
             // given
-            Long boardId = 1L;
-            String accessToken = "Bearer " + jwtService.createAccessToken("2");
+            Long boardId = 6L;
+            String accessToken = "Bearer " + jwtService.createAccessToken("3");
             //when
             ResultActions resultActions = mvc.perform(
                     delete("/articles/delete/{boardId}", boardId)
@@ -512,7 +510,7 @@ public class BoardControllerTest {
         void testBoardDeleteNotFound() throws Exception {
             // given
             Long boardId = 100L;
-            String accessToken = "Bearer " + jwtService.createAccessToken("2");
+            String accessToken = "Bearer " + jwtService.createAccessToken("3");
             //when
             ResultActions resultActions = mvc.perform(
                     delete("/articles/delete/{boardId}", boardId)
@@ -536,9 +534,9 @@ public class BoardControllerTest {
         @DisplayName("성공 : 수정 값이 하나인 경우")
         void testBoardModify1() throws Exception {
             // given
-            Long boardId = 2L;
-            String store = "starbucks";
-            String accessToken = "Bearer " + jwtService.createAccessToken("1");
+            Long boardId = 6L;
+            String store = "더벤티";
+            String accessToken = "Bearer " + jwtService.createAccessToken("6");
             BoardModifyRqDTO requestDTO = BoardModifyRqDTO.builder()
                     .store(store)
                     .build();
@@ -558,11 +556,10 @@ public class BoardControllerTest {
             resultActions.andExpect(jsonPath("$.success").value("true"));
             resultActions.andExpect(jsonPath("$.response.boardId").value(boardId));
             resultActions.andExpect(jsonPath("$.response.store").value(store)); // 수정
-            resultActions.andExpect(jsonPath("$.response.destination").value("전남대 공대7 217호관"));
-            resultActions.andExpect(jsonPath("$.response.beverage").value("핫 아메리카노"));
-            resultActions.andExpect(jsonPath("$.response.tip").value(1000));
-            resultActions.andExpect(jsonPath("$.response.request").value("빨리 와주세요"));
-            resultActions.andExpect(jsonPath("$.response.finishedAt").value("1696040640"));
+            resultActions.andExpect(jsonPath("$.response.destination").value("전남대 공대7 222호관"));
+            resultActions.andExpect(jsonPath("$.response.beverage").value("카페라떼"));
+            resultActions.andExpect(jsonPath("$.response.tip").value(2000));
+            resultActions.andExpect(jsonPath("$.response.request").value("빨리 와주세요6"));
             resultActions.andExpect(jsonPath("$.response.match").value(false));
 
         }
@@ -571,10 +568,10 @@ public class BoardControllerTest {
         @DisplayName("성공 : 수정 값이 둘인 경우")
         void testBoardModify2() throws Exception {
             // given
-            Long boardId = 2L;
-            String store = "starbucks";
+            Long boardId = 6L;
+            String store = "더벤티";
             int tip = 1;
-            String accessToken = "Bearer " + jwtService.createAccessToken("1");
+            String accessToken = "Bearer " + jwtService.createAccessToken("6");
             BoardModifyRqDTO requestDTO = BoardModifyRqDTO.builder()
                     .store(store)
                     .tip(tip)
@@ -595,25 +592,24 @@ public class BoardControllerTest {
             resultActions.andExpect(jsonPath("$.success").value("true"));
             resultActions.andExpect(jsonPath("$.response.boardId").value(boardId));
             resultActions.andExpect(jsonPath("$.response.store").value(store)); // 수정
-            resultActions.andExpect(jsonPath("$.response.destination").value("전남대 공대7 217호관"));
-            resultActions.andExpect(jsonPath("$.response.beverage").value("핫 아메리카노"));
+            resultActions.andExpect(jsonPath("$.response.destination").value("전남대 공대7 222호관"));
+            resultActions.andExpect(jsonPath("$.response.beverage").value("카페라떼"));
             resultActions.andExpect(jsonPath("$.response.tip").value(tip)); // 수정
-            resultActions.andExpect(jsonPath("$.response.request").value("빨리 와주세요"));
-            resultActions.andExpect(jsonPath("$.response.finishedAt").value("1696040640"));
+            resultActions.andExpect(jsonPath("$.response.request").value("빨리 와주세요6"));
             resultActions.andExpect(jsonPath("$.response.match").value(false));
         }
         @Test
         @DisplayName("성공 : 공고글 전체를 수정하는 경우")
         void testBoardModify3() throws Exception {
             // given
-            Long boardId = 2L;
-            String store = "starbucks";
+            Long boardId = 6L;
+            String store = "더벤티";
             beverags.add("아이스티");
             String destination = "정보마루";
             int tip = 1;
             String request = "천천히 조심해서 오세요 :)";
             String finishedAt = "2023-11-03 07:25";
-            String accessToken = "Bearer " + jwtService.createAccessToken("1");
+            String accessToken = "Bearer " + jwtService.createAccessToken("6");
             BoardModifyRqDTO requestDTO = BoardModifyRqDTO.builder()
                     .store(store)
                     .beverage(beverags)
@@ -650,8 +646,8 @@ public class BoardControllerTest {
         @DisplayName("실패 : 수정할 값이 없는 경우")
         void testBoardModifyNoFields() throws Exception {
             // given
-            Long boardId = 2L;
-            String accessToken = "Bearer " + jwtService.createAccessToken("1");
+            Long boardId = 6L;
+            String accessToken = "Bearer " + jwtService.createAccessToken("6");
             BoardModifyRqDTO requestDTO = BoardModifyRqDTO.builder()
                     .build();
             String requestBody = om.writeValueAsString(requestDTO);
@@ -673,9 +669,9 @@ public class BoardControllerTest {
         @DisplayName("실패 : 가게가 없는 경우")
         void testBoardModifyNotFoundStore() throws Exception {
             // given
-            Long boardId = 2L;
+            Long boardId = 6L;
             String store = "팬도로시";
-            String accessToken = "Bearer " + jwtService.createAccessToken("1");
+            String accessToken = "Bearer " + jwtService.createAccessToken("6");
             BoardModifyRqDTO requestDTO = BoardModifyRqDTO.builder()
                     .store(store)
                     .build();
@@ -692,15 +688,15 @@ public class BoardControllerTest {
             System.out.println("testBoardModifyNotFoundStore : " + responseBody);
             //then
             resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("가게가 존재하지 않습니다"));
+            resultActions.andExpect(jsonPath("$.error.message").value(ErrorMessage.UNKNOWN_STORE));
         }
         @Test
         @DisplayName("실패 : 작성자가 아닌 경우")
         void testBoardModifyInvalidUser() throws Exception {
             // given
-            Long boardId = 2L;
-            String store = "starbucks";
-            String accessToken = "Bearer " + jwtService.createAccessToken("2");
+            Long boardId = 6L;
+            String store = "더벤티";
+            String accessToken = "Bearer " + jwtService.createAccessToken("3");
             BoardModifyRqDTO requestDTO = BoardModifyRqDTO.builder()
                     .store(store)
                     .build();
@@ -723,9 +719,9 @@ public class BoardControllerTest {
         @DisplayName("실패 : 이미 매칭된 공고글의 경우")
         void testBoardModifyMatch() throws Exception {
             // given
-            Long boardId = 1L;
-            String store = "starbucks";
-            String accessToken = "Bearer " + jwtService.createAccessToken("1");
+            Long boardId = 3L;
+            String store = "더벤티";
+            String accessToken = "Bearer " + jwtService.createAccessToken("3");
             BoardModifyRqDTO requestDTO = BoardModifyRqDTO.builder()
                     .store(store)
                     .build();
@@ -749,8 +745,8 @@ public class BoardControllerTest {
         void testBoardModifyNotFound() throws Exception {
             // given
             Long boardId = 100L;
-            String store = "starbucks";
-            String accessToken = "Bearer " + jwtService.createAccessToken("1");
+            String store = "더벤티";
+            String accessToken = "Bearer " + jwtService.createAccessToken("3");
             BoardModifyRqDTO requestDTO = BoardModifyRqDTO.builder()
                     .store(store)
                     .build();
@@ -773,9 +769,9 @@ public class BoardControllerTest {
         @DisplayName("실패 : 가게에 공백('', ' ')이 들어오는경우")
         void testBoardModifyBlankStore() throws Exception {
             // given
-            Long boardId = 2L;
+            Long boardId = 6L;
             String store = " ";
-            String accessToken = "Bearer " + jwtService.createAccessToken("1");
+            String accessToken = "Bearer " + jwtService.createAccessToken("6");
             BoardModifyRqDTO requestDTO = BoardModifyRqDTO.builder()
                     .store(store)
                     .build();
@@ -798,9 +794,9 @@ public class BoardControllerTest {
         @DisplayName("실패 : 음료에 공백('', ' ')이 들어오는경우")
         void testBoardModifyBlankBeverage() throws Exception {
             // given
-            Long boardId = 2L;
+            Long boardId = 6L;
             beverags.add(" ");
-            String accessToken = "Bearer " + jwtService.createAccessToken("1");
+            String accessToken = "Bearer " + jwtService.createAccessToken("6");
             BoardModifyRqDTO requestDTO = BoardModifyRqDTO.builder()
                     .beverage(beverags)
                     .build();
@@ -824,9 +820,9 @@ public class BoardControllerTest {
         @DisplayName("실패 : 픽업팁이 음수인 경우")
         void testBoardModifyInvalidTip() throws Exception {
             // given
-            Long boardId = 2L;
+            Long boardId = 6L;
             int tip = -1;
-            String accessToken = "Bearer " + jwtService.createAccessToken("1");
+            String accessToken = "Bearer " + jwtService.createAccessToken("6");
             BoardModifyRqDTO requestDTO = BoardModifyRqDTO.builder()
                     .tip(tip)
                     .build();

@@ -64,6 +64,7 @@ public class BoardController {
     public ResponseEntity<?> modify(@PathVariable("boardId") Long boardId,
                                     @RequestBody @Valid BoardModifyRqDTO requestDTO,
                                     @Login Long userId){
+        boardService.checkListEmpty(requestDTO.beverage());
         BoardModifyRpDTO responseDTO = boardService.modify(requestDTO,boardId, userId);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
