@@ -139,7 +139,8 @@ public class UserController {
     }
 
     @GetMapping("/mypage/picker/list/{boardId}")
-    public ResponseEntity<?> myPagePickerDetail(@PathVariable("boardId") Long boardId) {
-        return ResponseEntity.ok(ApiUtils.success(boardService.boardDetailAfter(boardId)));
+    public ResponseEntity<?> myPagePickerDetail(@PathVariable("boardId") Long boardId,
+                                                @Login Long userId) {
+        return ResponseEntity.ok(ApiUtils.success(userService.pickerBoardDetail(boardId, userId)));
     }
 }

@@ -33,10 +33,10 @@ class UserControllerTest {
     private JwtService jwtService;
 
     @Nested
-    class testUserAuthStatus{
+    class testUserAuthStatus {
         @Test
         @DisplayName("성공 : 학생증 인증을 신청한 일반회원의 경우")
-        void testUserAuthStatus1() throws Exception{
+        void testUserAuthStatus1() throws Exception {
             //given
             String accessToken = "Bearer " + jwtService.createAccessToken("2"); //USER
 
@@ -55,9 +55,10 @@ class UserControllerTest {
             resultActions.andExpect(jsonPath("$.success").value("true"));
             resultActions.andExpect(jsonPath("$.response").value("인증 진행 중"));
         }
+
         @Test
         @DisplayName("성공 : 학생증 인증을 신청하지 않은 일반회원의 경우")
-        void testUserAuthStatus2() throws Exception{
+        void testUserAuthStatus2() throws Exception {
             //given
             String accessToken = "Bearer " + jwtService.createAccessToken("7");
 
@@ -76,9 +77,10 @@ class UserControllerTest {
             resultActions.andExpect(jsonPath("$.success").value("true"));
             resultActions.andExpect(jsonPath("$.response").value("미인증"));
         }
+
         @Test
         @DisplayName("성공 : 학생회원의 경우")
-        void testUserAuthStatus3() throws Exception{
+        void testUserAuthStatus3() throws Exception {
             //given
             String accessToken = "Bearer " + jwtService.createAccessToken("3"); //STUDENT
 
@@ -98,9 +100,10 @@ class UserControllerTest {
             resultActions.andExpect(jsonPath("$.response").value("인증"));
         }
     }
+
     @Test
     @DisplayName("성공 : 마이페이지 조회")
-    void tesMyPage() throws Exception{
+    void tesMyPage() throws Exception {
         //given
         String accessToken = "Bearer " + jwtService.createAccessToken("2"); //USER
 
@@ -144,6 +147,7 @@ class UserControllerTest {
         resultActions.andExpect(jsonPath("$.response.content[0].nickname").value("배경"));
 
     }
+
     @Test
     @DisplayName("성공 : 학생 인증 상세보기")
     void testGetAuthDetail() throws Exception {
@@ -164,8 +168,9 @@ class UserControllerTest {
         resultActions.andExpect(jsonPath("$.success").value("true"));
         resultActions.andExpect(jsonPath("$.response.nickname").value("배경"));
     }
+
     @Nested
-    class testAuthApprove{
+    class testAuthApprove {
         @Test
         @DisplayName("성공 : 학생 인증 승인")
         void testAuthApprove() throws Exception {
@@ -192,6 +197,7 @@ class UserControllerTest {
             resultActions.andExpect(jsonPath("$.success").value("true"));
             resultActions.andExpect(jsonPath("$.response").value("학생 인증이 승인되었습니다"));
         }
+
         @Test
         @DisplayName("실패 : 일반 등급이 아닌 회원의 학생 인증을 시도하는 경우")
         void testAuthApproveInvalidRole() throws Exception {
@@ -219,9 +225,10 @@ class UserControllerTest {
             resultActions.andExpect(jsonPath("$.error.message").value("일반 회원이 아닙니다"));
         }
     }
+
     @Test
     @DisplayName("성공 : 피커 공고글 목록")
-    void testPickerBoardList() throws Exception{
+    void testPickerBoardList() throws Exception {
         //given
         String accessToken = "Bearer " + jwtService.createAccessToken("2");
         String refreshToken = jwtService.createRefreshToken();
@@ -251,7 +258,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("실패 : 수락한 공고글이 없는 경우")
-    void testFailPickerBoardList() throws Exception{
+    void testFailPickerBoardList() throws Exception {
         //given
         String accessToken = "Bearer " + jwtService.createAccessToken("1");
         Long userId = 1L;
@@ -273,5 +280,78 @@ class UserControllerTest {
         //then
         resultActions.andExpect(jsonPath("$.success").value("false"));
         resultActions.andExpect(jsonPath("$.error.message").value("수락한 공고글이 없습니다"));
+    }
+
+    @Test
+    @DisplayName("성공 : 피커 공고글 상세보기")
+    void testPickerBoardDetail() throws Exception {
+        //given
+        String accessToken = "Bearer " + jwtService.createAccessToken("2");
+        Long boardId = 4L;
+        //when
+        ResultActions resultActions = mvc.perform(
+                get("/mypage/picker/list/{boardId}", boardId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", accessToken)
+        );
+
+        //eye
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("testPickerBoardDetail : " + responseBody);
+
+        //then
+        resultActions.andExpect(jsonPath("$.success").value("true"));
+        resultActions.andExpect(jsonPath("$.response.boardId").value("4"));
+        resultActions.andExpect(jsonPath("$.response.shopName").value("이디야"));
+        resultActions.andExpect(jsonPath("$.response.destination").value("전남대 공대7 220호관"));
+        resultActions.andExpect(jsonPath("$.response.beverage[0].name").value("카페모카 3잔"));
+        resultActions.andExpect(jsonPath("$.response.beverage[1].name").value("초코라떼 2잔"));
+        resultActions.andExpect(jsonPath("$.response.beverage[2].name").value("딸기라떼 1잔"));
+        resultActions.andExpect(jsonPath("$.response.tip").value("1000"));
+        resultActions.andExpect(jsonPath("$.response.request").value("빨리 와주세요4"));
+    }
+
+    @Test
+    @DisplayName("실패 : 매칭이 완료되지 않은 공고글을 조회한 경우")
+    void testFailPickerBoardDetail1() throws Exception {
+        //given
+        String accessToken = "Bearer " + jwtService.createAccessToken("2");
+        Long boardId = 1L;
+        //when
+        ResultActions resultActions = mvc.perform(
+                get("/mypage/picker/list/{boardId}", boardId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", accessToken)
+        );
+
+        //eye
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("testPickerBoardDetail : " + responseBody);
+
+        //then
+        resultActions.andExpect(jsonPath("$.success").value("false"));
+        resultActions.andExpect(jsonPath("$.error.message").value("매칭이 완료되지 않은 공고글입니다"));
+    }
+
+    @Test
+    @DisplayName("실패 : 해당 공고글의 피커가 아닐 경우")
+    void testFailPickerBoardDetail2() throws Exception {
+        //given
+        String accessToken = "Bearer " + jwtService.createAccessToken("1");
+        Long boardId = 4L;
+        //when
+        ResultActions resultActions = mvc.perform(
+                get("/mypage/picker/list/{boardId}", boardId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", accessToken)
+        );
+
+        //eye
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("testPickerBoardDetail : " + responseBody);
+
+        //then
+        resultActions.andExpect(jsonPath("$.success").value("false"));
+        resultActions.andExpect(jsonPath("$.error.message").value("해당 공고글의 피커가 아닙니다"));
     }
 }

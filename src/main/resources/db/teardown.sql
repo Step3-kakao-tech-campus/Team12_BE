@@ -38,13 +38,12 @@ VALUES
 
 insert into beverage_tb(id, name, board_id)
 values
-    (1, '아메리카노', 3),
-    (2, '카페라떼', 6);
-insert into beverage_tb(id, name)
-values
-    (3, '카페모카'),
-    (4, '초코라떼'),
-    (5, '딸기라떼');
+    (1, '아메리카노 1잔', 3),
+    (2, '카페라떼 1잔', 6),
+    (3, '카페모카 3잔', 4),
+    (4, '초코라떼 2잔', 4),
+    (5, '딸기라떼 1잔', 4);
+
 
 insert into match_tb (arrival_time, id, match_time, user_id)
 VALUES

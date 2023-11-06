@@ -18,7 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 import pickup_shuttle.pickup._core.errors.exception.Exception400;
 import pickup_shuttle.pickup._core.errors.exception.Exception500;
 import pickup_shuttle.pickup.config.ErrorMessage;
+import pickup_shuttle.pickup.domain.beverage.dto.BeverageDTO;
 import pickup_shuttle.pickup.domain.board.Board;
+import pickup_shuttle.pickup.domain.board.repository.BoardRepository;
 import pickup_shuttle.pickup.domain.board.repository.BoardRepositoryCustom;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
@@ -44,6 +46,7 @@ public class UserService {
     private final AmazonS3 amazonS3;
     private final UserRepositoryCustom userRepositoryCustom;
     private final BoardRepositoryCustom boardRepositoryCustom;
+    private final BoardRepository boardRepository;
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
     @Value("${cloud.aws.s3.dir}")
@@ -251,6 +254,34 @@ public class UserService {
                 .toList();
         return new SliceImpl<>(boardBoardListRpDTO,pageRequest,boardSlice.hasNext());
     }
+    public UserPickerDetail pickerBoardDetail(Long boardId, Long userId) {
+        Board board = boardRepository.m2findByBoardId(boardId).orElseThrow(
+                () -> new Exception400("매칭이 완료되지 않은 공고글입니다")
+        );
 
+        if(!board.getMatch().getUser().getUserId().equals(userId)){
+            throw new Exception400("해당 공고글의 피커가 아닙니다");
+        }
+        List<BeverageDTO> beverageDTOList = board.getBeverages().stream()
+                .map(b -> BeverageDTO.builder()
+                        .name(b.getName())
+                        .build())
+                .toList();
+        return UserPickerDetail.builder()
+                .boardId(board.getBoardId())
+                .shopName(board.getStore().getName())
+                .destination(board.getDestination())
+                .beverage(beverageDTOList)
+                .tip(board.getTip())
+                .request(board.getRequest())
+                .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                .isMatch(board.isMatch())
+                .pickerBank(board.getMatch().getUser().getBank())
+                .pickerAccount(board.getMatch().getUser().getAccount())
+                .arrivalTime(board.getMatch().getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).toEpochSecond(ZoneOffset.UTC))
+                .pickerPhoneNumber(board.getMatch().getUser().getPhoneNumber())
+                .build();
+
+    }
 }
 
