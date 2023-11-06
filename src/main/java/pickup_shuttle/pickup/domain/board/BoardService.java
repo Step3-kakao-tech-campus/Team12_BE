@@ -25,6 +25,7 @@ import pickup_shuttle.pickup.domain.store.Store;
 import pickup_shuttle.pickup.domain.store.StoreRepository;
 import pickup_shuttle.pickup.domain.user.User;
 import pickup_shuttle.pickup.domain.user.repository.UserRepository;
+import pickup_shuttle.pickup.domain.utils.Utils;
 
 
 import java.lang.reflect.Field;
@@ -43,7 +44,7 @@ public class BoardService {
     private final MatchService matchService;
 
     public Slice<BoardListRpDTO> boardList(Long lastBoardId, int limit) {
-        PageRequest pageRequest = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "boardId"));
+        PageRequest pageRequest = PageRequest.of(0, limit);
         Slice<Board> boardsSlice = boardRepositoryCustom.searchAllBySlice(lastBoardId, pageRequest);
         return getBoardListResponseDTOs(pageRequest, boardsSlice);
     }
@@ -51,6 +52,7 @@ public class BoardService {
     //boardSlice로 BoardListRpDTO 만드는 과정
     private Slice<BoardListRpDTO> getBoardListResponseDTOs(PageRequest pageRequest, Slice<Board> boardSlice) {
         List<BoardListRpDTO> boardBoardListRpDTO = boardSlice.getContent().stream()
+                .filter(Utils::notOverDeadline)
                 .map(b -> BoardListRpDTO.builder()
                         .boardId(b.getBoardId())
                         .shopName(b.getStore().getName())
