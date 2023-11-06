@@ -27,6 +27,8 @@ import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.response.*;
 import pickup_shuttle.pickup.domain.user.repository.UserRepository;
 import pickup_shuttle.pickup.domain.user.repository.UserRepositoryCustom;
+import pickup_shuttle.pickup.domain.utils.Utils;
+
 import java.io.InputStream;
 import java.time.ZoneOffset;
 import java.util.Date;
@@ -42,6 +44,7 @@ public class UserService {
     private final BoardRepository boardRepository;
     private final MatchRepository matchRepository;
     private final AmazonS3 amazonS3;
+    private final Utils utils;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -230,6 +233,7 @@ public class UserService {
         PageRequest pageRequest = PageRequest.of(0, size);
         Slice<Board> boardSlice = userRepositoryCustom.searchRequesterList(userId, lastBoardId, pageRequest);
         List<UserGetRequesterListRpDTO> responseDTOList = boardSlice.getContent().stream()
+                .filter(b -> !utils.overDeadline(b))
                 .map(b -> UserGetRequesterListRpDTO.builder()
                         .boardId(b.getBoardId())
                         .shopName(b.getStore().getName())
