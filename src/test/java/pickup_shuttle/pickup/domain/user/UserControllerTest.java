@@ -219,4 +219,59 @@ class UserControllerTest {
             resultActions.andExpect(jsonPath("$.error.message").value("일반 회원이 아닙니다"));
         }
     }
+    @Test
+    @DisplayName("성공 : 피커 공고글 목록")
+    void testPickerBoardList() throws Exception{
+        //given
+        String accessToken = "Bearer " + jwtService.createAccessToken("2");
+        String refreshToken = jwtService.createRefreshToken();
+        System.out.println("refreshToken: " + refreshToken);
+        Long userId = 2L;
+        String offset = "";
+        String limit = "10";
+        //when
+        ResultActions resultActions = mvc.perform(
+                get("/mypage/picker/list")
+                        .queryParam("offset", offset)
+                        .queryParam("limit", limit)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", accessToken)
+        );
+
+        //eye
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("testMyPage : " + responseBody);
+
+        //then
+        resultActions.andExpect(jsonPath("$.success").value("true"));
+        resultActions.andExpect(jsonPath("$.response.last").value("true"));
+        resultActions.andExpect(jsonPath("$.response.content[0].boardId").value("4"));
+        resultActions.andExpect(jsonPath("$.response.content[0].destination").value("전남대 공대7 220호관"));
+    }
+
+    @Test
+    @DisplayName("실패 : 수락한 공고글이 없는 경우")
+    void testFailPickerBoardList() throws Exception{
+        //given
+        String accessToken = "Bearer " + jwtService.createAccessToken("1");
+        Long userId = 1L;
+        String offset = "";
+        String limit = "10";
+        //when
+        ResultActions resultActions = mvc.perform(
+                get("/mypage/picker/list")
+                        .queryParam("offset", offset)
+                        .queryParam("limit", limit)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", accessToken)
+        );
+
+        //eye
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("testMyPage : " + responseBody);
+
+        //then
+        resultActions.andExpect(jsonPath("$.success").value("false"));
+        resultActions.andExpect(jsonPath("$.error.message").value("수락한 공고글이 없습니다"));
+    }
 }

@@ -7,26 +7,30 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pickup_shuttle.pickup._core.errors.exception.Exception400;
 import pickup_shuttle.pickup._core.errors.exception.Exception500;
 import pickup_shuttle.pickup.config.ErrorMessage;
+import pickup_shuttle.pickup.domain.board.Board;
+import pickup_shuttle.pickup.domain.board.repository.BoardRepositoryCustom;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
+import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserAuthApproveRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserModifyRqDTO;
-import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
-import pickup_shuttle.pickup.domain.user.dto.response.UserAuthDetailRpDTO;
-import pickup_shuttle.pickup.domain.user.dto.response.UserAuthListRpDTO;
-import pickup_shuttle.pickup.domain.user.dto.response.UserGetImageUrlRpDTO;
-import pickup_shuttle.pickup.domain.user.dto.response.UserMyPageRpDTO;
+import pickup_shuttle.pickup.domain.user.dto.response.*;
 import pickup_shuttle.pickup.domain.user.repository.UserRepository;
 import pickup_shuttle.pickup.domain.user.repository.UserRepositoryCustom;
+import pickup_shuttle.pickup.domain.utils.Utils;
 
 import java.io.InputStream;
+import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -34,10 +38,12 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class UserService {
     private final UserRepository userRepository;
     private final AmazonS3 amazonS3;
     private final UserRepositoryCustom userRepositoryCustom;
+    private final BoardRepositoryCustom boardRepositoryCustom;
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
     @Value("${cloud.aws.s3.dir}")
@@ -220,6 +226,30 @@ public class UserService {
             return "학생 인증이 승인되었습니다";
         }
         else throw new Exception400("일반 회원이 아닙니다");
+    }
+
+    public Slice<UserPickerListRpDTO> myPagePickerList(Long lastBoardId, int limit, Long userId) {
+        PageRequest pageRequest = PageRequest.of(0, limit);
+        Slice<Board> boardsSlice = boardRepositoryCustom.searchAllBySlice2(lastBoardId, pageRequest, userId);
+        if(boardsSlice.getContent().isEmpty()) {
+            throw new Exception400("수락한 공고글이 없습니다");
+        }
+        return getPickerListResponseDTOs(pageRequest, boardsSlice);
+    }
+
+    private Slice<UserPickerListRpDTO> getPickerListResponseDTOs(PageRequest pageRequest, Slice<Board> boardSlice) {
+        List<UserPickerListRpDTO> boardBoardListRpDTO = boardSlice.getContent().stream()
+                .filter(Utils::notOverDeadline)
+                .map(b -> UserPickerListRpDTO.builder()
+                        .boardId(b.getBoardId())
+                        .shopName(b.getStore().getName())
+                        .finishedAt(b.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                        .tip(b.getTip())
+                        .isMatch(b.isMatch())
+                        .destination(b.getDestination())
+                        .build())
+                .toList();
+        return new SliceImpl<>(boardBoardListRpDTO,pageRequest,boardSlice.hasNext());
     }
 }
 

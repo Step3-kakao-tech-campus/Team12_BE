@@ -15,9 +15,9 @@ import pickup_shuttle.pickup._core.utils.CustomPage;
 import pickup_shuttle.pickup.config.Login;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
 import pickup_shuttle.pickup.domain.refreshToken.dto.response.AccessTokenRpDTO;
+import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserAuthApproveRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserModifyRqDTO;
-import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserUploadImageRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.response.*;
 import pickup_shuttle.pickup.security.service.JwtService;
@@ -127,5 +127,12 @@ public class UserController {
     public ResponseEntity<?> authApprove(@RequestBody @Valid UserAuthApproveRqDTO requestDTO){
         String message = userService.authApprove(requestDTO);
         return ResponseEntity.ok(ApiUtils.success(message));
+    }
+
+    @GetMapping("/mypage/picker/list")
+    public ResponseEntity<?> myPagePickerList(@RequestParam(value = "offset",required = false) Long lastBoardId,
+                                              @RequestParam(value = "limit",defaultValue = "10") int size,
+                                              @Login Long userId) {
+        return ResponseEntity.ok(ApiUtils.success(userService.myPagePickerList(lastBoardId,size,userId)));
     }
 }
