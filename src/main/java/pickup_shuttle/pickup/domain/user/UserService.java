@@ -251,5 +251,6 @@ public class UserService {
                 .toList();
         return new SliceImpl<>(boardBoardListRpDTO,pageRequest,boardSlice.hasNext());
     }
+
 }
 

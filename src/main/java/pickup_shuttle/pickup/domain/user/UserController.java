@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import pickup_shuttle.pickup._core.utils.ApiUtils;
 import pickup_shuttle.pickup._core.utils.CustomPage;
 import pickup_shuttle.pickup.config.Login;
+import pickup_shuttle.pickup.domain.board.BoardService;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
 import pickup_shuttle.pickup.domain.refreshToken.dto.response.AccessTokenRpDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
@@ -28,10 +29,11 @@ import pickup_shuttle.pickup.security.service.JwtService;
 public class UserController {
     private final UserService userService;
     private final JwtService jwtService;
+    private final BoardService boardService;
+    private final
 
     // 은행명, 계좌번호 입력 창으로 이동
-    @GetMapping("/users/register/input")
-    public ModelAndView userInfoInput() {
+    @GetMapping("/users/register/input") ModelAndView userInfoInput() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("registerInput");
 
@@ -134,5 +136,10 @@ public class UserController {
                                               @RequestParam(value = "limit",defaultValue = "10") int size,
                                               @Login Long userId) {
         return ResponseEntity.ok(ApiUtils.success(userService.myPagePickerList(lastBoardId,size,userId)));
+    }
+
+    @GetMapping("/mypage/picker/list/{boardId}")
+    public ResponseEntity<?> myPagePickerDetail(@PathVariable("boardId") Long boardId) {
+        return ResponseEntity.ok(ApiUtils.success(boardService.boardDetailAfter(boardId)));
     }
 }
