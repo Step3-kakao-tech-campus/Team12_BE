@@ -25,7 +25,7 @@ import pickup_shuttle.pickup.domain.store.Store;
 import pickup_shuttle.pickup.domain.store.StoreRepository;
 import pickup_shuttle.pickup.domain.user.User;
 import pickup_shuttle.pickup.domain.user.repository.UserRepository;
-import pickup_shuttle.pickup.domain.utils.Utils;
+
 
 import java.lang.reflect.Field;
 import java.time.ZoneOffset;
@@ -41,7 +41,6 @@ public class BoardService {
     private final UserRepository userRepository;
     private final StoreRepository storeRepository;
     private final MatchService matchService;
-    private final Utils utils;
 
     public Slice<BoardListRpDTO> boardList(Long lastBoardId, int limit) {
         PageRequest pageRequest = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "boardId"));
@@ -57,7 +56,7 @@ public class BoardService {
                         .shopName(b.getStore().getName())
                         .finishedAt(b.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
                         .tip(b.getTip())
-                        .match(b.isMatch())
+                        .isMatch(b.isMatch())
                         .destination(b.getDestination())
                         .build())
                 .toList();
@@ -99,7 +98,6 @@ public class BoardService {
                 .isMatch(board.isMatch())
                 .shopName(board.getStore().getName())
                 .beverage(beverageDTOS)
-                .overDeadline(utils.overDeadline(board))
                 .build();
     }
     //select 2번
@@ -130,7 +128,6 @@ public class BoardService {
                 .arrivalTime(board.getMatch().getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).toEpochSecond(ZoneOffset.UTC))
                 .isMatch(board.isMatch())
                 .beverage(beverageDTOS)
-                .overDeadline(utils.overDeadline(board))
                 .build();
     }
 
