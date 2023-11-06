@@ -255,7 +255,7 @@ public class UserService {
         return new SliceImpl<>(boardBoardListRpDTO,pageRequest,boardSlice.hasNext());
     }
     public UserPickerDetail pickerBoardDetail(Long boardId, Long userId) {
-        Board board = boardRepository.m2findByBoardId(boardId).orElseThrow(
+        Board board = boardRepository.m5findByBoardId(boardId).orElseThrow(
                 () -> new Exception400("매칭이 완료되지 않은 공고글입니다")
         );
 
