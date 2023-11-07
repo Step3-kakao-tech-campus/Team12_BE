@@ -22,10 +22,17 @@ import pickup_shuttle.pickup.domain.beverage.dto.BeverageDTO;
 import pickup_shuttle.pickup.domain.board.Board;
 import pickup_shuttle.pickup.domain.board.repository.BoardRepository;
 import pickup_shuttle.pickup.domain.board.repository.BoardRepositoryCustom;
+import pickup_shuttle.pickup.domain.beverage.dto.BeverageDTO;
+import pickup_shuttle.pickup.domain.board.Board;
+import pickup_shuttle.pickup.domain.board.repository.BoardRepository;
+import pickup_shuttle.pickup.domain.match.Match;
+import pickup_shuttle.pickup.domain.match.MatchRepository;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserAuthApproveRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserModifyRqDTO;
+import pickup_shuttle.pickup.domain.user.dto.response.*;
+import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.response.*;
 import pickup_shuttle.pickup.domain.user.repository.UserRepository;
 import pickup_shuttle.pickup.domain.user.repository.UserRepositoryCustom;
@@ -43,10 +50,13 @@ import java.util.Optional;
 @Slf4j
 public class UserService {
     private final UserRepository userRepository;
-    private final AmazonS3 amazonS3;
     private final UserRepositoryCustom userRepositoryCustom;
-    private final BoardRepositoryCustom boardRepositoryCustom;
     private final BoardRepository boardRepository;
+    private final MatchRepository matchRepository;
+    private final AmazonS3 amazonS3;
+    private final Utils utils;
+
+    private final BoardRepositoryCustom boardRepositoryCustom;
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
     @Value("${cloud.aws.s3.dir}")
@@ -230,6 +240,65 @@ public class UserService {
         }
         else throw new Exception400("일반 회원이 아닙니다");
     }
+    public Slice<UserGetRequesterListRpDTO> getRequesterList(Long userId, Long lastBoardId, int size){
+        PageRequest pageRequest = PageRequest.of(0, size);
+        Slice<Board> boardSlice = userRepositoryCustom.searchRequesterList(userId, lastBoardId, pageRequest);
+        List<UserGetRequesterListRpDTO> responseDTOList = boardSlice.getContent().stream()
+                .filter(b -> !utils.overDeadline(b))
+                .map(b -> UserGetRequesterListRpDTO.builder()
+                        .boardId(b.getBoardId())
+                        .shopName(b.getStore().getName())
+                        .destination(b.getDestination())
+                        .finishedAt(b.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                        .tip(b.getTip())
+                        .match(b.isMatch())
+                        .build())
+                .toList();
+        return new SliceImpl<>(responseDTOList, pageRequest, boardSlice.hasNext());
+    }
+    public UserGetRequesterDetailRpDTO getRequesterDetail(Long boardId){
+        Board board = boardRepository.m4findByBoardId(boardId).orElseThrow(
+                () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
+        );
+        List<BeverageDTO> beverage = board.getBeverages().stream()
+                .map(b -> BeverageDTO.builder()
+                        .name(b.getName())
+                        .build()
+                )
+                .toList();
+        if(board.isMatch()){
+            Match match = matchRepository.mfindByMatchId(board.getMatch().getMatchId()).orElseThrow(
+                    () -> new Exception400("매칭 정보를 찾을 수 없습니다")
+            );
+            return UserGetRequesterDetailRpDTO.builder()
+                    .boardId(boardId)
+                    .shopName(board.getStore().getName())
+                    .destination(board.getDestination())
+                    .beverage(beverage)
+                    .tip(board.getTip())
+                    .request(board.getRequest())
+                    .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                    .isMatch(board.isMatch())
+                    .pickerBank(match.getUser().getBank())
+                    .pickerAccount(match.getUser().getAccount())
+                    .arrivalTime(match.getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).toEpochSecond(ZoneOffset.UTC))
+                    .pickerPhoneNumber(match.getUser().getPhoneNumber())
+                    .build();
+        }else{
+            return UserGetRequesterDetailRpDTO.builder()
+                    .boardId(boardId)
+                    .shopName(board.getStore().getName())
+                    .destination(board.getDestination())
+                    .beverage(beverage)
+                    .tip(board.getTip())
+                    .request(board.getRequest())
+                    .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                    .isMatch(board.isMatch())
+                    .build();
+        }
+
+    }
+
 
     public Slice<UserPickerListRpDTO> myPagePickerList(Long lastBoardId, int limit, Long userId) {
         PageRequest pageRequest = PageRequest.of(0, limit);

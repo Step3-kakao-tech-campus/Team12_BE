@@ -29,11 +29,10 @@ import pickup_shuttle.pickup.security.service.JwtService;
 public class UserController {
     private final UserService userService;
     private final JwtService jwtService;
-    private final BoardService boardService;
-    private final
 
     // 은행명, 계좌번호 입력 창으로 이동
-    @GetMapping("/users/register/input") ModelAndView userInfoInput() {
+    @GetMapping("/users/register/input")
+    public ModelAndView userInfoInput() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("registerInput");
 
@@ -51,7 +50,7 @@ public class UserController {
 
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(SignUpRqDTO requestDTO, @AuthenticationPrincipal CustomOauth2User customOauth2User, Errors errors){
+    public ResponseEntity<?> signup(@RequestBody SignUpRqDTO requestDTO, @AuthenticationPrincipal CustomOauth2User customOauth2User, Errors errors){
         userService.signup(requestDTO, customOauth2User);
 
         return ResponseEntity.ok(ApiUtils.success("처리에 성공하였습니다." + "은행이름: " + requestDTO.bankName() + "  계좌번호: " + requestDTO.accountNum()));
@@ -129,6 +128,19 @@ public class UserController {
     public ResponseEntity<?> authApprove(@RequestBody @Valid UserAuthApproveRqDTO requestDTO){
         String message = userService.authApprove(requestDTO);
         return ResponseEntity.ok(ApiUtils.success(message));
+    }
+    @GetMapping("/mypage/requester/list")
+    public ResponseEntity<?> getRequesterList(
+            @Login Long userId,
+            @RequestParam(value = "offset",required = false) Long lastBoardId,
+            @RequestParam(value = "limit",defaultValue = "10") int size){
+        Slice<UserGetRequesterListRpDTO> responseDTO = userService.getRequesterList(userId, lastBoardId, size);
+        return ResponseEntity.ok(ApiUtils.success(new CustomPage(responseDTO)));
+    }
+    @GetMapping("/mypage/requester/detail/{boardId}")
+    public ResponseEntity<?> getRequesterDetail(@PathVariable("boardId") Long boardId){
+        UserGetRequesterDetailRpDTO responseDTO = userService.getRequesterDetail(boardId);
+        return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 
     @GetMapping("/mypage/picker/list")
