@@ -22,17 +22,12 @@ import pickup_shuttle.pickup.domain.beverage.dto.BeverageDTO;
 import pickup_shuttle.pickup.domain.board.Board;
 import pickup_shuttle.pickup.domain.board.repository.BoardRepository;
 import pickup_shuttle.pickup.domain.board.repository.BoardRepositoryCustom;
-import pickup_shuttle.pickup.domain.beverage.dto.BeverageDTO;
-import pickup_shuttle.pickup.domain.board.Board;
-import pickup_shuttle.pickup.domain.board.repository.BoardRepository;
 import pickup_shuttle.pickup.domain.match.Match;
 import pickup_shuttle.pickup.domain.match.MatchRepository;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserAuthApproveRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserModifyRqDTO;
-import pickup_shuttle.pickup.domain.user.dto.response.*;
-import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.response.*;
 import pickup_shuttle.pickup.domain.user.repository.UserRepository;
 import pickup_shuttle.pickup.domain.user.repository.UserRepositoryCustom;
@@ -54,8 +49,6 @@ public class UserService {
     private final BoardRepository boardRepository;
     private final MatchRepository matchRepository;
     private final AmazonS3 amazonS3;
-    private final Utils utils;
-
     private final BoardRepositoryCustom boardRepositoryCustom;
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -65,13 +58,14 @@ public class UserService {
     public void signup(SignUpRqDTO signUpRqDTO, CustomOauth2User customOauth2User){
         String bankName = signUpRqDTO.bankName();
         String accountNum = signUpRqDTO.accountNum();
-        Optional<User> user = userRepository.findBySocialId(customOauth2User.getName());
-        user.get().setRole(UserRole.USER);
+        User user = userRepository.findBySocialId(customOauth2User.getName()).orElseThrow(
+                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
+        );
+        user.setRole(UserRole.USER);
         customOauth2User.setBankName(bankName);
         customOauth2User.setAccountNum(accountNum);
-        user.get().setBank(bankName);
-        user.get().setAccount(accountNum);
-        return;
+        user.setBank(bankName);
+        user.setAccount(accountNum);
     }
     public String userAuthStatus(Long userId){
         User user = userRepository.findById(userId).orElseThrow(
@@ -79,11 +73,11 @@ public class UserService {
         );
         String userRole = user.getUserRole().getValue();
         String userUrl = user.getUrl();
-        switch (userRole){
-            case "ROLE_USER": return userUrl.equals("") ? "미인증":"인증 진행 중";
-            case "ROLE_STUDENT": return "인증";
-            default : return "미인증";
-        }
+        return switch (userRole) {
+            case "ROLE_USER" -> userUrl.isEmpty() ? "미인증" : "인증 진행 중";
+            case "ROLE_STUDENT" -> "인증";
+            default -> "미인증";
+        };
     }
 
     @Transactional
@@ -94,19 +88,20 @@ public class UserService {
         }
         String userBankName = user.get().getBank();
         String userAccountNum = user.get().getAccount();
-        if(userModifyRqDTO.account() != userAccountNum){
+        if(!userModifyRqDTO.account().equals(userAccountNum)){
             user.get().setAccount(userModifyRqDTO.account());
         }
-        if(userModifyRqDTO.bank() != userBankName){
+        if(!userModifyRqDTO.bank().equals(userBankName)){
             user.get().setBank(userModifyRqDTO.bank());
         }
         return true;
     }
 
     public long userPK(CustomOauth2User customOauth2User){
-        Optional<User> user = userRepository.findBySocialId(customOauth2User.getName());
-        long userPK = user.get().getUserId();
-        return userPK;
+        User user = userRepository.findBySocialId(customOauth2User.getName()).orElseThrow(
+                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
+        );
+        return user.getUserId();
     }
 
     @Transactional
@@ -145,7 +140,7 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new Exception400(ErrorMessage.UNKNOWN_USER)
         );
-        if(user.getUrl().equals("")){
+        if(user.getUrl().isEmpty()){
             throw new Exception400("등록된 이미지가 존재하지 않습니다");
         }
         return UserGetImageUrlRpDTO.builder().url(getPresignedUrl(userId)).build(); // PreSigned URL 응답
@@ -157,8 +152,7 @@ public class UserService {
         String fileName = dir + userId + ".jpg";
         GeneratePresignedUrlRequest generatePresignedUrlRequest = getGeneratePreSignedUrlRequest(bucket, fileName);
         try{
-            String presignedUrl = amazonS3.generatePresignedUrl(generatePresignedUrlRequest).toString();
-            return presignedUrl;
+            return amazonS3.generatePresignedUrl(generatePresignedUrlRequest).toString();
         }catch (Exception e){
             throw new Exception500("presigned url 발급을 실패했습니다");
         }
@@ -221,7 +215,7 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new Exception400(ErrorMessage.UNKNOWN_USER)
         );
-        if(user.getUrl().equals("")){
+        if(user.getUrl().isEmpty()){
             throw new Exception400("등록된 이미지가 존재하지 않습니다");
         }
         return UserAuthDetailRpDTO.builder()
@@ -244,7 +238,7 @@ public class UserService {
         PageRequest pageRequest = PageRequest.of(0, size);
         Slice<Board> boardSlice = userRepositoryCustom.searchRequesterList(userId, lastBoardId, pageRequest);
         List<UserGetRequesterListRpDTO> responseDTOList = boardSlice.getContent().stream()
-                .filter(b -> !utils.overDeadline(b))
+                .filter(Utils::notOverDeadline)
                 .map(b -> UserGetRequesterListRpDTO.builder()
                         .boardId(b.getBoardId())
                         .shopName(b.getStore().getName())
