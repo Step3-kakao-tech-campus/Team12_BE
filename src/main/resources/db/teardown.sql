@@ -48,6 +48,6 @@ values
 
 insert into match_tb (arrival_time, id, match_time, user_id)
 VALUES
-    (date_add(current_time(), interval 15 minute), 1, now(),2);
+    (date_add(current_time(), interval 15 minute), 1, now(),3);
 
 update board_tb set match_id = 1 , is_match = 'Y' where id = 3;

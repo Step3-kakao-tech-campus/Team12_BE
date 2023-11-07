@@ -219,4 +219,75 @@ class UserControllerTest {
             resultActions.andExpect(jsonPath("$.error.message").value("일반 회원이 아닙니다"));
         }
     }
+
+    @Nested
+    class testGetRequesterDetail{
+        @Test
+        @DisplayName("성공 : (작성자) 공고글 매칭 전 상세조회")
+        void testGetRequesterDetailBeforeMatched() throws Exception {
+            //given
+            String accessToken = "Bearer " + jwtService.createAccessToken("6");
+            Long boardId = 6L;
+
+            //when
+            ResultActions resultActions = mvc.perform(
+                    get("/mypage/requester/detail/{boardId}", boardId)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", accessToken)
+            );
+
+            //eye
+            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+            System.out.println("testGetRequesterDetailBeforeMatched : " + responseBody);
+
+            //then
+            resultActions.andExpect(jsonPath("$.success").value("true"));
+            resultActions.andExpect(jsonPath("$.response.boardId").value(boardId));
+            resultActions.andExpect(jsonPath("$.response.isMatch").value(false));
+        }
+        @Test
+        @DisplayName("성공 : (작성자) 공고글 매칭 후 상세조회")
+        void testGetRequesterDetailAfterMatched() throws Exception {
+            //given
+            String accessToken = "Bearer " + jwtService.createAccessToken("3"); //ADMIN
+            Long boardId = 3L;
+
+            //when
+            ResultActions resultActions = mvc.perform(
+                    get("/mypage/requester/detail/{boardId}", boardId)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", accessToken)
+            );
+
+            //eye
+            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+            System.out.println("testGetRequesterDetailAfterMatched : " + responseBody);
+
+            //then
+            resultActions.andExpect(jsonPath("$.success").value("true"));
+            resultActions.andExpect(jsonPath("$.response.boardId").value(boardId));
+            resultActions.andExpect(jsonPath("$.response.isMatch").value(true));
+        }
+    }
+    @Test
+    @DisplayName("성공 : (작성자) 공고글 목록 보기")
+    void testGetRequesterList() throws Exception {
+        //given
+        String accessToken = "Bearer " + jwtService.createAccessToken("3");
+
+        //when
+        ResultActions resultActions = mvc.perform(
+                get("/mypage/requester/list")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", accessToken)
+        );
+
+        //eye
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("testGetRequesterList : " + responseBody);
+
+        //then
+        resultActions.andExpect(jsonPath("$.success").value("true"));
+        resultActions.andExpect(jsonPath("$.response.content[0].boardId").value(3));
+    }
 }
