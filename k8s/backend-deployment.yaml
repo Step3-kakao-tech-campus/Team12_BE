@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: krmp-d2hub-idock.9rum.cc/dev-test/repo_cc21a378d78c
+        env:
+          - name: TZ
+            value: Asia/Seoul
+          - name: KAKAO_OAUTH_CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: oauth-secret
+                key: client_id
+          - name: KAKAO_OAUTH_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: oauth-secret
+                key: client_secret
+          - name: AWS_ACCESSKEY
+            valueFrom:
+              secretKeyRef:
+                name: aws-secret
+                key: accesskey
+          - name: AWS_SECRETKEY
+            valueFrom:
+              secretKeyRef:
+                name: aws-secret
+                key: secretkey
+          - name: SPRING_DATASOURCE_URL
+            value: jdbc:mysql://mysql:3306/pickup?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false&allowPublicKeyRetrieval=true
+          - name: SPRING_DATASOURCE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mysql-secret
+                key: USER
+          - name: SPRING_DATASOURCE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-secret
+                key: PASSWORD
+          - name: SPRING_PROFILES_ACTIVE
+            value: "dev"
+          - name: JWT_SECRETKEY
+            valueFrom:
+              secretKeyRef:
+                name: jwt-secret-key-secret
+                key: secretKey
+        resources:
+          requests:
+            memory: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+spec:
+  selector:
+    app: backend
+  ports:
+    - port: 8080
+      targetPort: 8080

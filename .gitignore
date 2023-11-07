@@ -6,8 +6,7 @@
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # 추가 작성
-application.properties
-application-oauth.yml
+
 
 # User-specific stuff
 .idea/**/workspace.xml
@@ -203,7 +202,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-application-prod.yml
 
 .gradle
 **/build/
@@ -230,4 +228,10 @@ gradle-app.setting
 # Lock 파일
 *.lock
 
+#쿠버네티스 secret file
+backend-secret.yaml
+mysql-secret.yaml
+aws-secret.yaml
+oauth-secret.yaml
+k8s/configs/jwt-secret-key-secret.yaml
 # End of https://www.toptal.com/developers/gitignore/api/java,intellij,macos,windows
