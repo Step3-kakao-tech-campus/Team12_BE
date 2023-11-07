@@ -13,11 +13,12 @@ import org.springframework.web.servlet.ModelAndView;
 import pickup_shuttle.pickup._core.utils.ApiUtils;
 import pickup_shuttle.pickup._core.utils.CustomPage;
 import pickup_shuttle.pickup.config.Login;
+import pickup_shuttle.pickup.domain.board.BoardService;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
 import pickup_shuttle.pickup.domain.refreshToken.dto.response.AccessTokenRpDTO;
+import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserAuthApproveRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserModifyRqDTO;
-import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserUploadImageRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.response.*;
 import pickup_shuttle.pickup.security.service.JwtService;
@@ -140,5 +141,18 @@ public class UserController {
     public ResponseEntity<?> getRequesterDetail(@PathVariable("boardId") Long boardId){
         UserGetRequesterDetailRpDTO responseDTO = userService.getRequesterDetail(boardId);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
+    }
+
+    @GetMapping("/mypage/picker/list")
+    public ResponseEntity<?> myPagePickerList(@RequestParam(value = "offset",required = false) Long lastBoardId,
+                                              @RequestParam(value = "limit",defaultValue = "10") int size,
+                                              @Login Long userId) {
+        return ResponseEntity.ok(ApiUtils.success(userService.myPagePickerList(lastBoardId,size,userId)));
+    }
+
+    @GetMapping("/mypage/picker/list/{boardId}")
+    public ResponseEntity<?> myPagePickerDetail(@PathVariable("boardId") Long boardId,
+                                                @Login Long userId) {
+        return ResponseEntity.ok(ApiUtils.success(userService.pickerBoardDetail(boardId, userId)));
     }
 }

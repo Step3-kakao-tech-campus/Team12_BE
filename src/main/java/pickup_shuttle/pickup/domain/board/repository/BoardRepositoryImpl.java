@@ -9,21 +9,18 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
 import pickup_shuttle.pickup.domain.board.Board;
-import pickup_shuttle.pickup.domain.board.repository.BoardRepositoryCustom;
-
 import java.util.List;
-import static pickup_shuttle.pickup.domain.board.QBoard.*;
-import static pickup_shuttle.pickup.domain.store.QStore.*;
+import static pickup_shuttle.pickup.domain.board.QBoard.board;
+import static pickup_shuttle.pickup.domain.match.QMatch.match;
+import static pickup_shuttle.pickup.domain.store.QStore.store;
 
 @Repository
 @Primary
 public class BoardRepositoryImpl implements BoardRepositoryCustom {
 
     private final JPAQueryFactory query;
-    private final EntityManager em;
 
     public BoardRepositoryImpl(EntityManager em) {
-        this.em = em;
         this.query = new JPAQueryFactory(em);
     }
 
@@ -52,6 +49,26 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
             return null;
         }
         return board.boardId.lt(boardId);
+    }
+
+    @Override
+    public Slice<Board> searchAllBySlice2(Long lastBoardId, Pageable pageable, Long userId) {
+        List<Board> results = query
+                .selectFrom(board)
+                .join(board.store, store).fetchJoin()
+                .join(board.match, match).fetchJoin()
+                .where(ltBoardId(lastBoardId),
+                        match.user.userId.eq(userId))
+                .orderBy(board.boardId.desc())
+                .limit(pageable.getPageSize() + 1)
+                .fetch();
+
+        boolean hasNext = results.size() > pageable.getPageSize();
+        if (hasNext) {
+            results.remove(pageable.getPageSize());
+        }
+
+        return new SliceImpl<>(results, pageable, hasNext);
     }
 }
 

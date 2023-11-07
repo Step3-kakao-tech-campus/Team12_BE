@@ -7,8 +7,11 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,11 +21,17 @@ import pickup_shuttle.pickup.config.ErrorMessage;
 import pickup_shuttle.pickup.domain.beverage.dto.BeverageDTO;
 import pickup_shuttle.pickup.domain.board.Board;
 import pickup_shuttle.pickup.domain.board.repository.BoardRepository;
+import pickup_shuttle.pickup.domain.board.repository.BoardRepositoryCustom;
+import pickup_shuttle.pickup.domain.beverage.dto.BeverageDTO;
+import pickup_shuttle.pickup.domain.board.Board;
+import pickup_shuttle.pickup.domain.board.repository.BoardRepository;
 import pickup_shuttle.pickup.domain.match.Match;
 import pickup_shuttle.pickup.domain.match.MatchRepository;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
+import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserAuthApproveRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserModifyRqDTO;
+import pickup_shuttle.pickup.domain.user.dto.response.*;
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.response.*;
 import pickup_shuttle.pickup.domain.user.repository.UserRepository;
@@ -38,6 +47,7 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class UserService {
     private final UserRepository userRepository;
     private final UserRepositoryCustom userRepositoryCustom;
@@ -46,6 +56,7 @@ public class UserService {
     private final AmazonS3 amazonS3;
     private final Utils utils;
 
+    private final BoardRepositoryCustom boardRepositoryCustom;
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
     @Value("${cloud.aws.s3.dir}")
@@ -288,5 +299,58 @@ public class UserService {
 
     }
 
+
+    public Slice<UserPickerListRpDTO> myPagePickerList(Long lastBoardId, int limit, Long userId) {
+        PageRequest pageRequest = PageRequest.of(0, limit);
+        Slice<Board> boardsSlice = boardRepositoryCustom.searchAllBySlice2(lastBoardId, pageRequest, userId);
+        if(boardsSlice.getContent().isEmpty()) {
+            throw new Exception400("수락한 공고글이 없습니다");
+        }
+        return getPickerListResponseDTOs(pageRequest, boardsSlice);
+    }
+
+    private Slice<UserPickerListRpDTO> getPickerListResponseDTOs(PageRequest pageRequest, Slice<Board> boardSlice) {
+        List<UserPickerListRpDTO> boardBoardListRpDTO = boardSlice.getContent().stream()
+                .filter(Utils::notOverDeadline)
+                .map(b -> UserPickerListRpDTO.builder()
+                        .boardId(b.getBoardId())
+                        .shopName(b.getStore().getName())
+                        .finishedAt(b.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                        .tip(b.getTip())
+                        .isMatch(b.isMatch())
+                        .destination(b.getDestination())
+                        .build())
+                .toList();
+        return new SliceImpl<>(boardBoardListRpDTO,pageRequest,boardSlice.hasNext());
+    }
+    public UserPickerDetail pickerBoardDetail(Long boardId, Long userId) {
+        Board board = boardRepository.m5findByBoardId(boardId).orElseThrow(
+                () -> new Exception400("매칭이 완료되지 않은 공고글입니다")
+        );
+
+        if(!board.getMatch().getUser().getUserId().equals(userId)){
+            throw new Exception400("해당 공고글의 피커가 아닙니다");
+        }
+        List<BeverageDTO> beverageDTOList = board.getBeverages().stream()
+                .map(b -> BeverageDTO.builder()
+                        .name(b.getName())
+                        .build())
+                .toList();
+        return UserPickerDetail.builder()
+                .boardId(board.getBoardId())
+                .shopName(board.getStore().getName())
+                .destination(board.getDestination())
+                .beverage(beverageDTOList)
+                .tip(board.getTip())
+                .request(board.getRequest())
+                .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                .isMatch(board.isMatch())
+                .pickerBank(board.getMatch().getUser().getBank())
+                .pickerAccount(board.getMatch().getUser().getAccount())
+                .arrivalTime(board.getMatch().getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).toEpochSecond(ZoneOffset.UTC))
+                .pickerPhoneNumber(board.getMatch().getUser().getPhoneNumber())
+                .build();
+
+    }
 }
 

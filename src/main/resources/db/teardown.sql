@@ -31,23 +31,25 @@ insert into board_tb (tip, created_at, finished_at, id, match_id, store_id, user
 VALUES
     (1000, current_time,date_add(current_time, interval 30 minute), 1, null, 1, 1, '전남대 공대7 217호관', 'N', '빨리 와주세요1'),
     (1500, current_time,date_add(current_time, interval 30 minute), 2, null, 2, 2, '전남대 공대7 218호관', 'N', '빨리 와주세요2'),
-    (2000, current_time,date_add(current_time, interval 30 minute), 3, null, 3, 3, '전남대 공대7 219호관', 'N', '빨리 와주세요3'),
+    (2000, current_time,date_add(current_time, interval 1 second), 3, null, 3, 3, '전남대 공대7 219호관', 'N', '빨리 와주세요3'),
     (1000, current_time,date_add(current_time, interval 30 minute), 4, null, 4, 4, '전남대 공대7 220호관', 'N', '빨리 와주세요4'),
     (1500, current_time,date_add(current_time, interval 30 minute), 5, null, 5, 5, '전남대 공대7 221호관', 'N', '빨리 와주세요5'),
     (2000, current_time,date_add(current_time, interval 30 minute), 6, null, 5, 6, '전남대 공대7 222호관', 'N', '빨리 와주세요6');
 
 insert into beverage_tb(id, name, board_id)
 values
-    (1, '아메리카노', 3),
-    (2, '카페라떼', 6);
-insert into beverage_tb(id, name)
-values
-    (3, '카페모카'),
-    (4, '초코라떼'),
-    (5, '딸기라떼');
+    (1, '아메리카노 1잔', 3),
+    (2, '카페라떼 1잔', 6),
+    (3, '카페모카 3잔', 4),
+    (4, '초코라떼 2잔', 4),
+    (5, '딸기라떼 1잔', 4);
+
 
 insert into match_tb (arrival_time, id, match_time, user_id)
 VALUES
-    (date_add(current_time(), interval 15 minute), 1, now(),3);
+    (date_add(current_time(), interval 15 minute), 1, now(),2),
+    (date_add(current_time(), interval 15 minute), 2, now(),2);
+
 
 update board_tb set match_id = 1 , is_match = 'Y' where id = 3;
+update board_tb set match_id = 2 , is_match = 'Y' where id = 4;

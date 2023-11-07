@@ -1,4 +1,4 @@
-package pickup_shuttle.pickup.domain.board.dto.response;
+package pickup_shuttle.pickup.domain.user.dto.response;
 
 import lombok.Builder;
 import pickup_shuttle.pickup.domain.beverage.dto.BeverageDTO;
@@ -6,7 +6,7 @@ import pickup_shuttle.pickup.domain.beverage.dto.BeverageDTO;
 import java.util.List;
 
 @Builder
-public record BoardDetailBeforeRpDTO(
+public record UserPickerDetail(
         Long boardId,
         String shopName,
         String destination,
@@ -14,5 +14,9 @@ public record BoardDetailBeforeRpDTO(
         int tip,
         String request,
         Long finishedAt,
-        boolean isMatch
+        boolean isMatch,
+        String pickerBank,
+        String pickerAccount,
+        Long arrivalTime,
+        String pickerPhoneNumber
 ) { }
