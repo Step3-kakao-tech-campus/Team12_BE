@@ -17,6 +17,9 @@ import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationF
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import pickup_shuttle.pickup.domain.oauth2.handler.OAuth2LoginFailureHandler;
 import pickup_shuttle.pickup.domain.oauth2.handler.OAuth2LoginSuccessHandler;
 import pickup_shuttle.pickup.domain.oauth2.service.CustomOAuth2UserService;
@@ -24,6 +27,8 @@ import pickup_shuttle.pickup.domain.refreshToken.RefreshTokenRepository;
 import pickup_shuttle.pickup.domain.user.repository.UserRepository;
 import pickup_shuttle.pickup.security.filter.JwtAuthenticationProcessingFilter;
 import pickup_shuttle.pickup.security.service.JwtService;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -86,7 +91,6 @@ public class SecurityConfig {
         return http.build();
 
     }
-
 
     @Bean
     public AuthenticationManager authenticationManager() {

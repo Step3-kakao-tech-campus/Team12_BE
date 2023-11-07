@@ -11,4 +11,4 @@ spring:
     - dev-db
     - dev-oauth
     - dev-aws
-  active: dev
+  active: local

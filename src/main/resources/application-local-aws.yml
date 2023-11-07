@@ -1,0 +1,16 @@
+spring:
+  config:
+    activate:
+      on-profile: local-aws
+cloud:
+  aws:
+    s3:
+      bucket: pickup-shuttle-bucket
+      dir : student-card/
+    credentials:
+      accessKey: AKIAW7XSIXNSHLYP5WDK
+      secretKey: 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
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
