@@ -49,7 +49,7 @@ public class UserController {
 
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(SignUpRqDTO requestDTO, @AuthenticationPrincipal CustomOauth2User customOauth2User, Errors errors){
+    public ResponseEntity<?> signup(@RequestBody SignUpRqDTO requestDTO, @AuthenticationPrincipal CustomOauth2User customOauth2User, Errors errors){
         userService.signup(requestDTO, customOauth2User);
 
         return ResponseEntity.ok(ApiUtils.success("처리에 성공하였습니다." + "은행이름: " + requestDTO.bankName() + "  계좌번호: " + requestDTO.accountNum()));

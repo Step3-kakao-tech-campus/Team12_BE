@@ -38,14 +38,14 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
                 User findUser = userRepository.findBySocialId(oauth2User.getName())
                         .orElseThrow(() -> new IllegalArgumentException("socialID에 해당하는 유저가 없습니다."));
                 String accessToken = jwtService.createAccessToken(findUser.getUserId().toString());
-                response.sendRedirect("/users/register/input"); // 리다이렉트 주소 (계좌번호 입력)
+                response.sendRedirect("http://localhost:3000/register/bank"); // 리다이렉트 주소 (계좌번호 입력)
                 jwtService.sendRefreshToken(response, null);
                 findUser.authorizeUser();
 
             } else {
                 System.out.println("loginSuccess 실행");
                 loginSuccess(response, oauth2User);
-                redirectStrategy.sendRedirect(request, response, "/login/callback");
+                redirectStrategy.sendRedirect(request, response, "http://localhost:3000/login/callback");
             }
         } catch(Exception e){
             throw e;
