@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
@@ -27,11 +26,11 @@ import pickup_shuttle.pickup.domain.user.User;
 import pickup_shuttle.pickup.domain.user.repository.UserRepository;
 import pickup_shuttle.pickup.domain.utils.Utils;
 
-
 import java.lang.reflect.Field;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -145,7 +144,7 @@ public class BoardService {
                 () -> new Exception400(ErrorMessage.UNKNOWN_USER)
         );
         Match match = matchService.createMatch(requestDTo.arrivalTime(),user);
-        if(match.getUser().getUserId() == board.getUser().getUserId()) {
+        if(Objects.equals(match.getUser().getUserId(), board.getUser().getUserId())) {
             throw new Exception400("공고글 작성자는 매칭 수락을 할 수 없습니다");
         }
         board.updateMatch(match);
@@ -206,7 +205,7 @@ public class BoardService {
         }
         // 공고 수정
         Map<String, Object> mapToPatch = requestDTO.patchValues(store); // null 삭제
-        if (mapToPatch.size() > 0){
+        if (!mapToPatch.isEmpty()){
             updatePatch(board, mapToPatch);
         } else{
             throw new Exception400("수정할 값이 없습니다");
@@ -229,7 +228,7 @@ public class BoardService {
             if (k.equals("beverages")){
                 board.getBeverages().clear();
                 board.getBeverages().addAll((List<Beverage>)v);
-                board.getBeverages().forEach(b -> {b.setBoard(board);});
+                board.getBeverages().forEach(b -> b.setBoard(board));
             }
             else{
                 Field field = ReflectionUtils.findField(Board.class, k);
@@ -247,7 +246,7 @@ public class BoardService {
         }
     }
     public void checkListEmpty(List<String> beverages){
-        if(beverages != null && beverages.size() == 0){
+        if(beverages != null && beverages.isEmpty()){
             throw new Exception400("음료를 입력하지 않았습니다");
         }
     }
