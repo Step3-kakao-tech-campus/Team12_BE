@@ -86,10 +86,10 @@ public class UserService {
     }
 
     @Transactional
-    public boolean modifyUser(UserModifyRqDTO userModifyRqDTO, Long userId) {
+    public ModifyUserRpDTO modifyUser(UserModifyRqDTO userModifyRqDTO, Long userId) {
         Optional<User> user = userRepository.findById(userId);
         if(user.isEmpty()){
-            return false;
+            throw new Exception400("인증되지 않은 사용자 입니다");
         }
         String userBankName = user.get().getBank();
         String userAccountNum = user.get().getAccount();
@@ -99,7 +99,9 @@ public class UserService {
         if(!userModifyRqDTO.bank().equals(userBankName)){
             user.get().setBank(userModifyRqDTO.bank());
         }
-        return true;
+        return ModifyUserRpDTO.builder()
+                .response("회원 수정이 완료되었습니다")
+                .build();
     }
 
 
