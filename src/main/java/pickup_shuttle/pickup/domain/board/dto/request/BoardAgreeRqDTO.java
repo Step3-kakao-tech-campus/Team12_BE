@@ -4,11 +4,12 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
+import pickup_shuttle.pickup.config.ErrorMessage;
 
 @Builder
 public record BoardAgreeRqDTO(
-        @NotNull(message = "도착예정 시간이 공백입니다")
-        @Min(value = 0, message = "도착예정 시간은 0 이상이어야 합니다")
-        @Max(value = 60, message = "도착예정 시간은 60 이하이어야 합니다")
+        @NotNull(message = "도착예정시간" + ErrorMessage.BADREQUEST_BLANK)
+        @Min(value = 1, message = "도착예정시간" + ErrorMessage.BADREQUEST_MIN)
+        @Max(value = Integer.MAX_VALUE, message = "도착예정시간" + ErrorMessage.BADREQUEST_MAX)
         Integer arrivalTime
 ) { }
