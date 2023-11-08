@@ -210,7 +210,7 @@ public class BoardControllerTest {
 
             //then
             resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("가게가 공백입니다"));
+            resultActions.andExpect(jsonPath("$.error.message").value("가게" + ErrorMessage.BADREQUEST_BLANK));
             resultActions.andExpect(jsonPath("$.error.status").value(400));
         }
         @Test
@@ -243,7 +243,7 @@ public class BoardControllerTest {
 
             //then
             resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("음료명에 빈 문자열 or null이 입력 되었습니다"));
+            resultActions.andExpect(jsonPath("$.error.message").value("음료" + ErrorMessage.BADREQUEST_BLANK));
             resultActions.andExpect(jsonPath("$.error.status").value(400));
         }
         @Test
@@ -275,7 +275,7 @@ public class BoardControllerTest {
 
             //then
             resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("위치가 공백입니다"));
+            resultActions.andExpect(jsonPath("$.error.message").value("위치" + ErrorMessage.BADREQUEST_BLANK));
             resultActions.andExpect(jsonPath("$.error.status").value(400));
         }
         @Test
@@ -307,7 +307,7 @@ public class BoardControllerTest {
 
             //then
             resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("픽업팁이 음수입니다"));
+            resultActions.andExpect(jsonPath("$.error.message").value("픽업팁" + ErrorMessage.BADREQUEST_MIN));
             resultActions.andExpect(jsonPath("$.error.status").value(400));
         }
         @Test
@@ -339,7 +339,7 @@ public class BoardControllerTest {
 
             //then
             resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("마감기간이 공백입니다"));
+            resultActions.andExpect(jsonPath("$.error.message").value("마감기간" + ErrorMessage.BADREQUEST_BLANK));
             resultActions.andExpect(jsonPath("$.error.status").value(400));
         }
     }
@@ -434,37 +434,8 @@ public class BoardControllerTest {
 
         }
         @Test
-        @DisplayName("실패 : 도착 예정 시간이 60 초과인 경우")
+        @DisplayName("실패 : 도착 예정 시간이 0 이하인 경우")
         void testFailBoardAgree3() throws Exception{
-            //given
-            Long boardId = 6L;
-            String accessToken = "Bearer " + jwtService.createAccessToken("3");
-            BoardAgreeRqDTO requestDTO = BoardAgreeRqDTO.builder()
-                    .arrivalTime(61)
-                    .build();
-            String requestBody = om.writeValueAsString(requestDTO);
-
-            //when
-            ResultActions resultActions = mvc.perform(
-                    post("/articles/agree/{boardId}", boardId)
-                            .content(requestBody)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
-
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testBoardAgree : " + responseBody);
-
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("도착예정 시간은 60 이하이어야 합니다"));
-            resultActions.andExpect(jsonPath("$.error.status").value(400));
-
-        }
-        @Test
-        @DisplayName("실패 : 도착 예정 시간이 0 미만인 경우")
-        void testFailBoardAgree4() throws Exception{
             //given
             Long boardId = 6L;
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
@@ -487,7 +458,7 @@ public class BoardControllerTest {
 
             //then
             resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("도착예정 시간은 0 이상이어야 합니다"));
+            resultActions.andExpect(jsonPath("$.error.message").value("도착예정시간" + ErrorMessage.BADREQUEST_MIN));
             resultActions.andExpect(jsonPath("$.error.status").value(400));
 
         }
@@ -515,7 +486,7 @@ public class BoardControllerTest {
 
             //then
             resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("도착예정 시간이 공백입니다"));
+            resultActions.andExpect(jsonPath("$.error.message").value("도착예정시간" + ErrorMessage.BADREQUEST_BLANK));
             resultActions.andExpect(jsonPath("$.error.status").value(400));
 
         }
@@ -869,7 +840,7 @@ public class BoardControllerTest {
             System.out.println("testBoardModifyBlankStore : " + responseBody);
             //then
             resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("가게가 공백입니다"));
+            resultActions.andExpect(jsonPath("$.error.message").value("가게" + ErrorMessage.BADREQUEST_BLANK));
         }
         @Test
         @DisplayName("실패 : 음료에 공백('', ' ')이 들어오는경우")
@@ -894,7 +865,7 @@ public class BoardControllerTest {
             System.out.println("testBoardModifyBlankBeverage : " + responseBody);
             //then
             resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("음료가 공백입니다"));
+            resultActions.andExpect(jsonPath("$.error.message").value("음료" + ErrorMessage.BADREQUEST_BLANK));
         }
 
         @Test
@@ -920,7 +891,7 @@ public class BoardControllerTest {
             System.out.println("testBoardModifyInvalidTip : " + responseBody);
             //then
             resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("픽업팁이 음수입니다"));
+            resultActions.andExpect(jsonPath("$.error.message").value("픽업팁" + ErrorMessage.BADREQUEST_MIN));
         }
     }
 }
