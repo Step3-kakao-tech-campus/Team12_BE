@@ -491,6 +491,34 @@ public class BoardControllerTest {
             resultActions.andExpect(jsonPath("$.error.status").value(400));
 
         }
+        @Test
+        @DisplayName("실패 : 도착 예정 시간이 공백인 경우")
+        void testFailBoardAgree5() throws Exception{
+            //given
+            Long boardId = 6L;
+            String accessToken = "Bearer " + jwtService.createAccessToken("3");
+            BoardAgreeRqDTO requestDTO = BoardAgreeRqDTO.builder()
+                    .build();
+            String requestBody = om.writeValueAsString(requestDTO);
+
+            //when
+            ResultActions resultActions = mvc.perform(
+                    post("/articles/agree/{boardId}", boardId)
+                            .content(requestBody)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", accessToken)
+            );
+
+            //eye
+            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+            System.out.println("testBoardAgree : " + responseBody);
+
+            //then
+            resultActions.andExpect(jsonPath("$.success").value("false"));
+            resultActions.andExpect(jsonPath("$.error.message").value("도착예정 시간이 공백입니다"));
+            resultActions.andExpect(jsonPath("$.error.status").value(400));
+
+        }
     }
     @Nested
     class testBoardDelete {

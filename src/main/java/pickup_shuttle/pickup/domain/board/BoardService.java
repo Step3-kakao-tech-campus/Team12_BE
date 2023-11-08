@@ -134,7 +134,7 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardAgreeRpDTO boardAgree(BoardAgreeRqDTO requestDTo, Long boardId, Long userId) {
+    public BoardAgreeRpDTO boardAgree(BoardAgreeRqDTO requestDTO, Long boardId, Long userId) {
         Board board = boardRepository.mfindByBoardId(boardId).orElseThrow(
                 () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
         );
@@ -144,7 +144,7 @@ public class BoardService {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new Exception400(ErrorMessage.UNKNOWN_USER)
         );
-        Match match = matchService.createMatch(requestDTo.arrivalTime(),user);
+        Match match = matchService.createMatch(requestDTO.arrivalTime(),user);
         if(match.getUser().getUserId() == board.getUser().getUserId()) {
             throw new Exception400("공고글 작성자는 매칭 수락을 할 수 없습니다");
         }
