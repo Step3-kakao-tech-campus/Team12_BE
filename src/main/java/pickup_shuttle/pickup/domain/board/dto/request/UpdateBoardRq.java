@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @Builder
-public record BoardModifyRqDTO(
+public record UpdateBoardRq(
         @NotSpace(message = "가게가 공백입니다")
         String store,
         List<@NotBlank(message = "음료가 공백입니다") String> beverage,
@@ -29,7 +29,7 @@ public record BoardModifyRqDTO(
 ) {
     public Map<String, Object> patchValues(Store store){
         Map<String, Object> map = new HashMap<>();
-        ReflectionUtils.doWithFields(BoardModifyRqDTO.class, field -> {
+        ReflectionUtils.doWithFields(UpdateBoardRq.class, field -> {
             Object value = field.get(this);
             if (value != null) {
                 switch (field.getName()){

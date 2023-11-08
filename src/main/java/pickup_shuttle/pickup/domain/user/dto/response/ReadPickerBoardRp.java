@@ -1,16 +1,16 @@
 package pickup_shuttle.pickup.domain.user.dto.response;
 
 import lombok.Builder;
-import pickup_shuttle.pickup.domain.beverage.dto.BeverageDTO;
+import pickup_shuttle.pickup.domain.beverage.dto.Beverage;
 
 import java.util.List;
 
 @Builder
-public record UserPickerDetail(
+public record ReadPickerBoardRp(
         Long boardId,
         String shopName,
         String destination,
-        List<BeverageDTO> beverage,
+        List<Beverage> beverage,
         int tip,
         String request,
         Long finishedAt,

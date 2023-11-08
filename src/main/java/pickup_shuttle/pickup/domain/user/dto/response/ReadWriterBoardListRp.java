@@ -3,7 +3,7 @@ package pickup_shuttle.pickup.domain.user.dto.response;
 import lombok.Builder;
 
 @Builder
-public record UserGetRequesterListRpDTO(
+public record ReadWriterBoardListRp(
         Long boardId,
         String shopName,
         String destination,

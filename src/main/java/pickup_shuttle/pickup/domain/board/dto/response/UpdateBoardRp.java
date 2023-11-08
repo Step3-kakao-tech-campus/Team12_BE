@@ -4,7 +4,7 @@ import lombok.Builder;
 import java.util.List;
 
 @Builder
-public record BoardModifyRpDTO(
+public record UpdateBoardRp(
         Long boardId,
         String store,
         List<String> beverage,

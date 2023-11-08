@@ -2,16 +2,16 @@ package pickup_shuttle.pickup.domain.user.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
-import pickup_shuttle.pickup.domain.beverage.dto.BeverageDTO;
+import pickup_shuttle.pickup.domain.beverage.dto.Beverage;
 
 import java.util.List;
 
 @Builder
-public record UserGetRequesterDetailRpDTO(
+public record ReadWriterBoardRp(
         Long boardId,
         String shopName,
         String destination,
-        List<BeverageDTO> beverage,
+        List<Beverage> beverage,
         int tip,
         String request,
         Long finishedAt,

@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 
 @Builder
-public record SignUpRqDTO (
+public record CreateUserRq(
     @NotEmpty(message = "은행 이름이 공백입니다.")
      String bankName,
     @NotEmpty(message = "계좌번호가 공백입니다.")

@@ -1,7 +1,6 @@
 package pickup_shuttle.pickup.domain.board.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Builder;
@@ -15,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Builder
-public record BoardWriteRqDTO(
+public record CreateBoardRq(
         @NotBlank(message = "가게가 공백입니다") String store,
         List<String> beverage,
         @NotBlank(message = "위치가 공백입니다") String destination,
