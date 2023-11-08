@@ -376,7 +376,7 @@ public class BoardControllerTest {
         }
 
         @Test()
-        @DisplayName("공고글 작성자가 매칭 수락 한 경우")
+        @DisplayName("실패 : 공고글 작성자가 매칭 수락 한 경우")
         void testFailBoardAgree() throws Exception {
             Long boardId = 6L;
             String accessToken = "Bearer " + jwtService.createAccessToken("6");
@@ -405,7 +405,7 @@ public class BoardControllerTest {
         }
 
         @Test
-        @DisplayName("공고글이 이미 매칭 된 경우")
+        @DisplayName("실패 : 공고글이 이미 매칭 된 경우")
         void testFailBoardAgree2() throws Exception{
             //given
             Long boardId = 3L;
@@ -430,6 +430,64 @@ public class BoardControllerTest {
             //then
             resultActions.andExpect(jsonPath("$.success").value("false"));
             resultActions.andExpect(jsonPath("$.error.message").value("공고글이 이미 매칭 됐습니다"));
+            resultActions.andExpect(jsonPath("$.error.status").value(400));
+
+        }
+        @Test
+        @DisplayName("실패 : 도착 예정 시간이 60 초과인 경우")
+        void testFailBoardAgree3() throws Exception{
+            //given
+            Long boardId = 6L;
+            String accessToken = "Bearer " + jwtService.createAccessToken("3");
+            BoardAgreeRqDTO requestDTO = BoardAgreeRqDTO.builder()
+                    .arrivalTime(61)
+                    .build();
+            String requestBody = om.writeValueAsString(requestDTO);
+
+            //when
+            ResultActions resultActions = mvc.perform(
+                    post("/articles/agree/{boardId}", boardId)
+                            .content(requestBody)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", accessToken)
+            );
+
+            //eye
+            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+            System.out.println("testBoardAgree : " + responseBody);
+
+            //then
+            resultActions.andExpect(jsonPath("$.success").value("false"));
+            resultActions.andExpect(jsonPath("$.error.message").value("도착예정 시간은 60 이하이어야 합니다"));
+            resultActions.andExpect(jsonPath("$.error.status").value(400));
+
+        }
+        @Test
+        @DisplayName("실패 : 도착 예정 시간이 0 미만인 경우")
+        void testFailBoardAgree4() throws Exception{
+            //given
+            Long boardId = 6L;
+            String accessToken = "Bearer " + jwtService.createAccessToken("3");
+            BoardAgreeRqDTO requestDTO = BoardAgreeRqDTO.builder()
+                    .arrivalTime(-1)
+                    .build();
+            String requestBody = om.writeValueAsString(requestDTO);
+
+            //when
+            ResultActions resultActions = mvc.perform(
+                    post("/articles/agree/{boardId}", boardId)
+                            .content(requestBody)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", accessToken)
+            );
+
+            //eye
+            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+            System.out.println("testBoardAgree : " + responseBody);
+
+            //then
+            resultActions.andExpect(jsonPath("$.success").value("false"));
+            resultActions.andExpect(jsonPath("$.error.message").value("도착예정 시간은 0 이상이어야 합니다"));
             resultActions.andExpect(jsonPath("$.error.status").value(400));
 
         }
