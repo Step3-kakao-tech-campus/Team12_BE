@@ -13,22 +13,18 @@ import org.springframework.web.servlet.ModelAndView;
 import pickup_shuttle.pickup._core.utils.ApiUtils;
 import pickup_shuttle.pickup._core.utils.CustomPage;
 import pickup_shuttle.pickup.config.Login;
-import pickup_shuttle.pickup.domain.board.BoardService;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
-import pickup_shuttle.pickup.domain.refreshToken.dto.response.AccessTokenRpDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserAuthApproveRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserModifyRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserUploadImageRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.response.*;
-import pickup_shuttle.pickup.security.service.JwtService;
 
 
 @RequiredArgsConstructor
 @RestController
 public class UserController {
     private final UserService userService;
-    private final JwtService jwtService;
 
     // 은행명, 계좌번호 입력 창으로 이동
     @GetMapping("/users/register/input")
@@ -58,14 +54,8 @@ public class UserController {
 
     @GetMapping("/login/callback")
     public ResponseEntity<?> callBack(Authentication authentication){
-        CustomOauth2User customOauth2User = (CustomOauth2User) authentication.getPrincipal();
-        String userPK = Long.toString(userService.userPK(customOauth2User));
-        if(customOauth2User != null){
-            String token = jwtService.createAccessToken(userPK);
-            return ResponseEntity.ok().body(ApiUtils.success(AccessTokenRpDTO.builder().AccessToken(token).build()));
-        } else {
-            return ResponseEntity.badRequest().body(ApiUtils.error("인증에 실패하였습니다.", HttpStatus.UNAUTHORIZED));
-        }
+       LoginRp responseDTO = userService.login(authentication);
+        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
     // 유저 인증 상태 (인증/미인증/인증 진행 중) 반환

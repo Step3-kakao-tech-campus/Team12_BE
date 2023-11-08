@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,6 +33,7 @@ import pickup_shuttle.pickup.domain.user.dto.response.*;
 import pickup_shuttle.pickup.domain.user.repository.UserRepository;
 import pickup_shuttle.pickup.domain.user.repository.UserRepositoryCustom;
 import pickup_shuttle.pickup.domain.utils.Utils;
+import pickup_shuttle.pickup.security.service.JwtService;
 
 import java.io.InputStream;
 import java.time.ZoneOffset;
@@ -50,12 +52,14 @@ public class UserService {
     private final MatchRepository matchRepository;
     private final AmazonS3 amazonS3;
     private final BoardRepositoryCustom boardRepositoryCustom;
+    private final JwtService jwtService;
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
     @Value("${cloud.aws.s3.dir}")
     private String dir;
+
     @Transactional
-    public void signup(SignUpRqDTO signUpRqDTO, CustomOauth2User customOauth2User){
+    public void signup(SignUpRqDTO signUpRqDTO, CustomOauth2User customOauth2User) {
         String bankName = signUpRqDTO.bankName();
         String accountNum = signUpRqDTO.accountNum();
         User user = userRepository.findBySocialId(customOauth2User.getName()).orElseThrow(
@@ -67,7 +71,8 @@ public class UserService {
         user.setBank(bankName);
         user.setAccount(accountNum);
     }
-    public String userAuthStatus(Long userId){
+
+    public String userAuthStatus(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new Exception400(ErrorMessage.UNKNOWN_USER)
         );
@@ -81,7 +86,7 @@ public class UserService {
     }
 
     @Transactional
-    public boolean modifyUser(UserModifyRqDTO userModifyRqDTO, Long userId){
+    public boolean modifyUser(UserModifyRqDTO userModifyRqDTO, Long userId) {
         Optional<User> user = userRepository.findById(userId);
         if(user.isEmpty()){
             return false;
@@ -97,50 +102,44 @@ public class UserService {
         return true;
     }
 
-    public long userPK(CustomOauth2User customOauth2User){
-        User user = userRepository.findBySocialId(customOauth2User.getName()).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
-        );
-        return user.getUserId();
-    }
 
     @Transactional
-    public void uploadImage(MultipartFile multipartFile, Long userId){
+    public void uploadImage(MultipartFile multipartFile, Long userId) {
         // 메타 데이터 설정
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(multipartFile.getSize());
-        if(!isImage(multipartFile.getContentType())){
+        if (!isImage(multipartFile.getContentType())) {
             throw new Exception400("이미지 파일이 아닙니다");
         }
         metadata.setContentType(multipartFile.getContentType());
         // 파일 읽기
         InputStream inputStream;
-        try{
+        try {
             inputStream = multipartFile.getInputStream();
-        }catch(Exception e){
+        } catch (Exception e) {
             throw new Exception400("파일을 읽을 수 없습니다");
         }
         // 유저 검증
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new Exception400(ErrorMessage.UNKNOWN_USER)
         );
-        if(user.getUserRole().getValue().equals("ROLE_STUDENT"))
+        if (user.getUserRole().getValue().equals("ROLE_STUDENT"))
             throw new Exception400("이미 인증된 유저입니다");
         // 업로드
-        try{
+        try {
             String fileName = dir + userId + ".jpg"; // 파일명 : {userId}.jpg
             amazonS3.putObject(bucket, fileName, inputStream, metadata); // aws
             user.updateUrl(amazonS3.getUrl(bucket, fileName).toString()); // mysql
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new Exception500("AWS 이미지 업로드를 실패했습니다");
         }
     }
 
-    public UserGetImageUrlRpDTO getImageUrl(Long userId){
+    public UserGetImageUrlRpDTO getImageUrl(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new Exception400(ErrorMessage.UNKNOWN_USER)
         );
-        if(user.getUrl().isEmpty()){
+        if (user.getUrl().isEmpty()) {
             throw new Exception400("등록된 이미지가 존재하지 않습니다");
         }
         return UserGetImageUrlRpDTO.builder().url(getPresignedUrl(userId)).build(); // PreSigned URL 응답
@@ -151,9 +150,9 @@ public class UserService {
 
         String fileName = dir + userId + ".jpg";
         GeneratePresignedUrlRequest generatePresignedUrlRequest = getGeneratePreSignedUrlRequest(bucket, fileName);
-        try{
+        try {
             return amazonS3.generatePresignedUrl(generatePresignedUrlRequest).toString();
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new Exception500("presigned url 발급을 실패했습니다");
         }
     }
@@ -179,7 +178,7 @@ public class UserService {
         return expiration;
     }
 
-    private boolean isImage(String fileType){
+    private boolean isImage(String fileType) {
         String[] imageTypes = {"image/jpeg", "image/png", "image/gif"};
         for (String type : imageTypes) {
             if (type.equals(fileType)) {
@@ -188,6 +187,7 @@ public class UserService {
         }
         return false;
     }
+
     public UserMyPageRpDTO myPage(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new Exception400(ErrorMessage.UNKNOWN_USER)
@@ -198,24 +198,25 @@ public class UserService {
                 .build();
     }
 
-    public Slice<UserAuthListRpDTO> getAuthList(Long lastUserId, int size){
+    public Slice<UserAuthListRpDTO> getAuthList(Long lastUserId, int size) {
         PageRequest pageRequest = PageRequest.of(0, size);
         Slice<User> userSlice = userRepositoryCustom.searchAuthList(lastUserId, pageRequest);
 
         List<UserAuthListRpDTO> userAuthListRpDTOList = userSlice.getContent().stream()
                 .filter(u -> !u.getUrl().isEmpty())
                 .map(u -> UserAuthListRpDTO.builder()
-                            .userId(u.getUserId())
-                            .nickname(u.getNickname())
-                            .build())
+                        .userId(u.getUserId())
+                        .nickname(u.getNickname())
+                        .build())
                 .toList();
         return new SliceImpl<>(userAuthListRpDTOList, pageRequest, userSlice.hasNext());
     }
-    public UserAuthDetailRpDTO getAuthDetail(Long userId){
+
+    public UserAuthDetailRpDTO getAuthDetail(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new Exception400(ErrorMessage.UNKNOWN_USER)
         );
-        if(user.getUrl().isEmpty()){
+        if (user.getUrl().isEmpty()) {
             throw new Exception400("등록된 이미지가 존재하지 않습니다");
         }
         return UserAuthDetailRpDTO.builder()
@@ -223,18 +224,19 @@ public class UserService {
                 .url(getPresignedUrl(userId))
                 .build();
     }
+
     @Transactional
-    public String authApprove(UserAuthApproveRqDTO requestDTO){
+    public String authApprove(UserAuthApproveRqDTO requestDTO) {
         User user = userRepository.findById(requestDTO.userId()).orElseThrow(
                 () -> new Exception400(ErrorMessage.UNKNOWN_USER)
         );
-        if(user.getUserRole() == UserRole.USER){
+        if (user.getUserRole() == UserRole.USER) {
             user.updateRole(UserRole.STUDENT);
             return "학생 인증이 승인되었습니다";
-        }
-        else throw new Exception400("일반 회원이 아닙니다");
+        } else throw new Exception400("일반 회원이 아닙니다");
     }
-    public Slice<UserGetRequesterListRpDTO> getRequesterList(Long userId, Long lastBoardId, int size){
+
+    public Slice<UserGetRequesterListRpDTO> getRequesterList(Long userId, Long lastBoardId, int size) {
         PageRequest pageRequest = PageRequest.of(0, size);
         Slice<Board> boardSlice = userRepositoryCustom.searchRequesterList(userId, lastBoardId, pageRequest);
         List<UserGetRequesterListRpDTO> responseDTOList = boardSlice.getContent().stream()
@@ -250,7 +252,8 @@ public class UserService {
                 .toList();
         return new SliceImpl<>(responseDTOList, pageRequest, boardSlice.hasNext());
     }
-    public UserGetRequesterDetailRpDTO getRequesterDetail(Long boardId){
+
+    public UserGetRequesterDetailRpDTO getRequesterDetail(Long boardId) {
         Board board = boardRepository.m4findByBoardId(boardId).orElseThrow(
                 () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
         );
@@ -260,7 +263,7 @@ public class UserService {
                         .build()
                 )
                 .toList();
-        if(board.isMatch()){
+        if (board.isMatch()) {
             Match match = matchRepository.mfindByMatchId(board.getMatch().getMatchId()).orElseThrow(
                     () -> new Exception400("매칭 정보를 찾을 수 없습니다")
             );
@@ -278,7 +281,7 @@ public class UserService {
                     .arrivalTime(match.getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).toEpochSecond(ZoneOffset.UTC))
                     .pickerPhoneNumber(match.getUser().getPhoneNumber())
                     .build();
-        }else{
+        } else {
             return UserGetRequesterDetailRpDTO.builder()
                     .boardId(boardId)
                     .shopName(board.getStore().getName())
@@ -317,6 +320,7 @@ public class UserService {
                 .toList();
         return new SliceImpl<>(boardBoardListRpDTO,pageRequest,boardSlice.hasNext());
     }
+
     public UserPickerDetail pickerBoardDetail(Long boardId, Long userId) {
         Board board = boardRepository.m5findByBoardId(boardId).orElseThrow(
                 () -> new Exception400("매칭이 완료되지 않은 공고글입니다")
@@ -346,5 +350,20 @@ public class UserService {
                 .build();
 
     }
-}
 
+    public LoginRp login(Authentication authentication) {
+        CustomOauth2User customOauth2User = (CustomOauth2User) authentication.getPrincipal();
+        if (customOauth2User == null) {
+            throw new Exception400("인증에 실패하였습니다.");
+        }
+        User user = userRepository.findBySocialId(customOauth2User.getName()).orElseThrow(
+                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
+        );
+        String userPK = user.getUserId().toString();
+        return LoginRp.builder()
+                .accessToken(jwtService.createAccessToken(userPK))
+                .nickname(user.getNickname())
+                .role(user.getUserRole().getValue())
+                .build();
+    }
+}
