@@ -31,7 +31,7 @@ public class BoardController {
     @PostMapping("/write")
     public ResponseEntity<?> write(@RequestBody @Valid BoardWriteRqDTO requestDTO,
                                    @Login Long userId){
-        boardService.checkListBlank(requestDTO.beverage());
+        boardService.checkListEmpty(requestDTO.beverage());
         BoardWriteRpDTO responseDTO = boardService.write(requestDTO, userId);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }

@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
@@ -244,12 +243,6 @@ public class BoardService {
         });
     }
 
-    public void checkListBlank(List<String> beverages) {
-        for(String b : beverages) {
-            if(b == null || b.isEmpty())
-                throw new Exception400("음료명에 빈 문자열 or null이 입력 되었습니다");
-        }
-    }
     public void checkListEmpty(List<String> beverages){
         if(beverages != null && beverages.size() == 0){
             throw new Exception400("음료를 입력하지 않았습니다");
