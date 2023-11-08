@@ -6,12 +6,12 @@ import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pickup_shuttle.pickup._core.utils.ApiUtils;
+import pickup_shuttle.pickup._core.utils.CustomPage;
 import pickup_shuttle.pickup.config.Login;
 import pickup_shuttle.pickup.domain.board.dto.request.BoardAgreeRqDTO;
 import pickup_shuttle.pickup.domain.board.dto.request.BoardModifyRqDTO;
 import pickup_shuttle.pickup.domain.board.dto.request.BoardWriteRqDTO;
 import pickup_shuttle.pickup.domain.board.dto.response.*;
-import pickup_shuttle.pickup.security.service.JwtService;
 
 
 @RestController
@@ -19,13 +19,13 @@ import pickup_shuttle.pickup.security.service.JwtService;
 @RequestMapping("articles")
 public class BoardController {
     private final BoardService boardService;
-    private final JwtService jwtService;
+
     @GetMapping
     public ResponseEntity<?> getBoardList(
             @RequestParam(value = "offset",required = false) Long lastBoardId,
             @RequestParam(value = "limit",defaultValue = "10") int size) {
         Slice<BoardListRpDTO> responseDTOSlice = boardService.boardList(lastBoardId, size);
-        return ResponseEntity.ok(ApiUtils.success(responseDTOSlice));
+        return ResponseEntity.ok(ApiUtils.success(new CustomPage(responseDTOSlice)));
     }
 
     @PostMapping("/write")

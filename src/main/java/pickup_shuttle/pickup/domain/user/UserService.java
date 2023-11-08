@@ -22,17 +22,12 @@ import pickup_shuttle.pickup.domain.beverage.dto.BeverageDTO;
 import pickup_shuttle.pickup.domain.board.Board;
 import pickup_shuttle.pickup.domain.board.repository.BoardRepository;
 import pickup_shuttle.pickup.domain.board.repository.BoardRepositoryCustom;
-import pickup_shuttle.pickup.domain.beverage.dto.BeverageDTO;
-import pickup_shuttle.pickup.domain.board.Board;
-import pickup_shuttle.pickup.domain.board.repository.BoardRepository;
 import pickup_shuttle.pickup.domain.match.Match;
 import pickup_shuttle.pickup.domain.match.MatchRepository;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserAuthApproveRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.UserModifyRqDTO;
-import pickup_shuttle.pickup.domain.user.dto.response.*;
-import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
 import pickup_shuttle.pickup.domain.user.dto.response.*;
 import pickup_shuttle.pickup.domain.user.repository.UserRepository;
 import pickup_shuttle.pickup.domain.user.repository.UserRepositoryCustom;
@@ -54,7 +49,6 @@ public class UserService {
     private final BoardRepository boardRepository;
     private final MatchRepository matchRepository;
     private final AmazonS3 amazonS3;
-    private final Utils utils;
 
     private final BoardRepositoryCustom boardRepositoryCustom;
     @Value("${cloud.aws.s3.bucket}")
@@ -157,8 +151,7 @@ public class UserService {
         String fileName = dir + userId + ".jpg";
         GeneratePresignedUrlRequest generatePresignedUrlRequest = getGeneratePreSignedUrlRequest(bucket, fileName);
         try{
-            String presignedUrl = amazonS3.generatePresignedUrl(generatePresignedUrlRequest).toString();
-            return presignedUrl;
+            return amazonS3.generatePresignedUrl(generatePresignedUrlRequest).toString();
         }catch (Exception e){
             throw new Exception500("presigned url 발급을 실패했습니다");
         }
@@ -244,7 +237,7 @@ public class UserService {
         PageRequest pageRequest = PageRequest.of(0, size);
         Slice<Board> boardSlice = userRepositoryCustom.searchRequesterList(userId, lastBoardId, pageRequest);
         List<UserGetRequesterListRpDTO> responseDTOList = boardSlice.getContent().stream()
-                .filter(b -> !utils.overDeadline(b))
+                .filter(Utils::notOverDeadline)
                 .map(b -> UserGetRequesterListRpDTO.builder()
                         .boardId(b.getBoardId())
                         .shopName(b.getStore().getName())

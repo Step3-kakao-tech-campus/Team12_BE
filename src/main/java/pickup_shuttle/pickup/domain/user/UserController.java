@@ -13,7 +13,6 @@ import org.springframework.web.servlet.ModelAndView;
 import pickup_shuttle.pickup._core.utils.ApiUtils;
 import pickup_shuttle.pickup._core.utils.CustomPage;
 import pickup_shuttle.pickup.config.Login;
-import pickup_shuttle.pickup.domain.board.BoardService;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
 import pickup_shuttle.pickup.domain.refreshToken.dto.response.AccessTokenRpDTO;
 import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
@@ -147,7 +146,7 @@ public class UserController {
     public ResponseEntity<?> myPagePickerList(@RequestParam(value = "offset",required = false) Long lastBoardId,
                                               @RequestParam(value = "limit",defaultValue = "10") int size,
                                               @Login Long userId) {
-        return ResponseEntity.ok(ApiUtils.success(userService.myPagePickerList(lastBoardId,size,userId)));
+        return ResponseEntity.ok(ApiUtils.success(new CustomPage(userService.myPagePickerList(lastBoardId,size,userId))));
     }
 
     @GetMapping("/mypage/picker/list/{boardId}")

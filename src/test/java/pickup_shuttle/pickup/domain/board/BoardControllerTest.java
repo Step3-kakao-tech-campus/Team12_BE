@@ -48,14 +48,12 @@ public class BoardControllerTest {
     void testBoardList() throws Exception {
         //given
         String accessToken = "Bearer " + jwtService.createAccessToken("2");
-        String lastBoardId = "";
-        String size = "10";
+        String limit = "10";
 
         //when
         ResultActions resultActions = mvc.perform(
                 get("/articles")
-                        .queryParam("lastBoardId", lastBoardId)
-                        .queryParam("size", size)
+                        .queryParam("limit", limit)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", accessToken)
         );
