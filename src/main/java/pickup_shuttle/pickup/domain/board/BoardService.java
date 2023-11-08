@@ -212,7 +212,11 @@ public class BoardService {
             throw new Exception400("수정할 값이 없습니다");
         }
 
-        List<String> beverages = board.getBeverages().stream().map(Beverage::getName).toList();
+        List<BeverageDTO> beverages = board.getBeverages().stream().map(
+                b -> BeverageDTO.builder()
+                        .name(b.getName())
+                        .build()
+        ).toList();
         return BoardModifyRpDTO.builder()
                 .boardId(board.getBoardId())
                 .store(board.getStore().getName())
@@ -221,7 +225,7 @@ public class BoardService {
                 .tip(board.getTip())
                 .request(board.getRequest())
                 .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
-                .match(board.isMatch())
+                .isMatch(board.isMatch())
                 .build();
     }
     public void updatePatch(Board board, Map<String, Object> mapToPatch){

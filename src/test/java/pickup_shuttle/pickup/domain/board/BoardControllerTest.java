@@ -37,12 +37,12 @@ public class BoardControllerTest {
     @Autowired
     private JwtService jwtService;
 
-    private  List<String> beverags = new ArrayList<>();
+    private  List<String> beverages = new ArrayList<>();
 
     @BeforeEach
     void beforEach() throws Exception {
-        beverags.add("아이스 아메리카노");
-        beverags.add("핫 아메리카노");
+        beverages.add("아이스 아메리카노 1잔");
+        beverages.add("핫 아메리카노 1잔");
     }
     @Test //공고글 목록 조회
     void testBoardList() throws Exception {
@@ -125,7 +125,7 @@ public class BoardControllerTest {
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
             BoardWriteRqDTO boardWriteRqDTO = BoardWriteRqDTO.builder()
                     .store("스타벅스")
-                    .beverage(beverags)
+                    .beverage(beverages)
                     .destination("전남대 공대 시계탑")
                     .tip(1000)
                     .request("후딱후딱 갖다주십쇼!!!!!!!!!!!!!!")
@@ -156,7 +156,7 @@ public class BoardControllerTest {
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
             BoardWriteRqDTO boardWriteRqDTO = BoardWriteRqDTO.builder()
                     .store("팬도로시")
-                    .beverage(beverags)
+                    .beverage(beverages)
                     .destination("전남대 공대 시계탑")
                     .tip(1000)
                     .request("후딱후딱 갖다주십쇼!!!!!!!!!!!!!!")
@@ -188,7 +188,7 @@ public class BoardControllerTest {
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
             BoardWriteRqDTO boardWriteRqDTO = BoardWriteRqDTO.builder()
                     .store(" ")
-                    .beverage(beverags)
+                    .beverage(beverages)
                     .destination("전남대 공대 시계탑")
                     .tip(1000)
                     .request("후딱후딱 갖다주십쇼!!!!!!!!!!!!!!")
@@ -218,10 +218,10 @@ public class BoardControllerTest {
         void testWriteBlankBeverage() throws Exception{
             //given
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
-            beverags.add("");
+            beverages.add("");
             BoardWriteRqDTO boardWriteRqDTO = BoardWriteRqDTO.builder()
                     .store("스타벅스")
-                    .beverage(beverags)
+                    .beverage(beverages)
                     .destination("전남대 공대 시계탑")
                     .tip(1000)
                     .request("후딱후딱 갖다주십쇼!!!!!!!!!!!!!!")
@@ -253,7 +253,7 @@ public class BoardControllerTest {
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
             BoardWriteRqDTO boardWriteRqDTO = BoardWriteRqDTO.builder()
                     .store("스타벅스")
-                    .beverage(beverags)
+                    .beverage(beverages)
                     .destination(" ")
                     .tip(1000)
                     .request("후딱후딱 갖다주십쇼!!!!!!!!!!!!!!")
@@ -285,7 +285,7 @@ public class BoardControllerTest {
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
             BoardWriteRqDTO boardWriteRqDTO = BoardWriteRqDTO.builder()
                     .store("스타벅스")
-                    .beverage(beverags)
+                    .beverage(beverages)
                     .destination("전남대 공대 시계탑")
                     .tip(-1)
                     .request("후딱후딱 갖다주십쇼!!!!!!!!!!!!!!")
@@ -317,7 +317,7 @@ public class BoardControllerTest {
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
             BoardWriteRqDTO boardWriteRqDTO = BoardWriteRqDTO.builder()
                     .store("스타벅스")
-                    .beverage(beverags)
+                    .beverage(beverages)
                     .destination("전남대 공대 시계탑")
                     .tip(1000)
                     .request("후딱후딱 갖다주십쇼!!!!!!!!!!!!!!")
@@ -371,7 +371,7 @@ public class BoardControllerTest {
 
             //then
             resultActions.andExpect(jsonPath("$.success").value("true"));
-            resultActions.andExpect(jsonPath("$.response.beverage[0].name").value("카페라떼"));
+            resultActions.andExpect(jsonPath("$.response.beverage[0].name").value("카페라떼 1잔"));
 
         }
 
@@ -552,10 +552,10 @@ public class BoardControllerTest {
             resultActions.andExpect(jsonPath("$.response.boardId").value(boardId));
             resultActions.andExpect(jsonPath("$.response.store").value(store)); // 수정
             resultActions.andExpect(jsonPath("$.response.destination").value("전남대 공대7 222호관"));
-            resultActions.andExpect(jsonPath("$.response.beverage").value("카페라떼"));
+            resultActions.andExpect(jsonPath("$.response.beverage[0].name").value("카페라떼 1잔"));
             resultActions.andExpect(jsonPath("$.response.tip").value(2000));
             resultActions.andExpect(jsonPath("$.response.request").value("빨리 와주세요6"));
-            resultActions.andExpect(jsonPath("$.response.match").value(false));
+            resultActions.andExpect(jsonPath("$.response.isMatch").value(false));
 
         }
 
@@ -588,10 +588,10 @@ public class BoardControllerTest {
             resultActions.andExpect(jsonPath("$.response.boardId").value(boardId));
             resultActions.andExpect(jsonPath("$.response.store").value(store)); // 수정
             resultActions.andExpect(jsonPath("$.response.destination").value("전남대 공대7 222호관"));
-            resultActions.andExpect(jsonPath("$.response.beverage").value("카페라떼"));
+            resultActions.andExpect(jsonPath("$.response.beverage[0].name").value("카페라떼 1잔"));
             resultActions.andExpect(jsonPath("$.response.tip").value(tip)); // 수정
             resultActions.andExpect(jsonPath("$.response.request").value("빨리 와주세요6"));
-            resultActions.andExpect(jsonPath("$.response.match").value(false));
+            resultActions.andExpect(jsonPath("$.response.isMatch").value(false));
         }
         @Test
         @DisplayName("성공 : 공고글 전체를 수정하는 경우")
@@ -599,7 +599,7 @@ public class BoardControllerTest {
             // given
             Long boardId = 6L;
             String store = "더벤티";
-            beverags.add("아이스티");
+            beverages.add("아이스티 1잔");
             String destination = "정보마루";
             int tip = 1;
             String request = "천천히 조심해서 오세요 :)";
@@ -607,7 +607,7 @@ public class BoardControllerTest {
             String accessToken = "Bearer " + jwtService.createAccessToken("6");
             BoardModifyRqDTO requestDTO = BoardModifyRqDTO.builder()
                     .store(store)
-                    .beverage(beverags)
+                    .beverage(beverages)
                     .destination(destination)
                     .tip(tip)
                     .request(request)
@@ -630,11 +630,11 @@ public class BoardControllerTest {
             resultActions.andExpect(jsonPath("$.response.boardId").value(boardId));
             resultActions.andExpect(jsonPath("$.response.store").value(store));
             resultActions.andExpect(jsonPath("$.response.destination").value(destination));
-            resultActions.andExpect(jsonPath("$.response.beverage").value(beverags));
+            resultActions.andExpect(jsonPath("$.response.beverage[0].name").value("아이스 아메리카노 1잔"));
             resultActions.andExpect(jsonPath("$.response.tip").value(tip));
             resultActions.andExpect(jsonPath("$.response.request").value(request));
             resultActions.andExpect(jsonPath("$.response.finishedAt").value("1698996300"));
-            resultActions.andExpect(jsonPath("$.response.match").value(false));
+            resultActions.andExpect(jsonPath("$.response.isMatch").value(false));
         }
 
         @Test
@@ -790,10 +790,10 @@ public class BoardControllerTest {
         void testBoardModifyBlankBeverage() throws Exception {
             // given
             Long boardId = 6L;
-            beverags.add(" ");
+            beverages.add(" ");
             String accessToken = "Bearer " + jwtService.createAccessToken("6");
             BoardModifyRqDTO requestDTO = BoardModifyRqDTO.builder()
-                    .beverage(beverags)
+                    .beverage(beverages)
                     .build();
             String requestBody = om.writeValueAsString(requestDTO);
             //when
