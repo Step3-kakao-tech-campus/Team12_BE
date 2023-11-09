@@ -15,7 +15,8 @@ import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import pickup_shuttle.pickup._core.errors.exception.Exception400;
+import pickup_shuttle.pickup._core.errors.exception.Exception403;
+import pickup_shuttle.pickup._core.errors.exception.Exception404;
 import pickup_shuttle.pickup._core.errors.exception.Exception500;
 import pickup_shuttle.pickup.config.ErrorMessage;
 import pickup_shuttle.pickup.domain.beverage.dto.response.BeverageRpDTO;
@@ -68,7 +69,7 @@ public class UserService {
     }
     public String userAuthStatus(Long userId){
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
         String userRole = user.getUserRole().getValue();
         String userUrl = user.getUrl();
@@ -108,7 +109,7 @@ public class UserService {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(multipartFile.getSize());
         if(!isImage(multipartFile.getContentType())){
-            throw new Exception400("이미지 파일이 아닙니다");
+            throw new Exception403("이미지 파일이 아닌 경우 이미지를 업로드할 수 없습니다");
         }
         metadata.setContentType(multipartFile.getContentType());
         // 파일 읽기
@@ -116,14 +117,14 @@ public class UserService {
         try{
             inputStream = multipartFile.getInputStream();
         }catch(Exception e){
-            throw new Exception400("파일을 읽을 수 없습니다");
+            throw new Exception403("읽을 수 없는 이미지 파일인 경우 이미지를 업로드할 수 없습니다");
         }
         // 유저 검증
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
         if(user.getUserRole().getValue().equals("ROLE_STUDENT"))
-            throw new Exception400("이미 인증된 유저입니다");
+            throw new Exception403("이미 인증된 유저인 경우 이미지를 업로드할 수 없습니다");
         // 업로드
         try{
             String fileName = dir + userId + ".jpg"; // 파일명 : {userId}.jpg
@@ -136,10 +137,10 @@ public class UserService {
 
     public UserGetImageUrlRpDTO getImageUrl(Long userId){
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
         if(user.getUrl().equals("")){
-            throw new Exception400("등록된 이미지가 존재하지 않습니다");
+            throw new Exception403("등록된 이미지가 존재하지 않는 경우 이미지 URL을 가져올 수 없습니다");
         }
         return UserGetImageUrlRpDTO.builder().imageUrl(getPresignedUrl(userId)).build(); // PreSigned URL 응답
     }
@@ -188,7 +189,7 @@ public class UserService {
     }
     public UserMyPageRpDTO myPage(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
         return UserMyPageRpDTO.builder()
                 .userAuth(user.getUserRole().getValue())
@@ -211,10 +212,10 @@ public class UserService {
     }
     public UserAuthDetailRpDTO getAuthDetail(Long userId){
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
         if(user.getUrl().equals("")){
-            throw new Exception400("등록된 이미지가 존재하지 않습니다");
+            throw new Exception403("등록된 이미지가 존재하지 않는 경우 상세 인증 정보를 볼 수 없습니다");
         }
         return UserAuthDetailRpDTO.builder()
                 .nickname(user.getNickname())
@@ -224,13 +225,13 @@ public class UserService {
     @Transactional
     public String authApprove(UserAuthApproveRqDTO requestDTO){
         User user = userRepository.findById(requestDTO.userId()).orElseThrow(
-                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
         if(user.getUserRole() == UserRole.USER){
             user.updateRole(UserRole.STUDENT);
             return "학생 인증이 승인되었습니다";
         }
-        else throw new Exception400("일반 회원이 아닙니다");
+        else throw new Exception403("일반 회원이 아닌 경우 학생 인증을 승인할 수 없습니다");
     }
     public Slice<UserGetRequesterListRpDTO> getRequesterList(Long userId, Long lastBoardId, int size){
         PageRequest pageRequest = PageRequest.of(0, size);
@@ -250,7 +251,7 @@ public class UserService {
     }
     public UserGetRequesterDetailRpDTO getRequesterDetail(Long boardId){
         Board board = boardRepository.m4findByBoardId(boardId).orElseThrow(
-                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
         );
         List<BeverageRpDTO> beverages = board.getBeverages().stream()
                 .map(b -> BeverageRpDTO.builder()
@@ -260,7 +261,7 @@ public class UserService {
                 .toList();
         if(board.isMatch()){
             Match match = matchRepository.mfindByMatchId(board.getMatch().getMatchId()).orElseThrow(
-                    () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "매칭된 공고글의 매치ID", "매치"))
+                    () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "매칭된 공고글의 매치ID", "매치"))
             );
             return UserGetRequesterDetailRpDTO.builder()
                     .boardId(boardId)
@@ -295,9 +296,6 @@ public class UserService {
     public Slice<UserPickerListRpDTO> myPagePickerList(Long lastBoardId, int limit, Long userId) {
         PageRequest pageRequest = PageRequest.of(0, limit);
         Slice<Board> boardsSlice = boardRepositoryCustom.searchAllBySlice2(lastBoardId, pageRequest, userId);
-        if(boardsSlice.getContent().isEmpty()) {
-            throw new Exception400("수락한 공고글이 없습니다");
-        }
         return getPickerListResponseDTOs(pageRequest, boardsSlice);
     }
 
@@ -317,11 +315,11 @@ public class UserService {
     }
     public UserPickerDetail pickerBoardDetail(Long boardId, Long userId) {
         Board board = boardRepository.m5findByBoardId(boardId).orElseThrow(
-                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
         );
 
         if(!board.getMatch().getUser().getUserId().equals(userId)){
-            throw new Exception400("해당 공고글의 피커가 아닙니다");
+            throw new Exception403("해당 공고글의 피커가 아닌 경우 공고글을 상세 조회할 수 없습니다");
         }
         List<BeverageRpDTO> beverageRpDTOList = board.getBeverages().stream()
                 .map(b -> BeverageRpDTO.builder()
