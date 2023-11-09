@@ -79,7 +79,7 @@ public class BoardService {
                 .boardId(board.getBoardId())
                 .build();
     }
-    public BoardDetailBeforeRpDTO boardDetailBefore(Long boardId) {
+    public BoardDetailBeforeRpDTO boardDetailBefore(Long boardId, Long userId) {
         Board board = boardRepository.mfindByBoardId(boardId).orElseThrow(
                 () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
         );
@@ -88,6 +88,7 @@ public class BoardService {
                         .name(b.getName())
                         .build()
         ).toList();
+
         return BoardDetailBeforeRpDTO.builder()
                 .boardId(board.getBoardId())
                 .destination(board.getDestination())
@@ -97,10 +98,11 @@ public class BoardService {
                 .isMatch(board.isMatch())
                 .shopName(board.getStore().getName())
                 .beverages(beverageRpDTOS)
+                .isRequester(board.getUser().getUserId() == userId)
                 .build();
     }
     //select 2번
-    public BoardDetailAfterRpDTO boardDetailAfter(Long boardId) {
+    public BoardDetailAfterRpDTO boardDetailAfter(Long boardId, Long userId) {
         Board board = boardRepository.m2findByBoardId(boardId).orElseThrow(
                 () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
         );
@@ -127,6 +129,7 @@ public class BoardService {
                 .arrivalTime(board.getMatch().getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).toEpochSecond(ZoneOffset.UTC))
                 .isMatch(board.isMatch())
                 .beverages(beverageRpDTOS)
+                .isRequester(board.getUser().getUserId() == userId)
                 .build();
     }
 

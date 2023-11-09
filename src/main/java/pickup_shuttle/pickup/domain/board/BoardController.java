@@ -36,14 +36,16 @@ public class BoardController {
     }
 
     @GetMapping("/before/{boardId}")
-    public ResponseEntity<?> beforeBoardDetail(@PathVariable("boardId") Long boardId) {
-        BoardDetailBeforeRpDTO responseDTO = boardService.boardDetailBefore(boardId);
+    public ResponseEntity<?> beforeBoardDetail(@PathVariable("boardId") Long boardId,
+                                               @Login Long userId) {
+        BoardDetailBeforeRpDTO responseDTO = boardService.boardDetailBefore(boardId, userId);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 
     @GetMapping("/after/{boardId}")
-    public ResponseEntity<?> afterBoardDetail(@PathVariable("boardId") Long boardId) {
-        BoardDetailAfterRpDTO responseDTO = boardService.boardDetailAfter(boardId);
+    public ResponseEntity<?> afterBoardDetail(@PathVariable("boardId") Long boardId,
+                                              @Login Long userId) {
+        BoardDetailAfterRpDTO responseDTO = boardService.boardDetailAfter(boardId, userId);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
     @PostMapping("/agree/{boardId}")
