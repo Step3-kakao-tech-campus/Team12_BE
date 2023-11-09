@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 import pickup_shuttle.pickup._core.errors.exception.Exception400;
+import pickup_shuttle.pickup._core.errors.exception.Exception403;
+import pickup_shuttle.pickup._core.errors.exception.Exception404;
 import pickup_shuttle.pickup.config.ErrorMessage;
 import pickup_shuttle.pickup.domain.beverage.Beverage;
 import pickup_shuttle.pickup.domain.beverage.dto.request.BeverageRqDTO;
@@ -68,10 +70,10 @@ public class BoardService {
     @Transactional
     public BoardWriteRpDTO write(BoardWriteRqDTO requestDTO, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
         Store store = storeRepository.findByName(requestDTO.shopName()).orElseThrow(
-                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "가게명", "가게"))
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "가게명", "가게"))
         );
         Board board = requestDTO.toBoard(user, store);
         boardRepository.save(board);
@@ -82,7 +84,7 @@ public class BoardService {
     }
     public BoardDetailBeforeRpDTO boardDetailBefore(Long boardId, Long userId) {
         Board board = boardRepository.mfindByBoardId(boardId).orElseThrow(
-                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
         );
         List<BeverageRpDTO> beverageRpDTOS = board.getBeverages().stream().map(
                 b -> BeverageRpDTO.builder()
@@ -105,10 +107,10 @@ public class BoardService {
     //select 2번
     public BoardDetailAfterRpDTO boardDetailAfter(Long boardId, Long userId) {
         Board board = boardRepository.m2findByBoardId(boardId).orElseThrow(
-                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
         );
         User user = userRepository.findById(board.getMatch().getUser().getUserId()).orElseThrow(
-                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "매칭된 공고글의 유저ID", "유저"))
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "매칭된 공고글의 유저ID", "유저"))
         );
         List<BeverageRpDTO> beverageRpDTOS = board.getBeverages().stream().map(
                 b -> BeverageRpDTO.builder()
@@ -137,17 +139,17 @@ public class BoardService {
     @Transactional
     public BoardAgreeRpDTO boardAgree(BoardAgreeRqDTO requestDTO, Long boardId, Long userId) {
         Board board = boardRepository.mfindByBoardId(boardId).orElseThrow(
-                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
         );
         if(board.getMatch() != null) {
-            throw new Exception400("공고글이 이미 매칭된 경우 수락됐습니다");
+            throw new Exception403("공고글이 이미 매칭된 경우 공고글을 수락할 수 없습니다");
         }
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
         Match match = matchService.createMatch(requestDTO.arrivalTime(),user);
         if(match.getUser().getUserId().equals(board.getUser().getUserId())) {
-            throw new Exception400("공고글 작성자는 매칭 수락을 할 수 없습니다");
+            throw new Exception403("공고글 작성자가 매칭 수락을 시도하는 경우 공고글을 수락 할 수 없습니다");
         }
         board.updateMatch(match);
         board.updateIsMatch(true);
@@ -172,14 +174,14 @@ public class BoardService {
     public void boardDelete(Long boardId, Long userId){
         // 공고글 확인
         Board board = boardRepository.m3findByBoardId(boardId).orElseThrow(
-                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
         );
         // 공고글 작성자 확인
         if(!(board.getUser().getUserId().equals(userId)))
-            throw new Exception400("공고글의 작성자가 아닙니다");
+            throw new Exception403("공고글의 작성자가 아닌 경우 공고글을 삭제할 수 없습니다");
         // 매칭되었는지 확인
         if(board.isMatch())
-            throw new Exception400("이미 매칭된 공고글은 삭제 할 수 없습니다");
+            throw new Exception403("공고글이 이미 매칭된 경우 공고글을 삭제할 수 없습니다");
         // 삭제
         boardRepository.delete(board);
 
@@ -188,19 +190,19 @@ public class BoardService {
     public BoardModifyRpDTO modify(BoardModifyRqDTO requestDTO, Long boardId, Long userId){
         // 공고글 확인
         Board board = boardRepository.m4findByBoardId(boardId).orElseThrow(
-                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
         );
         // 공고글 작성자 확인
         if(!(board.getUser().getUserId().equals(userId)))
-            throw new Exception400("공고글의 작성자가 아닙니다");
+            throw new Exception403("공고글의 작성자가 아닌 경우 공고글을 수정할 수 없습니다");
         // 매칭 여부 확인
         if(board.isMatch())
-            throw new Exception400("이미 매칭된 공고글은 수정 할 수 없습니다");
+            throw new Exception403("공고글이 이미 매칭된 경우 공고글을 수정할 수 없습니다");
         // 가게 확인
         Store store = null;
         if(requestDTO.shopName() != null){
             store = storeRepository.findByName(requestDTO.shopName()).orElseThrow(
-                    () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "가게명", "가게"))
+                    () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "가게명", "가게"))
             );
         }
         // 공고 수정
@@ -208,7 +210,7 @@ public class BoardService {
         if (mapToPatch.size() > 0){
             updatePatch(board, mapToPatch);
         } else{
-            throw new Exception400("수정할 값이 없습니다");
+            throw new Exception403("수정할 값이 없는 경우 공고글을 수정할 수 없습니다");
         }
 
         List<BeverageRpDTO> beverageRpDTOS = board.getBeverages().stream().map(
