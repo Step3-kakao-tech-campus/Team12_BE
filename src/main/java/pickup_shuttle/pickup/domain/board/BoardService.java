@@ -75,7 +75,9 @@ public class BoardService {
         Board board = requestDTO.toBoard(user, store);
         boardRepository.save(board);
 
-        return new BoardWriteRpDTO(board.getBoardId());
+        return BoardWriteRpDTO.builder()
+                .boardId(board.getBoardId())
+                .build();
     }
     public BoardDetailBeforeRpDTO boardDetailBefore(Long boardId) {
         Board board = boardRepository.mfindByBoardId(boardId).orElseThrow(
