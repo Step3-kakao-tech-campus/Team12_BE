@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.1.3'
 	id 'io.spring.dependency-management' version '1.1.3'
+	id "org.asciidoctor.jvm.convert" version "3.3.2"
 }
 
 group = 'pickup_shuttle'
@@ -11,7 +12,13 @@ java {
 	sourceCompatibility = '17'
 }
 
+ext {
+	set('snippetsDir', file("build/generated-snippets"))
+	// snippetsDir : 테스트 실행시 생성되는 응답을 저장할 디렉토리 지정
+}
+
 configurations {
+	asciidoctorExtensions
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
@@ -37,6 +44,8 @@ dependencies {
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 	runtimeOnly 'com.h2database:h2'
 	implementation 'org.apache.httpcomponents.client5:httpclient5:5.1'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 	// JWT Token
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 
@@ -76,11 +85,42 @@ def querydslDir = "$buildDir/generated/querydsl"
 sourceSets {
 	main.java.srcDirs += [ querydslDir ]
 }
-
+// === ⭐ Spring Rest Docs ===
 tasks.withType(JavaCompile) {
 	options.generatedSourceOutputDirectory = file(querydslDir)
 }
 
 clean.doLast {
 	file(querydslDir).deleteDir()
+}
+tasks.named('test') {
+	outputs.dir snippetsDir
+	useJUnitPlatform()
+}
+
+// (7) asciidoctor를 사용하기 위해서 asciidoctor task에 asciidoctorExtensions 설정
+tasks.named('asciidoctor') {
+	configurations "asciidoctorExtensions"
+	inputs.dir snippetsDir
+	dependsOn test
+}
+
+// (8) asciidoctor task 실행시 생성된 html 파일을 src/main/resources/static/docs 디렉토리에 카피
+task copyDocument(type: Copy) {
+	dependsOn asciidoctor            // (8-1)
+	from file("${asciidoctor.outputDir}")   // (8-2)
+	into file("src/main/resources/static/docs")   // (8-3)
+}
+
+build {
+	dependsOn copyDocument  // (9) 빌드되기전 copyDocument task 실행
+}
+
+// (10)
+bootJar {
+	dependsOn copyDocument    // (10-1) bootJar 실행되기전 copyDocument task 실행
+	from("${asciidoctor.outputDir}") {  // (10-2) bootJar에 asciidoctor task에서 생성된 html 파일 추가
+		into 'static/docs'     // (10-3) bootJar에 추가될 경로
+	}
+
 }
