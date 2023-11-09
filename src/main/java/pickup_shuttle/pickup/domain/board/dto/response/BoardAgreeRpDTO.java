@@ -10,7 +10,7 @@ public record BoardAgreeRpDTO(
         String shopName,
         String destination,
         List<BeverageRpDTO> beverages,
-        Integer tip,
+        int tip,
         String request,
         Long finishedAt,
         Long arrivalTime

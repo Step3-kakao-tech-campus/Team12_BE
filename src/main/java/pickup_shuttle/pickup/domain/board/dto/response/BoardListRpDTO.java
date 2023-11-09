@@ -7,7 +7,7 @@ public record BoardListRpDTO(
         Long boardId,
         String shopName,
         Long finishedAt,
-        Integer tip,
+        int tip,
         boolean isMatch,
         String destination
 ) { }

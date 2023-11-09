@@ -12,7 +12,7 @@ public record UserGetRequesterDetailRpDTO(
         String shopName,
         String destination,
         List<BeverageRpDTO> beverages,
-        Integer tip,
+        int tip,
         String request,
         Long finishedAt,
         boolean isMatch,

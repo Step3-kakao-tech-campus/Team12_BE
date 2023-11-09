@@ -57,18 +57,18 @@ public class UserService {
     private String dir;
     @Transactional
     public void signup(SignUpRqDTO signUpRqDTO, CustomOauth2User customOauth2User){
-        String bank = signUpRqDTO.bank();
-        String account = signUpRqDTO.account();
+        String bankName = signUpRqDTO.bankName();
+        String accountNum = signUpRqDTO.accountNum();
         Optional<User> user = userRepository.findBySocialId(customOauth2User.getName());
         user.get().setRole(UserRole.USER);
-        customOauth2User.setBankName(bank);
-        customOauth2User.setAccountNum(account);
-        user.get().setBank(bank);
-        user.get().setAccount(account);
+        customOauth2User.setBankName(bankName);
+        customOauth2User.setAccountNum(accountNum);
+        user.get().setBank(bankName);
+        user.get().setAccount(accountNum);
     }
     public String userAuthStatus(Long userId){
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
+                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
         String userRole = user.getUserRole().getValue();
         String userUrl = user.getUrl();
@@ -87,11 +87,11 @@ public class UserService {
         }
         String userBankName = user.get().getBank();
         String userAccountNum = user.get().getAccount();
-        if(userModifyRqDTO.account() != userAccountNum){
-            user.get().setAccount(userModifyRqDTO.account());
+        if(userModifyRqDTO.accountNum() != userAccountNum){
+            user.get().setAccount(userModifyRqDTO.accountNum());
         }
-        if(userModifyRqDTO.bank() != userBankName){
-            user.get().setBank(userModifyRqDTO.bank());
+        if(userModifyRqDTO.bankName() != userBankName){
+            user.get().setBank(userModifyRqDTO.bankName());
         }
         return true;
     }
@@ -120,7 +120,7 @@ public class UserService {
         }
         // 유저 검증
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
+                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
         if(user.getUserRole().getValue().equals("ROLE_STUDENT"))
             throw new Exception400("이미 인증된 유저입니다");
@@ -136,7 +136,7 @@ public class UserService {
 
     public UserGetImageUrlRpDTO getImageUrl(Long userId){
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
+                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
         if(user.getUrl().equals("")){
             throw new Exception400("등록된 이미지가 존재하지 않습니다");
@@ -188,10 +188,10 @@ public class UserService {
     }
     public UserMyPageRpDTO myPage(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
+                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
         return UserMyPageRpDTO.builder()
-                .role(user.getUserRole().getValue())
+                .userAuth(user.getUserRole().getValue())
                 .nickname(user.getNickname())
                 .build();
     }
@@ -211,7 +211,7 @@ public class UserService {
     }
     public UserAuthDetailRpDTO getAuthDetail(Long userId){
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
+                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
         if(user.getUrl().equals("")){
             throw new Exception400("등록된 이미지가 존재하지 않습니다");
@@ -224,7 +224,7 @@ public class UserService {
     @Transactional
     public String authApprove(UserAuthApproveRqDTO requestDTO){
         User user = userRepository.findById(requestDTO.userId()).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
+                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
         if(user.getUserRole() == UserRole.USER){
             user.updateRole(UserRole.STUDENT);
@@ -250,7 +250,7 @@ public class UserService {
     }
     public UserGetRequesterDetailRpDTO getRequesterDetail(Long boardId){
         Board board = boardRepository.m4findByBoardId(boardId).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
+                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
         );
         List<BeverageRpDTO> beverages = board.getBeverages().stream()
                 .map(b -> BeverageRpDTO.builder()
@@ -260,7 +260,7 @@ public class UserService {
                 .toList();
         if(board.isMatch()){
             Match match = matchRepository.mfindByMatchId(board.getMatch().getMatchId()).orElseThrow(
-                    () -> new Exception400("매칭 정보를 찾을 수 없습니다")
+                    () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "매칭된 공고글의 매치ID", "매치"))
             );
             return UserGetRequesterDetailRpDTO.builder()
                     .boardId(boardId)
@@ -317,7 +317,7 @@ public class UserService {
     }
     public UserPickerDetail pickerBoardDetail(Long boardId, Long userId) {
         Board board = boardRepository.m5findByBoardId(boardId).orElseThrow(
-                () -> new Exception400("매칭이 완료되지 않은 공고글입니다")
+                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
         );
 
         if(!board.getMatch().getUser().getUserId().equals(userId)){

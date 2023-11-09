@@ -31,6 +31,7 @@ import java.lang.reflect.Field;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -67,10 +68,10 @@ public class BoardService {
     @Transactional
     public BoardWriteRpDTO write(BoardWriteRqDTO requestDTO, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
+                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
         Store store = storeRepository.findByName(requestDTO.shopName()).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_STORE)
+                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "가게명", "가게"))
         );
         Board board = requestDTO.toBoard(user, store);
         boardRepository.save(board);
@@ -81,7 +82,7 @@ public class BoardService {
     }
     public BoardDetailBeforeRpDTO boardDetailBefore(Long boardId, Long userId) {
         Board board = boardRepository.mfindByBoardId(boardId).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
+                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
         );
         List<BeverageRpDTO> beverageRpDTOS = board.getBeverages().stream().map(
                 b -> BeverageRpDTO.builder()
@@ -98,16 +99,16 @@ public class BoardService {
                 .isMatch(board.isMatch())
                 .shopName(board.getStore().getName())
                 .beverages(beverageRpDTOS)
-                .isRequester(board.getUser().getUserId() == userId)
+                .isRequester(board.getUser().getUserId().equals(userId))
                 .build();
     }
     //select 2번
     public BoardDetailAfterRpDTO boardDetailAfter(Long boardId, Long userId) {
         Board board = boardRepository.m2findByBoardId(boardId).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
+                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
         );
         User user = userRepository.findById(board.getMatch().getUser().getUserId()).orElseThrow(
-                () -> new Exception400("매칭 된 picker를 찾을 수 없습니다")
+                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "매칭된 공고글의 유저ID", "유저"))
         );
         List<BeverageRpDTO> beverageRpDTOS = board.getBeverages().stream().map(
                 b -> BeverageRpDTO.builder()
@@ -129,23 +130,23 @@ public class BoardService {
                 .arrivalTime(board.getMatch().getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).toEpochSecond(ZoneOffset.UTC))
                 .isMatch(board.isMatch())
                 .beverages(beverageRpDTOS)
-                .isRequester(board.getUser().getUserId() == userId)
+                .isRequester(board.getUser().getUserId().equals(userId))
                 .build();
     }
 
     @Transactional
     public BoardAgreeRpDTO boardAgree(BoardAgreeRqDTO requestDTO, Long boardId, Long userId) {
         Board board = boardRepository.mfindByBoardId(boardId).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
+                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
         );
         if(board.getMatch() != null) {
-            throw new Exception400("공고글이 이미 매칭 됐습니다");
+            throw new Exception400("공고글이 이미 매칭된 경우 수락됐습니다");
         }
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
+                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
         Match match = matchService.createMatch(requestDTO.arrivalTime(),user);
-        if(match.getUser().getUserId() == board.getUser().getUserId()) {
+        if(match.getUser().getUserId().equals(board.getUser().getUserId())) {
             throw new Exception400("공고글 작성자는 매칭 수락을 할 수 없습니다");
         }
         board.updateMatch(match);
@@ -171,7 +172,7 @@ public class BoardService {
     public void boardDelete(Long boardId, Long userId){
         // 공고글 확인
         Board board = boardRepository.m3findByBoardId(boardId).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
+                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
         );
         // 공고글 작성자 확인
         if(!(board.getUser().getUserId().equals(userId)))
@@ -187,7 +188,7 @@ public class BoardService {
     public BoardModifyRpDTO modify(BoardModifyRqDTO requestDTO, Long boardId, Long userId){
         // 공고글 확인
         Board board = boardRepository.m4findByBoardId(boardId).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
+                () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
         );
         // 공고글 작성자 확인
         if(!(board.getUser().getUserId().equals(userId)))
@@ -199,7 +200,8 @@ public class BoardService {
         Store store = null;
         if(requestDTO.shopName() != null){
             store = storeRepository.findByName(requestDTO.shopName()).orElseThrow(
-                    () -> new Exception400(ErrorMessage.UNKNOWN_STORE));
+                    () -> new Exception400(String.format(ErrorMessage.NOTFOUND_FORMAT, "가게명", "가게"))
+            );
         }
         // 공고 수정
         Map<String, Object> mapToPatch = requestDTO.patchValues(store); // null 삭제
@@ -230,11 +232,11 @@ public class BoardService {
             if (k.equals("beverages")){
                 board.getBeverages().clear();
                 board.getBeverages().addAll((List<Beverage>)v);
-                board.getBeverages().forEach(b -> {b.setBoard(board);});
+                board.getBeverages().forEach(b -> b.setBoard(board));
             }
             else{
                 Field field = ReflectionUtils.findField(Board.class, k);
-                field.setAccessible(true);
+                Objects.requireNonNull(field).setAccessible(true);
                 ReflectionUtils.setField(field, board, v);
             }
 

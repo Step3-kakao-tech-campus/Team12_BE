@@ -9,8 +9,7 @@ import pickup_shuttle.pickup.config.ValidValue;
 
 @Builder
 public record BoardAgreeRqDTO(
-        @NotNull(message = "도착예정시간" + ErrorMessage.BADREQUEST_EMPTY)
-        @Min(value = ValidValue.INTEGER_MIN, message = "도착예정시간" + ErrorMessage.BADREQUEST_MIN)
+        @Min(value = ValidValue.INTEGER_MIN, message = "도착예정시간" + ErrorMessage.BADREQUEST_EMPTY)
         @Max(value = ValidValue.INTEGER_MAX, message = "도착예정시간" + ErrorMessage.BADREQUEST_MAX)
-        Integer arrivalTime
+        int arrivalTime
 ) { }

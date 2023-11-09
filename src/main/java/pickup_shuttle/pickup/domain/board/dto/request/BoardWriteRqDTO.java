@@ -25,10 +25,9 @@ public record BoardWriteRqDTO(
         @NotBlank(message = "위치" + ErrorMessage.BADREQUEST_BLANK)
         @Size(max = ValidValue.STRING_MAX, message = "위치" + ErrorMessage.BADREQUEST_SIZE)
         String destination,
-        @NotNull(message = "픽업팁" + ErrorMessage.BADREQUEST_EMPTY)
-        @Min(value = ValidValue.INTEGER_MIN, message = "픽업팁" + ErrorMessage.BADREQUEST_MIN)
+        @Min(value = ValidValue.INTEGER_MIN, message = "픽업팁" + ErrorMessage.BADREQUEST_EMPTY)
         @Max(value = ValidValue.INTEGER_MAX, message = "픽업팁" + ErrorMessage.BADREQUEST_MAX)
-        Integer tip,
+        int tip,
         @Size(max = ValidValue.STRING_MAX, message = "요청사항" + ErrorMessage.BADREQUEST_SIZE)
         String request,
         @NotBlank(message = "마감기간" + ErrorMessage.BADREQUEST_BLANK)

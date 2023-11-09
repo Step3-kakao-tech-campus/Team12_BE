@@ -10,9 +10,9 @@ import pickup_shuttle.pickup.config.ValidValue;
 public record UserModifyRqDTO(
         @NotBlank(message = "은행명" + ErrorMessage.BADREQUEST_BLANK)
         @Size(max = ValidValue.STRING_MAX, message = "은행명" + ErrorMessage.BADREQUEST_SIZE)
-        String bank,
+        String bankName,
         @NotBlank(message = "계좌번호" + ErrorMessage.BADREQUEST_BLANK)
         @Size(max = ValidValue.STRING_MAX, message = "계좌번호" + ErrorMessage.BADREQUEST_SIZE)
-        String account
+        String accountNum
 )
 { }

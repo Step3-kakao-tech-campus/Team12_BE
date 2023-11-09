@@ -5,7 +5,7 @@ public class ValidValue {
     public static final int STRING_MAX = 60;
 
     // 도착예정시간
-    public static final int INTEGER_MIN = 0;
+    public static final int INTEGER_MIN = 1;
     public static final int INTEGER_MAX = Integer.MAX_VALUE;
 
     // id

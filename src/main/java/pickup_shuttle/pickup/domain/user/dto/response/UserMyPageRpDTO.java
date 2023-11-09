@@ -4,6 +4,6 @@ import lombok.Builder;
 
 @Builder
 public record UserMyPageRpDTO(
-        String role,
+        String userAuth,
         String nickname
 ) { }

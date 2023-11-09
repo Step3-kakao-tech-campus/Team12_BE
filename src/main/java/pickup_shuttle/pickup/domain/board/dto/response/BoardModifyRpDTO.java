@@ -11,7 +11,7 @@ public record BoardModifyRpDTO(
         String shopName,
         List<BeverageRpDTO> beverages,
         String destination,
-        Integer tip,
+        int tip,
         String request,
         Long finishedAt,
         boolean isMatch
