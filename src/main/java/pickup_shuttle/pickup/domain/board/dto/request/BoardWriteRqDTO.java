@@ -1,9 +1,12 @@
 package pickup_shuttle.pickup.domain.board.dto.request;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 import pickup_shuttle.pickup.config.ErrorMessage;
+import pickup_shuttle.pickup.config.ValidValue;
 import pickup_shuttle.pickup.domain.beverage.Beverage;
+import pickup_shuttle.pickup.domain.beverage.dto.request.BeverageRqDTO;
 import pickup_shuttle.pickup.domain.board.Board;
 import pickup_shuttle.pickup.domain.store.Store;
 import pickup_shuttle.pickup.domain.user.User;
@@ -15,51 +18,45 @@ import java.util.List;
 @Builder
 public record BoardWriteRqDTO(
         @NotBlank(message = "가게" + ErrorMessage.BADREQUEST_BLANK)
-        @Size(max = 60, message = "가게" + ErrorMessage.BADREQUEST_SIZE)
+        @Size(max = ValidValue.STRING_MAX, message = "가게" + ErrorMessage.BADREQUEST_SIZE)
         String store,
-        List<@NotBlank(message = "음료" + ErrorMessage.BADREQUEST_BLANK)String> beverage,
+        @NotEmpty(message = "음료" + ErrorMessage.BADREQUEST_EMPTY)
+        List<@Valid BeverageRqDTO> beverages,
         @NotBlank(message = "위치" + ErrorMessage.BADREQUEST_BLANK)
-        @Size(max = 60, message = "위치" + ErrorMessage.BADREQUEST_SIZE)
+        @Size(max = ValidValue.STRING_MAX, message = "위치" + ErrorMessage.BADREQUEST_SIZE)
         String destination,
-        @NotNull(message = "픽업팁" + ErrorMessage.BADREQUEST_BLANK)
-        @Min(value = 1, message = "픽업팁" + ErrorMessage.BADREQUEST_MIN)
-        @Max(value = Integer.MAX_VALUE, message = "픽업팁" + ErrorMessage.BADREQUEST_MAX)
+        @NotNull(message = "픽업팁" + ErrorMessage.BADREQUEST_EMPTY)
+        @Min(value = ValidValue.INTEGER_MIN, message = "픽업팁" + ErrorMessage.BADREQUEST_MIN)
+        @Max(value = ValidValue.INTEGER_MAX, message = "픽업팁" + ErrorMessage.BADREQUEST_MAX)
         Integer tip,
-        @Size(max = 60, message = "요청사항" + ErrorMessage.BADREQUEST_SIZE)
+        @Size(max = ValidValue.STRING_MAX, message = "요청사항" + ErrorMessage.BADREQUEST_SIZE)
         String request,
         @NotBlank(message = "마감기간" + ErrorMessage.BADREQUEST_BLANK)
-        @Size(max = 60, message = "마감기간" + ErrorMessage.BADREQUEST_SIZE)
+        @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}$", message = "마감기간은 yyyy-MM-dd HH:mm 형식이어야 합니다")
         String finishedAt
 ){
 
     public Board toBoard(User user, Store store){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         LocalDateTime localDateTime = LocalDateTime.parse(finishedAt, formatter);
-        List<Beverage> beverageList = beverageList(beverage);
+        List<Beverage> beverages = beverages(this.beverages);
         Board board = Board.builder()
                 .finishedAt(localDateTime)
                 .destination(destination)
                 .tip(tip)
                 .user(user)
                 .store(store)
-                .beverages(beverageList)
+                .beverages(beverages)
                 .build();
         board.updateRequest(request);
         return board;
     }
 
-    private List<Beverage> beverageList(List<String> beverage) {
-        return beverage.stream().map(
+    private List<Beverage> beverages(List<BeverageRqDTO> BeverageRqDTOS) {
+        return BeverageRqDTOS.stream().map(
                         b -> Beverage.builder()
-                                .name(b)
+                                .name(b.name())
                                 .build())
                 .toList();
     }
-//    public Beverage toBeverage(Board board){
-//        return Beverage.builder()
-//                .name()
-//                .build();
-//        // new Beverage(beverage, board);
-//    }
-
 }

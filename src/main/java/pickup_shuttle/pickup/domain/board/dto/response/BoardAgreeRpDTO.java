@@ -1,7 +1,7 @@
 package pickup_shuttle.pickup.domain.board.dto.response;
 
 import lombok.Builder;
-import pickup_shuttle.pickup.domain.beverage.dto.BeverageDTO;
+import pickup_shuttle.pickup.domain.beverage.dto.response.BeverageRpDTO;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import java.util.List;
 public record BoardAgreeRpDTO(
         String shopName,
         String destination,
-        List<BeverageDTO> beverage,
+        List<BeverageRpDTO> beverage,
         int tip,
         String request,
         Long finishedAt,

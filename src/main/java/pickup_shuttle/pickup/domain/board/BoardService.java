@@ -11,7 +11,8 @@ import pickup_shuttle.pickup._core.errors.exception.Exception400;
 import pickup_shuttle.pickup._core.errors.exception.Exception500;
 import pickup_shuttle.pickup.config.ErrorMessage;
 import pickup_shuttle.pickup.domain.beverage.Beverage;
-import pickup_shuttle.pickup.domain.beverage.dto.BeverageDTO;
+import pickup_shuttle.pickup.domain.beverage.dto.request.BeverageRqDTO;
+import pickup_shuttle.pickup.domain.beverage.dto.response.BeverageRpDTO;
 import pickup_shuttle.pickup.domain.board.dto.request.BoardAgreeRqDTO;
 import pickup_shuttle.pickup.domain.board.dto.request.BoardModifyRqDTO;
 import pickup_shuttle.pickup.domain.board.dto.request.BoardWriteRqDTO;
@@ -85,8 +86,8 @@ public class BoardService {
         Board board = boardRepository.mfindByBoardId(boardId).orElseThrow(
                 () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
         );
-        List<BeverageDTO> beverageDTOS = board.getBeverages().stream().map(
-                b -> BeverageDTO.builder()
+        List<BeverageRpDTO> beverageRpDTOS = board.getBeverages().stream().map(
+                b -> BeverageRpDTO.builder()
                         .name(b.getName())
                         .build()
         ).toList();
@@ -98,7 +99,7 @@ public class BoardService {
                 .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
                 .isMatch(board.isMatch())
                 .shopName(board.getStore().getName())
-                .beverage(beverageDTOS)
+                .beverage(beverageRpDTOS)
                 .build();
     }
     //select 2번
@@ -109,8 +110,8 @@ public class BoardService {
         User user = userRepository.findById(board.getMatch().getUser().getUserId()).orElseThrow(
                 () -> new Exception400("매칭 된 picker를 찾을 수 없습니다")
         );
-        List<BeverageDTO> beverageDTOS = board.getBeverages().stream().map(
-                b -> BeverageDTO.builder()
+        List<BeverageRpDTO> beverageRpDTOS = board.getBeverages().stream().map(
+                b -> BeverageRpDTO.builder()
                         .name(b.getName())
                         .build()
         ).toList();
@@ -128,7 +129,7 @@ public class BoardService {
                 .pickerPhoneNumber(user.getPhoneNumber())
                 .arrivalTime(board.getMatch().getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).toEpochSecond(ZoneOffset.UTC))
                 .isMatch(board.isMatch())
-                .beverage(beverageDTOS)
+                .beverage(beverageRpDTOS)
                 .build();
     }
 
@@ -149,14 +150,14 @@ public class BoardService {
         }
         board.updateMatch(match);
         board.updateIsMatch(true);
-        List<BeverageDTO> beverageDTOS = board.getBeverages().stream().map(
-                b -> BeverageDTO.builder()
+        List<BeverageRpDTO> beverageRpDTOS = board.getBeverages().stream().map(
+                b -> BeverageRpDTO.builder()
                         .name(b.getName())
                         .build()
         ).toList();
 
         return BoardAgreeRpDTO.builder()
-                .beverage(beverageDTOS)
+                .beverage(beverageRpDTOS)
                 .shopName(board.getStore().getName())
                 .tip(board.getTip())
                 .destination(board.getDestination())
@@ -211,15 +212,15 @@ public class BoardService {
             throw new Exception400("수정할 값이 없습니다");
         }
 
-        List<BeverageDTO> beverages = board.getBeverages().stream().map(
-                b -> BeverageDTO.builder()
+        List<BeverageRpDTO> beverageRpDTOS = board.getBeverages().stream().map(
+                b -> BeverageRpDTO.builder()
                         .name(b.getName())
                         .build()
         ).toList();
         return BoardModifyRpDTO.builder()
                 .boardId(board.getBoardId())
                 .store(board.getStore().getName())
-                .beverage(beverages)
+                .beverage(beverageRpDTOS)
                 .destination(board.getDestination())
                 .tip(board.getTip())
                 .request(board.getRequest())
@@ -243,9 +244,9 @@ public class BoardService {
         });
     }
 
-    public void checkListEmpty(List<String> beverages){
+    public void checkListEmpty(List<BeverageRqDTO> beverages){
         if(beverages != null && beverages.size() == 0){
-            throw new Exception400("음료를 입력하지 않았습니다");
+            throw new Exception400("음료" + ErrorMessage.BADREQUEST_EMPTY);
         }
     }
 }
