@@ -8,12 +8,11 @@ import java.util.List;
 @Builder
 public record BoardModifyRpDTO(
         Long boardId,
-        String store,
-        List<BeverageRpDTO> beverage,
+        String shopName,
+        List<BeverageRpDTO> beverages,
         String destination,
-        int tip,
+        Integer tip,
         String request,
         Long finishedAt,
         boolean isMatch
-) {
-}
+) { }

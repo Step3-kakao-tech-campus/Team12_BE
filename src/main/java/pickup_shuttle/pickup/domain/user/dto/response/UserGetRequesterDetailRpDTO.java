@@ -2,7 +2,7 @@ package pickup_shuttle.pickup.domain.user.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
-import pickup_shuttle.pickup.domain.beverage.dto.BeverageDTO;
+import pickup_shuttle.pickup.domain.beverage.dto.response.BeverageRpDTO;
 
 import java.util.List;
 
@@ -11,8 +11,8 @@ public record UserGetRequesterDetailRpDTO(
         Long boardId,
         String shopName,
         String destination,
-        List<BeverageDTO> beverage,
-        int tip,
+        List<BeverageRpDTO> beverages,
+        Integer tip,
         String request,
         Long finishedAt,
         boolean isMatch,
@@ -24,5 +24,4 @@ public record UserGetRequesterDetailRpDTO(
         Long arrivalTime,
         @JsonInclude(JsonInclude.Include.NON_NULL)
         String pickerPhoneNumber
-) {
-}
+) { }

@@ -6,6 +6,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Builder
 public record UserUploadImageRqDTO(
-        @NotNull(message = "이미지 : 파일이 없습니다")
+        @NotNull(message = "이미지 파일이 없습니다")
         MultipartFile image
 ) {}

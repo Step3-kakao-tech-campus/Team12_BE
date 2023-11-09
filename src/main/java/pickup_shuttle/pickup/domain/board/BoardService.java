@@ -69,7 +69,7 @@ public class BoardService {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new Exception400(ErrorMessage.UNKNOWN_USER)
         );
-        Store store = storeRepository.findByName(requestDTO.store()).orElseThrow(
+        Store store = storeRepository.findByName(requestDTO.shopName()).orElseThrow(
                 () -> new Exception400(ErrorMessage.UNKNOWN_STORE)
         );
         Board board = requestDTO.toBoard(user, store);
@@ -96,7 +96,7 @@ public class BoardService {
                 .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
                 .isMatch(board.isMatch())
                 .shopName(board.getStore().getName())
-                .beverage(beverageRpDTOS)
+                .beverages(beverageRpDTOS)
                 .build();
     }
     //select 2번
@@ -126,7 +126,7 @@ public class BoardService {
                 .pickerPhoneNumber(user.getPhoneNumber())
                 .arrivalTime(board.getMatch().getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).toEpochSecond(ZoneOffset.UTC))
                 .isMatch(board.isMatch())
-                .beverage(beverageRpDTOS)
+                .beverages(beverageRpDTOS)
                 .build();
     }
 
@@ -154,7 +154,7 @@ public class BoardService {
         ).toList();
 
         return BoardAgreeRpDTO.builder()
-                .beverage(beverageRpDTOS)
+                .beverages(beverageRpDTOS)
                 .shopName(board.getStore().getName())
                 .tip(board.getTip())
                 .destination(board.getDestination())
@@ -194,8 +194,8 @@ public class BoardService {
             throw new Exception400("이미 매칭된 공고글은 수정 할 수 없습니다");
         // 가게 확인
         Store store = null;
-        if(requestDTO.store() != null){
-            store = storeRepository.findByName(requestDTO.store()).orElseThrow(
+        if(requestDTO.shopName() != null){
+            store = storeRepository.findByName(requestDTO.shopName()).orElseThrow(
                     () -> new Exception400(ErrorMessage.UNKNOWN_STORE));
         }
         // 공고 수정
@@ -213,8 +213,8 @@ public class BoardService {
         ).toList();
         return BoardModifyRpDTO.builder()
                 .boardId(board.getBoardId())
-                .store(board.getStore().getName())
-                .beverage(beverageRpDTOS)
+                .shopName(board.getStore().getName())
+                .beverages(beverageRpDTOS)
                 .destination(board.getDestination())
                 .tip(board.getTip())
                 .request(board.getRequest())

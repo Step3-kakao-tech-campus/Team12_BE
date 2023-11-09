@@ -20,7 +20,7 @@ import java.util.Map;
 public record BoardModifyRqDTO(
         @NotSpace(message = "가게" + ErrorMessage.BADREQUEST_BLANK)
         @Size(max = ValidValue.STRING_MAX, message = "가게" + ErrorMessage.BADREQUEST_SIZE)
-        String store,
+        String shopName,
         List<@Valid BeverageRqDTO> beverages,
         @NotSpace(message = "위치" + ErrorMessage.BADREQUEST_BLANK)
         @Size(max = ValidValue.STRING_MAX, message = "위치" + ErrorMessage.BADREQUEST_SIZE)

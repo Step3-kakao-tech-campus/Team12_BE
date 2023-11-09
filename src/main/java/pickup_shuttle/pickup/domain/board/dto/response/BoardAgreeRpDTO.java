@@ -9,8 +9,8 @@ import java.util.List;
 public record BoardAgreeRpDTO(
         String shopName,
         String destination,
-        List<BeverageRpDTO> beverage,
-        int tip,
+        List<BeverageRpDTO> beverages,
+        Integer tip,
         String request,
         Long finishedAt,
         Long arrivalTime

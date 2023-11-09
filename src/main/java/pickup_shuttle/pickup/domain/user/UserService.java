@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import pickup_shuttle.pickup._core.errors.exception.Exception400;
 import pickup_shuttle.pickup._core.errors.exception.Exception500;
 import pickup_shuttle.pickup.config.ErrorMessage;
-import pickup_shuttle.pickup.domain.beverage.dto.BeverageDTO;
+import pickup_shuttle.pickup.domain.beverage.dto.response.BeverageRpDTO;
 import pickup_shuttle.pickup.domain.board.Board;
 import pickup_shuttle.pickup.domain.board.repository.BoardRepository;
 import pickup_shuttle.pickup.domain.board.repository.BoardRepositoryCustom;
@@ -57,15 +57,14 @@ public class UserService {
     private String dir;
     @Transactional
     public void signup(SignUpRqDTO signUpRqDTO, CustomOauth2User customOauth2User){
-        String bankName = signUpRqDTO.bankName();
-        String accountNum = signUpRqDTO.accountNum();
+        String bank = signUpRqDTO.bank();
+        String account = signUpRqDTO.account();
         Optional<User> user = userRepository.findBySocialId(customOauth2User.getName());
         user.get().setRole(UserRole.USER);
-        customOauth2User.setBankName(bankName);
-        customOauth2User.setAccountNum(accountNum);
-        user.get().setBank(bankName);
-        user.get().setAccount(accountNum);
-        return;
+        customOauth2User.setBankName(bank);
+        customOauth2User.setAccountNum(account);
+        user.get().setBank(bank);
+        user.get().setAccount(account);
     }
     public String userAuthStatus(Long userId){
         User user = userRepository.findById(userId).orElseThrow(
@@ -142,7 +141,7 @@ public class UserService {
         if(user.getUrl().equals("")){
             throw new Exception400("등록된 이미지가 존재하지 않습니다");
         }
-        return UserGetImageUrlRpDTO.builder().url(getPresignedUrl(userId)).build(); // PreSigned URL 응답
+        return UserGetImageUrlRpDTO.builder().imageUrl(getPresignedUrl(userId)).build(); // PreSigned URL 응답
     }
 
     // PreSigned URL 발급
@@ -219,7 +218,7 @@ public class UserService {
         }
         return UserAuthDetailRpDTO.builder()
                 .nickname(user.getNickname())
-                .url(getPresignedUrl(userId))
+                .imageUrl(getPresignedUrl(userId))
                 .build();
     }
     @Transactional
@@ -244,7 +243,7 @@ public class UserService {
                         .destination(b.getDestination())
                         .finishedAt(b.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
                         .tip(b.getTip())
-                        .match(b.isMatch())
+                        .isMatch(b.isMatch())
                         .build())
                 .toList();
         return new SliceImpl<>(responseDTOList, pageRequest, boardSlice.hasNext());
@@ -253,8 +252,8 @@ public class UserService {
         Board board = boardRepository.m4findByBoardId(boardId).orElseThrow(
                 () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
         );
-        List<BeverageDTO> beverage = board.getBeverages().stream()
-                .map(b -> BeverageDTO.builder()
+        List<BeverageRpDTO> beverages = board.getBeverages().stream()
+                .map(b -> BeverageRpDTO.builder()
                         .name(b.getName())
                         .build()
                 )
@@ -267,7 +266,7 @@ public class UserService {
                     .boardId(boardId)
                     .shopName(board.getStore().getName())
                     .destination(board.getDestination())
-                    .beverage(beverage)
+                    .beverages(beverages)
                     .tip(board.getTip())
                     .request(board.getRequest())
                     .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
@@ -282,7 +281,7 @@ public class UserService {
                     .boardId(boardId)
                     .shopName(board.getStore().getName())
                     .destination(board.getDestination())
-                    .beverage(beverage)
+                    .beverages(beverages)
                     .tip(board.getTip())
                     .request(board.getRequest())
                     .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
@@ -324,8 +323,8 @@ public class UserService {
         if(!board.getMatch().getUser().getUserId().equals(userId)){
             throw new Exception400("해당 공고글의 피커가 아닙니다");
         }
-        List<BeverageDTO> beverageDTOList = board.getBeverages().stream()
-                .map(b -> BeverageDTO.builder()
+        List<BeverageRpDTO> beverageRpDTOList = board.getBeverages().stream()
+                .map(b -> BeverageRpDTO.builder()
                         .name(b.getName())
                         .build())
                 .toList();
@@ -333,7 +332,7 @@ public class UserService {
                 .boardId(board.getBoardId())
                 .shopName(board.getStore().getName())
                 .destination(board.getDestination())
-                .beverage(beverageDTOList)
+                .beverages(beverageRpDTOList)
                 .tip(board.getTip())
                 .request(board.getRequest())
                 .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))

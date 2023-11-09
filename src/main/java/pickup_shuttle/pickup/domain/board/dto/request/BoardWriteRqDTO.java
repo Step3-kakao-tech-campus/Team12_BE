@@ -19,7 +19,7 @@ import java.util.List;
 public record BoardWriteRqDTO(
         @NotBlank(message = "가게" + ErrorMessage.BADREQUEST_BLANK)
         @Size(max = ValidValue.STRING_MAX, message = "가게" + ErrorMessage.BADREQUEST_SIZE)
-        String store,
+        String shopName,
         @NotEmpty(message = "음료" + ErrorMessage.BADREQUEST_EMPTY)
         List<@Valid BeverageRqDTO> beverages,
         @NotBlank(message = "위치" + ErrorMessage.BADREQUEST_BLANK)

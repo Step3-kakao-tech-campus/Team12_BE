@@ -10,8 +10,8 @@ public record BoardDetailBeforeRpDTO(
         Long boardId,
         String shopName,
         String destination,
-        List<BeverageRpDTO> beverage,
-        int tip,
+        List<BeverageRpDTO> beverages,
+        Integer tip,
         String request,
         Long finishedAt,
         boolean isMatch

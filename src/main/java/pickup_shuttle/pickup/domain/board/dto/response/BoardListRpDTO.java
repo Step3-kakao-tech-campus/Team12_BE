@@ -4,11 +4,11 @@ import lombok.Builder;
 
 @Builder
 public record BoardListRpDTO(
-    Long boardId,
-    String shopName,
-    Long finishedAt,
-    int tip,
-    boolean isMatch,
-    String destination
-) {}
+        Long boardId,
+        String shopName,
+        Long finishedAt,
+        Integer tip,
+        boolean isMatch,
+        String destination
+) { }
 

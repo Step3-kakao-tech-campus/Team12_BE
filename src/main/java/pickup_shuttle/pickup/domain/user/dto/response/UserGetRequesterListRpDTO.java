@@ -8,7 +8,6 @@ public record UserGetRequesterListRpDTO(
         String shopName,
         String destination,
         Long finishedAt,
-        int tip,
-        boolean match
-) {
-}
+        Integer tip,
+        boolean isMatch
+) { }
