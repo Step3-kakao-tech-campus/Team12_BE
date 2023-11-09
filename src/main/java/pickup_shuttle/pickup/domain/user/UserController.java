@@ -49,8 +49,8 @@ public class UserController {
     }
 
     @GetMapping("/login/callback")
-    public ResponseEntity<ApiUtils.ApiResult<LoginRp>> callBack(Authentication authentication){
-       LoginRp responseDTO = userService.login(authentication);
+    public ResponseEntity<ApiUtils.ApiResult<LoginUserRp>> callBack(Authentication authentication){
+       LoginUserRp responseDTO = userService.login(authentication);
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 

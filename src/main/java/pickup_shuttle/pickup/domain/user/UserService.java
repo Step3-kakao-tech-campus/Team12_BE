@@ -367,7 +367,7 @@ public class UserService {
 
     }
 
-    public LoginRp login(Authentication authentication) {
+    public LoginUserRp login(Authentication authentication) {
         CustomOauth2User customOauth2User = (CustomOauth2User) authentication.getPrincipal();
         if (customOauth2User == null) {
             throw new Exception400("인증에 실패하였습니다.");
@@ -376,10 +376,10 @@ public class UserService {
                 () -> new Exception400(ErrorMessage.UNKNOWN_USER)
         );
         String userPK = user.getUserId().toString();
-        return LoginRp.builder()
+        return LoginUserRp.builder()
                 .accessToken(jwtService.createAccessToken(userPK))
                 .nickname(user.getNickname())
-                .role(user.getUserRole().getValue())
+                .userAuth(user.getUserRole().getValue())
                 .build();
     }
 }
