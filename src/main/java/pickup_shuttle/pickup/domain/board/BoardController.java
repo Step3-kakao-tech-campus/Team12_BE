@@ -8,11 +8,10 @@ import org.springframework.web.bind.annotation.*;
 import pickup_shuttle.pickup._core.utils.ApiUtils;
 import pickup_shuttle.pickup._core.utils.CustomPage;
 import pickup_shuttle.pickup.config.Login;
-import pickup_shuttle.pickup.domain.board.dto.request.BoardAgreeRqDTO;
-import pickup_shuttle.pickup.domain.board.dto.request.BoardModifyRqDTO;
-import pickup_shuttle.pickup.domain.board.dto.request.BoardWriteRqDTO;
+import pickup_shuttle.pickup.domain.board.dto.request.AcceptBoardRq;
+import pickup_shuttle.pickup.domain.board.dto.request.CreateBoardRq;
+import pickup_shuttle.pickup.domain.board.dto.request.UpdateBoardRq;
 import pickup_shuttle.pickup.domain.board.dto.response.*;
-import pickup_shuttle.pickup.security.service.JwtService;
 
 
 @RestController
@@ -20,20 +19,19 @@ import pickup_shuttle.pickup.security.service.JwtService;
 @RequestMapping("articles")
 public class BoardController {
     private final BoardService boardService;
-    private final JwtService jwtService;
     @GetMapping
-    public ResponseEntity<ApiUtils.ApiResult<CustomPage<BoardListRpDTO>>> getBoardList(
+    public ResponseEntity<ApiUtils.ApiResult<CustomPage<ReadBoardListRp>>> getBoardList(
             @RequestParam(value = "offset",required = false) Long lastBoardId,
             @RequestParam(value = "limit",defaultValue = "10") int size) {
-        Slice<BoardListRpDTO> responseDTOSlice = boardService.boardList(lastBoardId, size);
+        Slice<ReadBoardListRp> responseDTOSlice = boardService.boardList(lastBoardId, size);
         return ResponseEntity.ok(ApiUtils.success(new CustomPage<>(responseDTOSlice)));
     }
 
     @PostMapping("/write")
-    public ResponseEntity<ApiUtils.ApiResult<BoardWriteRpDTO>> write(@RequestBody @Valid BoardWriteRqDTO requestDTO,
-                                                      @Login Long userId){
+    public ResponseEntity<ApiUtils.ApiResult<CreateBoardRp>> write(@RequestBody @Valid CreateBoardRq requestDTO,
+                                                                   @Login Long userId){
         boardService.checkListBlank(requestDTO.beverage());
-        BoardWriteRpDTO responseDTO = boardService.write(requestDTO, userId);
+        CreateBoardRp responseDTO = boardService.write(requestDTO, userId);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 
@@ -44,10 +42,10 @@ public class BoardController {
     }
 
     @PostMapping("/agree/{boardId}")
-    public ResponseEntity<ApiUtils.ApiResult<BoardAgreeRpDTO>> pickupAgree(@PathVariable("boardId") Long boardId,
-                                         @RequestBody @Valid BoardAgreeRqDTO requestDTO,
-                                         @Login Long userId) {
-        BoardAgreeRpDTO responseDTO = boardService.boardAgree(requestDTO,boardId,userId);
+    public ResponseEntity<ApiUtils.ApiResult<AcceptBoardRp>> pickupAgree(@PathVariable("boardId") Long boardId,
+                                                                         @RequestBody @Valid AcceptBoardRq requestDTO,
+                                                                         @Login Long userId) {
+        AcceptBoardRp responseDTO = boardService.boardAgree(requestDTO,boardId,userId);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
     @DeleteMapping("/delete/{boardId}")
@@ -57,11 +55,11 @@ public class BoardController {
         return ResponseEntity.ok(ApiUtils.success("공고글 삭제 완료"));
     }
     @PatchMapping("/modify/{boardId}")
-    public ResponseEntity<ApiUtils.ApiResult<BoardModifyRpDTO>> modify(@PathVariable("boardId") Long boardId,
-                                                     @RequestBody @Valid BoardModifyRqDTO requestDTO,
-                                                     @Login Long userId){
+    public ResponseEntity<ApiUtils.ApiResult<UpdateBoardRp>> modify(@PathVariable("boardId") Long boardId,
+                                                                    @RequestBody @Valid UpdateBoardRq requestDTO,
+                                                                    @Login Long userId){
         boardService.checkListEmpty(requestDTO.beverage());
-        BoardModifyRpDTO responseDTO = boardService.modify(requestDTO,boardId, userId);
+        UpdateBoardRp responseDTO = boardService.modify(requestDTO,boardId, userId);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 }

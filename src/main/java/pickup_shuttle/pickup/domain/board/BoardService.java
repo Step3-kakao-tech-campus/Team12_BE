@@ -10,11 +10,10 @@ import org.springframework.util.ReflectionUtils;
 import pickup_shuttle.pickup._core.errors.exception.Exception400;
 import pickup_shuttle.pickup._core.errors.exception.Exception500;
 import pickup_shuttle.pickup.config.ErrorMessage;
-import pickup_shuttle.pickup.domain.beverage.Beverage;
-import pickup_shuttle.pickup.domain.beverage.dto.BeverageDTO;
-import pickup_shuttle.pickup.domain.board.dto.request.BoardAgreeRqDTO;
-import pickup_shuttle.pickup.domain.board.dto.request.BoardModifyRqDTO;
-import pickup_shuttle.pickup.domain.board.dto.request.BoardWriteRqDTO;
+import pickup_shuttle.pickup.domain.beverage.dto.Beverage;
+import pickup_shuttle.pickup.domain.board.dto.request.AcceptBoardRq;
+import pickup_shuttle.pickup.domain.board.dto.request.UpdateBoardRq;
+import pickup_shuttle.pickup.domain.board.dto.request.CreateBoardRq;
 import pickup_shuttle.pickup.domain.board.dto.response.*;
 import pickup_shuttle.pickup.domain.board.repository.BoardRepository;
 import pickup_shuttle.pickup.domain.board.repository.BoardRepositoryCustom;
@@ -42,17 +41,17 @@ public class BoardService {
     private final StoreRepository storeRepository;
     private final MatchService matchService;
 
-    public Slice<BoardListRpDTO> boardList(Long lastBoardId, int limit) {
+    public Slice<ReadBoardListRp> boardList(Long lastBoardId, int limit) {
         PageRequest pageRequest = PageRequest.of(0, limit);
         Slice<Board> boardsSlice = boardRepositoryCustom.searchAllBySlice(lastBoardId, pageRequest);
         return getBoardListResponseDTOs(pageRequest, boardsSlice);
     }
 
-    //boardSlice로 BoardListRpDTO 만드는 과정
-    private Slice<BoardListRpDTO> getBoardListResponseDTOs(PageRequest pageRequest, Slice<Board> boardSlice) {
-        List<BoardListRpDTO> boardBoardListRpDTO = boardSlice.getContent().stream()
+    //boardSlice로 ReadBoardListRp 만드는 과정
+    private Slice<ReadBoardListRp> getBoardListResponseDTOs(PageRequest pageRequest, Slice<Board> boardSlice) {
+        List<ReadBoardListRp> boardReadBoardListRp = boardSlice.getContent().stream()
                 .filter(Utils::notOverDeadline)
-                .map(b -> BoardListRpDTO.builder()
+                .map(b -> ReadBoardListRp.builder()
                         .boardId(b.getBoardId())
                         .shopName(b.getStore().getName())
                         .finishedAt(b.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
@@ -61,11 +60,11 @@ public class BoardService {
                         .destination(b.getDestination())
                         .build())
                 .toList();
-        return new SliceImpl<>(boardBoardListRpDTO,pageRequest,boardSlice.hasNext());
+        return new SliceImpl<>(boardReadBoardListRp,pageRequest,boardSlice.hasNext());
     }
 
     @Transactional
-    public BoardWriteRpDTO write(BoardWriteRqDTO requestDTO, Long userId) {
+    public CreateBoardRp write(CreateBoardRq requestDTO, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new Exception400(ErrorMessage.UNKNOWN_USER)
         );
@@ -79,18 +78,18 @@ public class BoardService {
             throw new Exception500("unknown server error");
         }
 
-        return new BoardWriteRpDTO(board.getBoardId());
+        return new CreateBoardRp(board.getBoardId());
     }
-    public BoardDetailBeforeRpDTO boardDetailBefore(Long boardId) {
+    private ReadBoardBeforeRp boardDetailBefore(Long boardId) {
         Board board = boardRepository.mfindByBoardId(boardId).orElseThrow(
                 () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
         );
-        List<BeverageDTO> beverageDTOS = board.getBeverages().stream().map(
-                b -> BeverageDTO.builder()
+        List<Beverage> beverages = board.getBeverages().stream().map(
+                b -> Beverage.builder()
                         .name(b.getName())
                         .build()
         ).toList();
-        return BoardDetailBeforeRpDTO.builder()
+        return ReadBoardBeforeRp.builder()
                 .boardId(board.getBoardId())
                 .destination(board.getDestination())
                 .request(board.getRequest())
@@ -98,24 +97,24 @@ public class BoardService {
                 .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
                 .isMatch(board.isMatch())
                 .shopName(board.getStore().getName())
-                .beverage(beverageDTOS)
+                .beverage(beverages)
                 .build();
     }
     //select 2번
-    public BoardDetailAfterRpDTO boardDetailAfter(Long boardId) {
+    private ReadBoardAfterRp boardDetailAfter(Long boardId) {
         Board board = boardRepository.m2findByBoardId(boardId).orElseThrow(
                 () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
         );
         User user = userRepository.findById(board.getMatch().getUser().getUserId()).orElseThrow(
                 () -> new Exception400("매칭 된 picker를 찾을 수 없습니다")
         );
-        List<BeverageDTO> beverageDTOS = board.getBeverages().stream().map(
-                b -> BeverageDTO.builder()
+        List<Beverage> beverages = board.getBeverages().stream().map(
+                b -> Beverage.builder()
                         .name(b.getName())
                         .build()
         ).toList();
 
-        return BoardDetailAfterRpDTO.builder()
+        return ReadBoardAfterRp.builder()
                 .boardId(board.getBoardId())
                 .destination(board.getDestination())
                 .request(board.getRequest())
@@ -128,12 +127,21 @@ public class BoardService {
                 .pickerPhoneNumber(user.getPhoneNumber())
                 .arrivalTime(board.getMatch().getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).toEpochSecond(ZoneOffset.UTC))
                 .isMatch(board.isMatch())
-                .beverage(beverageDTOS)
+                .beverage(beverages)
                 .build();
+    }
+    public CheckBeforeAfter checkBeforeAfter(Long boardId) {
+        Board board = boardRepository.findById(boardId).orElseThrow(
+                () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
+        );
+        if(board.isMatch()) {
+            return boardDetailAfter(boardId);
+        }
+        return boardDetailBefore(boardId);
     }
 
     @Transactional
-    public BoardAgreeRpDTO boardAgree(BoardAgreeRqDTO requestDTo, Long boardId, Long userId) {
+    public AcceptBoardRp boardAgree(AcceptBoardRq requestDTo, Long boardId, Long userId) {
         Board board = boardRepository.mfindByBoardId(boardId).orElseThrow(
                 () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
         );
@@ -149,14 +157,14 @@ public class BoardService {
         }
         board.updateMatch(match);
         board.updateIsMatch(true);
-        List<BeverageDTO> beverageDTOS = board.getBeverages().stream().map(
-                b -> BeverageDTO.builder()
+        List<Beverage> beverages = board.getBeverages().stream().map(
+                b -> Beverage.builder()
                         .name(b.getName())
                         .build()
         ).toList();
 
-        return BoardAgreeRpDTO.builder()
-                .beverage(beverageDTOS)
+        return AcceptBoardRp.builder()
+                .beverage(beverages)
                 .shopName(board.getStore().getName())
                 .tip(board.getTip())
                 .destination(board.getDestination())
@@ -186,7 +194,7 @@ public class BoardService {
         }
     }
     @Transactional
-    public BoardModifyRpDTO modify(BoardModifyRqDTO requestDTO, Long boardId, Long userId){
+    public UpdateBoardRp modify(UpdateBoardRq requestDTO, Long boardId, Long userId){
         // 공고글 확인
         Board board = boardRepository.m4findByBoardId(boardId).orElseThrow(
                 () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
@@ -211,8 +219,8 @@ public class BoardService {
             throw new Exception400("수정할 값이 없습니다");
         }
 
-        List<String> beverages = board.getBeverages().stream().map(Beverage::getName).toList();
-        return BoardModifyRpDTO.builder()
+        List<String> beverages = board.getBeverages().stream().map(pickup_shuttle.pickup.domain.beverage.Beverage::getName).toList();
+        return UpdateBoardRp.builder()
                 .boardId(board.getBoardId())
                 .store(board.getStore().getName())
                 .beverage(beverages)
@@ -227,7 +235,7 @@ public class BoardService {
         mapToPatch.forEach((k, v) -> {
             if (k.equals("beverages")){
                 board.getBeverages().clear();
-                board.getBeverages().addAll((List<Beverage>)v);
+                board.getBeverages().addAll((List<pickup_shuttle.pickup.domain.beverage.Beverage>)v);
                 board.getBeverages().forEach(b -> b.setBoard(board));
             }
             else{
