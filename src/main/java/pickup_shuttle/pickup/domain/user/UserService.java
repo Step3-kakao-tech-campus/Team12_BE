@@ -60,7 +60,7 @@ public class UserService {
     private String dir;
 
     @Transactional
-    public void signup(CreateUserRq createUserRq, CustomOauth2User customOauth2User) {
+    public CreateUserRp signup(CreateUserRq createUserRq, CustomOauth2User customOauth2User) {
         String bankName = createUserRq.bankName();
         String accountNum = createUserRq.accountNum();
         User user = userRepository.findBySocialId(customOauth2User.getName()).orElseThrow(
@@ -71,6 +71,9 @@ public class UserService {
         customOauth2User.setAccountNum(accountNum);
         user.setBank(bankName);
         user.setAccount(accountNum);
+        return CreateUserRp.builder()
+                .message("회원가입이 완료되었습니다")
+                .build();
     }
 
     public String userAuthStatus(Long userId) {

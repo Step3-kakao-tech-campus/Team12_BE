@@ -42,10 +42,10 @@ public class UserController {
 
 
     @PostMapping("/signup")
-    public ResponseEntity<ApiUtils.ApiResult<String>> signup(@RequestBody CreateUserRq requestDTO, @AuthenticationPrincipal CustomOauth2User customOauth2User, Errors errors){
-        userService.signup(requestDTO, customOauth2User);
+    public ResponseEntity<ApiUtils.ApiResult<CreateUserRp>> signup(@RequestBody CreateUserRq requestDTO, @AuthenticationPrincipal CustomOauth2User customOauth2User, Errors errors){
+        CreateUserRp responseDTO = userService.signup(requestDTO, customOauth2User);
 
-        return ResponseEntity.ok(ApiUtils.success("처리에 성공하였습니다." + "은행이름: " + requestDTO.bankName() + "  계좌번호: " + requestDTO.accountNum()));
+        return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 
     @GetMapping("/login/callback")
