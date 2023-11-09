@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 import pickup_shuttle.pickup._core.errors.exception.Exception400;
-import pickup_shuttle.pickup._core.errors.exception.Exception500;
 import pickup_shuttle.pickup.config.ErrorMessage;
 import pickup_shuttle.pickup.domain.beverage.Beverage;
 import pickup_shuttle.pickup.domain.beverage.dto.request.BeverageRqDTO;
@@ -74,11 +73,7 @@ public class BoardService {
                 () -> new Exception400(ErrorMessage.UNKNOWN_STORE)
         );
         Board board = requestDTO.toBoard(user, store);
-        try {
-            boardRepository.save(board);
-        } catch (Exception e) {
-            throw new Exception500("unknown server error");
-        }
+        boardRepository.save(board);
 
         return new BoardWriteRpDTO(board.getBoardId());
     }
@@ -180,11 +175,8 @@ public class BoardService {
         if(board.isMatch())
             throw new Exception400("이미 매칭된 공고글은 삭제 할 수 없습니다");
         // 삭제
-        try {
-            boardRepository.delete(board);
-        } catch (Exception e){
-            throw new Exception500("unknown server error");
-        }
+        boardRepository.delete(board);
+
     }
     @Transactional
     public BoardModifyRpDTO modify(BoardModifyRqDTO requestDTO, Long boardId, Long userId){
@@ -244,7 +236,7 @@ public class BoardService {
         });
     }
 
-    public void checkListEmpty(List<BeverageRqDTO> beverages){
+    public void checkListEmpty(List<BeverageRqDTO> beverages){ //[](빈배열)만 보내는 경우 검사
         if(beverages != null && beverages.size() == 0){
             throw new Exception400("음료" + ErrorMessage.BADREQUEST_EMPTY);
         }
