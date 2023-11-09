@@ -19,16 +19,17 @@ import org.springframework.web.multipart.MultipartFile;
 import pickup_shuttle.pickup._core.errors.exception.Exception400;
 import pickup_shuttle.pickup._core.errors.exception.Exception500;
 import pickup_shuttle.pickup.config.ErrorMessage;
-import pickup_shuttle.pickup.domain.beverage.dto.BeverageDTO;
+import pickup_shuttle.pickup.domain.beverage.dto.Beverage;
 import pickup_shuttle.pickup.domain.board.Board;
 import pickup_shuttle.pickup.domain.board.repository.BoardRepository;
 import pickup_shuttle.pickup.domain.board.repository.BoardRepositoryCustom;
 import pickup_shuttle.pickup.domain.match.Match;
 import pickup_shuttle.pickup.domain.match.MatchRepository;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
-import pickup_shuttle.pickup.domain.user.dto.request.SignUpRqDTO;
-import pickup_shuttle.pickup.domain.user.dto.request.UserAuthApproveRqDTO;
-import pickup_shuttle.pickup.domain.user.dto.request.UserModifyRqDTO;
+import pickup_shuttle.pickup.domain.user.dto.request.ApproveUserRq;
+import pickup_shuttle.pickup.domain.user.dto.request.CreateUserRq;
+import pickup_shuttle.pickup.domain.user.dto.request.RejectUserRq;
+import pickup_shuttle.pickup.domain.user.dto.request.UpdateUserRq;
 import pickup_shuttle.pickup.domain.user.dto.response.*;
 import pickup_shuttle.pickup.domain.user.repository.UserRepository;
 import pickup_shuttle.pickup.domain.user.repository.UserRepositoryCustom;
@@ -59,9 +60,9 @@ public class UserService {
     private String dir;
 
     @Transactional
-    public void signup(SignUpRqDTO signUpRqDTO, CustomOauth2User customOauth2User) {
-        String bankName = signUpRqDTO.bankName();
-        String accountNum = signUpRqDTO.accountNum();
+    public void signup(CreateUserRq createUserRq, CustomOauth2User customOauth2User) {
+        String bankName = createUserRq.bankName();
+        String accountNum = createUserRq.accountNum();
         User user = userRepository.findBySocialId(customOauth2User.getName()).orElseThrow(
                 () -> new Exception400(ErrorMessage.UNKNOWN_USER)
         );
@@ -86,20 +87,20 @@ public class UserService {
     }
 
     @Transactional
-    public ModifyUserRpDTO modifyUser(UserModifyRqDTO userModifyRqDTO, Long userId) {
+    public UpdateUserRp modifyUser(UpdateUserRq updateUserRq, Long userId) {
         Optional<User> user = userRepository.findById(userId);
         if(user.isEmpty()){
             throw new Exception400("인증되지 않은 사용자 입니다");
         }
         String userBankName = user.get().getBank();
         String userAccountNum = user.get().getAccount();
-        if(!userModifyRqDTO.account().equals(userAccountNum)){
-            user.get().setAccount(userModifyRqDTO.account());
+        if(!updateUserRq.account().equals(userAccountNum)){
+            user.get().setAccount(updateUserRq.account());
         }
-        if(!userModifyRqDTO.bank().equals(userBankName)){
-            user.get().setBank(userModifyRqDTO.bank());
+        if(!updateUserRq.bank().equals(userBankName)){
+            user.get().setBank(updateUserRq.bank());
         }
-        return ModifyUserRpDTO.builder()
+        return UpdateUserRp.builder()
                 .response("회원 수정이 완료되었습니다")
                 .build();
     }
@@ -137,14 +138,14 @@ public class UserService {
         }
     }
 
-    public UserGetImageUrlRpDTO getImageUrl(Long userId) {
+    public GetUserImageRp getImageUrl(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new Exception400(ErrorMessage.UNKNOWN_USER)
         );
         if (user.getUrl().isEmpty()) {
             throw new Exception400("등록된 이미지가 존재하지 않습니다");
         }
-        return UserGetImageUrlRpDTO.builder().url(getPresignedUrl(userId)).build(); // PreSigned URL 응답
+        return GetUserImageRp.builder().url(getPresignedUrl(userId)).build(); // PreSigned URL 응답
     }
 
     // PreSigned URL 발급
@@ -190,45 +191,45 @@ public class UserService {
         return false;
     }
 
-    public UserMyPageRpDTO myPage(Long userId) {
+    public ReadMypageRp myPage(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new Exception400(ErrorMessage.UNKNOWN_USER)
         );
-        return UserMyPageRpDTO.builder()
+        return ReadMypageRp.builder()
                 .role(user.getUserRole().getValue())
                 .nickname(user.getNickname())
                 .build();
     }
 
-    public Slice<UserAuthListRpDTO> getAuthList(Long lastUserId, int size) {
+    public Slice<ReadUserAuthListRp> getAuthList(Long lastUserId, int size) {
         PageRequest pageRequest = PageRequest.of(0, size);
         Slice<User> userSlice = userRepositoryCustom.searchAuthList(lastUserId, pageRequest);
 
-        List<UserAuthListRpDTO> userAuthListRpDTOList = userSlice.getContent().stream()
+        List<ReadUserAuthListRp> readUserAuthListRpDTOList = userSlice.getContent().stream()
                 .filter(u -> !u.getUrl().isEmpty())
-                .map(u -> UserAuthListRpDTO.builder()
+                .map(u -> ReadUserAuthListRp.builder()
                         .userId(u.getUserId())
                         .nickname(u.getNickname())
                         .build())
                 .toList();
-        return new SliceImpl<>(userAuthListRpDTOList, pageRequest, userSlice.hasNext());
+        return new SliceImpl<>(readUserAuthListRpDTOList, pageRequest, userSlice.hasNext());
     }
 
-    public UserAuthDetailRpDTO getAuthDetail(Long userId) {
+    public ReadUserAuthRp getAuthDetail(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new Exception400(ErrorMessage.UNKNOWN_USER)
         );
         if (user.getUrl().isEmpty()) {
             throw new Exception400("등록된 이미지가 존재하지 않습니다");
         }
-        return UserAuthDetailRpDTO.builder()
+        return ReadUserAuthRp.builder()
                 .nickname(user.getNickname())
                 .url(getPresignedUrl(userId))
                 .build();
     }
 
     @Transactional
-    public String authApprove(UserAuthApproveRqDTO requestDTO) {
+    public String authApprove(ApproveUserRq requestDTO) {
         User user = userRepository.findById(requestDTO.userId()).orElseThrow(
                 () -> new Exception400(ErrorMessage.UNKNOWN_USER)
         );
@@ -238,12 +239,25 @@ public class UserService {
         } else throw new Exception400("일반 회원이 아닙니다");
     }
 
-    public Slice<UserGetRequesterListRpDTO> getRequesterList(Long userId, Long lastBoardId, int size) {
+    @Transactional
+    public RejectUserAuthRp authReject(RejectUserRq requestDTO) {
+        User user = userRepository.findById(requestDTO.userId()).orElseThrow(
+                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
+        );
+        if (user.getUserRole() == UserRole.USER) {
+           user.updateUrl("");
+           return RejectUserAuthRp.builder()
+                   .message("학생 인증이 거절되었습니다")
+                   .build();
+        } else throw new Exception400("일반 회원이 아닙니다");
+    }
+
+    public Slice<ReadWriterBoardListRp> getRequesterList(Long userId, Long lastBoardId, int size) {
         PageRequest pageRequest = PageRequest.of(0, size);
         Slice<Board> boardSlice = userRepositoryCustom.searchRequesterList(userId, lastBoardId, pageRequest);
-        List<UserGetRequesterListRpDTO> responseDTOList = boardSlice.getContent().stream()
+        List<ReadWriterBoardListRp> responseDTOList = boardSlice.getContent().stream()
                 .filter(Utils::notOverDeadline)
-                .map(b -> UserGetRequesterListRpDTO.builder()
+                .map(b -> ReadWriterBoardListRp.builder()
                         .boardId(b.getBoardId())
                         .shopName(b.getStore().getName())
                         .destination(b.getDestination())
@@ -255,12 +269,12 @@ public class UserService {
         return new SliceImpl<>(responseDTOList, pageRequest, boardSlice.hasNext());
     }
 
-    public UserGetRequesterDetailRpDTO getRequesterDetail(Long boardId) {
+    public ReadWriterBoardRp getRequesterDetail(Long boardId) {
         Board board = boardRepository.m4findByBoardId(boardId).orElseThrow(
                 () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
         );
-        List<BeverageDTO> beverage = board.getBeverages().stream()
-                .map(b -> BeverageDTO.builder()
+        List<Beverage> beverage = board.getBeverages().stream()
+                .map(b -> Beverage.builder()
                         .name(b.getName())
                         .build()
                 )
@@ -269,7 +283,7 @@ public class UserService {
             Match match = matchRepository.mfindByMatchId(board.getMatch().getMatchId()).orElseThrow(
                     () -> new Exception400("매칭 정보를 찾을 수 없습니다")
             );
-            return UserGetRequesterDetailRpDTO.builder()
+            return ReadWriterBoardRp.builder()
                     .boardId(boardId)
                     .shopName(board.getStore().getName())
                     .destination(board.getDestination())
@@ -284,7 +298,7 @@ public class UserService {
                     .pickerPhoneNumber(match.getUser().getPhoneNumber())
                     .build();
         } else {
-            return UserGetRequesterDetailRpDTO.builder()
+            return ReadWriterBoardRp.builder()
                     .boardId(boardId)
                     .shopName(board.getStore().getName())
                     .destination(board.getDestination())
@@ -299,7 +313,7 @@ public class UserService {
     }
 
 
-    public Slice<UserPickerListRpDTO> myPagePickerList(Long lastBoardId, int limit, Long userId) {
+    public Slice<ReadPickerBoardListRp> myPagePickerList(Long lastBoardId, int limit, Long userId) {
         PageRequest pageRequest = PageRequest.of(0, limit);
         Slice<Board> boardsSlice = boardRepositoryCustom.searchAllBySlice2(lastBoardId, pageRequest, userId);
         if(boardsSlice.getContent().isEmpty()) {
@@ -308,10 +322,10 @@ public class UserService {
         return getPickerListResponseDTOs(pageRequest, boardsSlice);
     }
 
-    private Slice<UserPickerListRpDTO> getPickerListResponseDTOs(PageRequest pageRequest, Slice<Board> boardSlice) {
-        List<UserPickerListRpDTO> boardBoardListRpDTO = boardSlice.getContent().stream()
+    private Slice<ReadPickerBoardListRp> getPickerListResponseDTOs(PageRequest pageRequest, Slice<Board> boardSlice) {
+        List<ReadPickerBoardListRp> boardBoardListRpDTO = boardSlice.getContent().stream()
                 .filter(Utils::notOverDeadline)
-                .map(b -> UserPickerListRpDTO.builder()
+                .map(b -> ReadPickerBoardListRp.builder()
                         .boardId(b.getBoardId())
                         .shopName(b.getStore().getName())
                         .finishedAt(b.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
@@ -323,7 +337,7 @@ public class UserService {
         return new SliceImpl<>(boardBoardListRpDTO,pageRequest,boardSlice.hasNext());
     }
 
-    public UserPickerDetail pickerBoardDetail(Long boardId, Long userId) {
+    public ReadPickerBoardRp pickerBoardDetail(Long boardId, Long userId) {
         Board board = boardRepository.m5findByBoardId(boardId).orElseThrow(
                 () -> new Exception400("매칭이 완료되지 않은 공고글입니다")
         );
@@ -331,16 +345,16 @@ public class UserService {
         if(!board.getMatch().getUser().getUserId().equals(userId)){
             throw new Exception400("해당 공고글의 피커가 아닙니다");
         }
-        List<BeverageDTO> beverageDTOList = board.getBeverages().stream()
-                .map(b -> BeverageDTO.builder()
+        List<Beverage> beverageList = board.getBeverages().stream()
+                .map(b -> Beverage.builder()
                         .name(b.getName())
                         .build())
                 .toList();
-        return UserPickerDetail.builder()
+        return ReadPickerBoardRp.builder()
                 .boardId(board.getBoardId())
                 .shopName(board.getStore().getName())
                 .destination(board.getDestination())
-                .beverage(beverageDTOList)
+                .beverage(beverageList)
                 .tip(board.getTip())
                 .request(board.getRequest())
                 .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
