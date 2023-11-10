@@ -10,6 +10,7 @@ import org.springframework.util.ReflectionUtils;
 import pickup_shuttle.pickup._core.errors.exception.Exception400;
 import pickup_shuttle.pickup._core.errors.exception.Exception403;
 import pickup_shuttle.pickup._core.errors.exception.Exception404;
+import pickup_shuttle.pickup._core.utils.MessageDTO;
 import pickup_shuttle.pickup.config.ErrorMessage;
 import pickup_shuttle.pickup.domain.beverage.Beverage;
 import pickup_shuttle.pickup.domain.beverage.dto.request.BeverageRqDTO;
@@ -33,7 +34,6 @@ import java.lang.reflect.Field;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -171,7 +171,7 @@ public class BoardService {
     }
 
     @Transactional
-    public void boardDelete(Long boardId, Long userId){
+    public MessageDTO boardDelete(Long boardId, Long userId){
         // 공고글 확인
         Board board = boardRepository.m3findByBoardId(boardId).orElseThrow(
                 () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
@@ -184,7 +184,7 @@ public class BoardService {
             throw new Exception403("공고글이 이미 매칭된 경우 공고글을 삭제할 수 없습니다");
         // 삭제
         boardRepository.delete(board);
-
+        return MessageDTO.builder().message("공고글 삭제를 완료하였습니다").build();
     }
     @Transactional
     public BoardModifyRpDTO modify(BoardModifyRqDTO requestDTO, Long boardId, Long userId){
@@ -218,6 +218,7 @@ public class BoardService {
                         .name(b.getName())
                         .build()
         ).toList();
+
         return BoardModifyRpDTO.builder()
                 .boardId(board.getBoardId())
                 .shopName(board.getStore().getName())
@@ -238,10 +239,9 @@ public class BoardService {
             }
             else{
                 Field field = ReflectionUtils.findField(Board.class, k);
-                Objects.requireNonNull(field).setAccessible(true);
+                field.setAccessible(true);
                 ReflectionUtils.setField(field, board, v);
             }
-
         });
     }
 

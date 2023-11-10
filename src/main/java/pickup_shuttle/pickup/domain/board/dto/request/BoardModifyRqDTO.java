@@ -29,7 +29,6 @@ public record BoardModifyRqDTO(
         Integer tip,
         @Size(max = ValidValue.STRING_MAX, message = "요청사항" + ErrorMessage.BADREQUEST_SIZE)
         String request,
-        @NotSpace(message = "마감기간" + ErrorMessage.BADREQUEST_BLANK)
         @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}$", message = "마감기간은 yyyy-MM-dd HH:mm 형식이어야 합니다")
         String finishedAt
 ) {
@@ -39,7 +38,7 @@ public record BoardModifyRqDTO(
             Object value = field.get(this);
             if (value != null) {
                 switch (field.getName()){
-                    case "store": map.put("store", store); break;
+                    case "shopName": map.put("store", store); break;
                     case "beverages" :  map.put("beverages", beverages((List<BeverageRqDTO>) value)); break;
                     case "finishedAt" : map.put("finishedAt", localDateTime((String) value)); break;
                     default: map.put(field.getName(), value);

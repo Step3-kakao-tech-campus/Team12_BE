@@ -1,13 +1,18 @@
 package pickup_shuttle.pickup.domain.board;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pickup_shuttle.pickup._core.utils.ApiUtils;
 import pickup_shuttle.pickup._core.utils.CustomPage;
+import pickup_shuttle.pickup._core.utils.MessageDTO;
+import pickup_shuttle.pickup.config.ErrorMessage;
 import pickup_shuttle.pickup.config.Login;
+import pickup_shuttle.pickup.config.ValidValue;
 import pickup_shuttle.pickup.domain.board.dto.request.BoardAgreeRqDTO;
 import pickup_shuttle.pickup.domain.board.dto.request.BoardModifyRqDTO;
 import pickup_shuttle.pickup.domain.board.dto.request.BoardWriteRqDTO;
@@ -17,13 +22,17 @@ import pickup_shuttle.pickup.domain.board.dto.response.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("articles")
+@Validated
 public class BoardController {
     private final BoardService boardService;
 
     @GetMapping
     public ResponseEntity<?> getBoardList(
-            @RequestParam(value = "offset",required = false) Long lastBoardId,
-            @RequestParam(value = "limit",defaultValue = "10") int size) {
+            @RequestParam(value = "offset",required = false)
+            Long lastBoardId,
+            @Min(value = ValidValue.INTEGER_MIN, message = "페이지 크기"+ ErrorMessage.BADREQUEST_MIN)
+            @RequestParam(value = "limit",defaultValue = "10")
+            int size) {
         Slice<BoardListRpDTO> responseDTOSlice = boardService.boardList(lastBoardId, size);
         return ResponseEntity.ok(ApiUtils.success(new CustomPage(responseDTOSlice)));
     }
@@ -58,10 +67,10 @@ public class BoardController {
     @DeleteMapping("/delete/{boardId}")
     public ResponseEntity<?> delete(@PathVariable("boardId") Long boardId,
                                     @Login Long userId){
-        boardService.boardDelete(boardId, userId);
-        return ResponseEntity.ok(ApiUtils.success("공고글 삭제 완료"));
+        MessageDTO responseDTO = boardService.boardDelete(boardId, userId);
+        return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
-    @PatchMapping("/modify/{boardId}")
+    @PutMapping("/modify/{boardId}")
     public ResponseEntity<?> modify(@PathVariable("boardId") Long boardId,
                                     @RequestBody @Valid BoardModifyRqDTO requestDTO,
                                     @Login Long userId){
