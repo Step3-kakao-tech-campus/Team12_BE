@@ -6,7 +6,6 @@ import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import pickup_shuttle.pickup._core.utils.ApiUtils;
@@ -50,7 +49,7 @@ public class UserController {
 
 
     @PostMapping("/signup")
-    public ResponseEntity<ApiUtils.ApiResult<CreateUserRp>> signup(@RequestBody CreateUserRq requestDTO, @AuthenticationPrincipal CustomOauth2User customOauth2User, Errors errors){
+    public ResponseEntity<ApiUtils.ApiResult<CreateUserRp>> signup(@RequestBody CreateUserRq requestDTO, @AuthenticationPrincipal CustomOauth2User customOauth2User){
         CreateUserRp responseDTO = userService.signup(requestDTO, customOauth2User);
 
         return ResponseEntity.ok(ApiUtils.success(responseDTO));

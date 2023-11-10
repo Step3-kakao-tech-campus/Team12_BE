@@ -382,27 +382,20 @@ public class UserService {
                 () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "인증된 유저의 이름", "유저"))
         );
         String userPK = user.getUserId().toString();
-        return LoginUserRp.builder()
+        String userRole = "";
+        if(user.getUserRole() == UserRole.ADMIN){
+            userRole = "ADMIN";
+        } else if(user.getUserRole() == UserRole.USER){
+            userRole = "USER";
+        } else if(user.getUserRole() == UserRole.STUDENT){
+            userRole = "STUDENT";
+        } else
+            userRole = "GUEST";
+
+            return LoginUserRp.builder()
                 .AccessToken(jwtService.createAccessToken(userPK))
                 .nickName(user.getNickname())
-                .userAuth(getUserRole(userPK))
+                .userAuth(userRole)
                 .build();
     }
-
-    public String getUserRole(String userPK){
-        Optional<User> optionalUser = userRepository.findById(Long.parseLong(userPK));
-        User user = optionalUser.get();
-        if(user.getUserRole() == UserRole.ADMIN){
-            return "ADMIN";
-        } else if(user.getUserRole() == UserRole.USER){
-            return "USER";
-        } else if(user.getUserRole() == UserRole.STUDENT){
-            return "STUDENT";
-        } else if (user.getUserRole() == UserRole.GUEST){
-            return "GUEST";
-        } else {
-            return "잘못 처리되었습니다.";
-        }
-    }
-
 }
