@@ -146,6 +146,7 @@ public class JwtService {
     /**
      * RefreshToken DB 저장(업데이트)
      */
+    @Transactional
     public void updateRefreshToken(String socialId, String refreshToken) {
         Optional<User> user = userRepository.findBySocialId(socialId);
         System.out.println("user의 pk ID 값: "  + user.get().getUserId().toString());

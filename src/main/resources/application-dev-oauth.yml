@@ -9,7 +9,7 @@ spring:
           kakao:
             client-id: ${KAKAO_OAUTH_CLIENT_ID}
             client-secret: ${KAKAO_OAUTH_CLIENT_SECRET}
-            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+            redirect-uri: https://k0d01653e1a11a.user-app.krampoline.com/api/login/oauth2/code/kakao
             client-authentication-method: client_secret_post
             authorization-grant-type: authorization_code
             scope: profile_nickname, profile_image, phone_number
