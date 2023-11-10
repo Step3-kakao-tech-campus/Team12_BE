@@ -23,6 +23,7 @@ import pickup_shuttle.pickup._core.errors.exception.Exception500;
 import pickup_shuttle.pickup.config.ErrorMessage;
 import pickup_shuttle.pickup.domain.beverage.dto.response.BeverageRp;
 import pickup_shuttle.pickup.domain.board.Board;
+import pickup_shuttle.pickup.domain.board.dto.response.*;
 import pickup_shuttle.pickup.domain.board.repository.BoardRepository;
 import pickup_shuttle.pickup.domain.board.repository.BoardRepositoryCustom;
 import pickup_shuttle.pickup.domain.match.Match;
@@ -35,8 +36,8 @@ import pickup_shuttle.pickup.domain.user.dto.request.UpdateUserRq;
 import pickup_shuttle.pickup.domain.user.dto.response.*;
 import pickup_shuttle.pickup.domain.user.repository.UserRepository;
 import pickup_shuttle.pickup.domain.user.repository.UserRepositoryCustom;
-import pickup_shuttle.pickup.domain.utils.Utils;
 import pickup_shuttle.pickup.security.service.JwtService;
+import pickup_shuttle.pickup.utils.Utils;
 
 import java.io.InputStream;
 import java.time.ZoneOffset;
