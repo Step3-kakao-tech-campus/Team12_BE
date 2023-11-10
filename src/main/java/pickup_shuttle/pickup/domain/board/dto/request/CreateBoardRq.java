@@ -2,11 +2,12 @@ package pickup_shuttle.pickup.domain.board.dto.request;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import pickup_shuttle.pickup.config.ErrorMessage;
 import pickup_shuttle.pickup.config.ValidValue;
 import pickup_shuttle.pickup.domain.beverage.Beverage;
-import pickup_shuttle.pickup.domain.beverage.dto.request.BeverageRqDTO;
+import pickup_shuttle.pickup.domain.beverage.dto.request.BeverageRq;
 import pickup_shuttle.pickup.domain.board.Board;
 import pickup_shuttle.pickup.domain.store.Store;
 import pickup_shuttle.pickup.domain.user.User;
@@ -16,12 +17,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Builder
-public record BoardWriteRqDTO(
+public record CreateBoardRq(
         @NotBlank(message = "가게" + ErrorMessage.BADREQUEST_BLANK)
         @Size(max = ValidValue.STRING_MAX, message = "가게" + ErrorMessage.BADREQUEST_SIZE)
         String shopName,
         @NotEmpty(message = "음료" + ErrorMessage.BADREQUEST_EMPTY)
-        List<@Valid BeverageRqDTO> beverages,
+        List<@Valid BeverageRq> beverages,
         @NotBlank(message = "위치" + ErrorMessage.BADREQUEST_BLANK)
         @Size(max = ValidValue.STRING_MAX, message = "위치" + ErrorMessage.BADREQUEST_SIZE)
         String destination,
@@ -50,8 +51,8 @@ public record BoardWriteRqDTO(
         return board;
     }
 
-    private List<Beverage> beverages(List<BeverageRqDTO> BeverageRqDTOS) {
-        return BeverageRqDTOS.stream().map(
+    private List<Beverage> beverages(List<BeverageRq> beverageRqs) {
+        return beverageRqs.stream().map(
                         b -> Beverage.builder()
                                 .name(b.name())
                                 .build())

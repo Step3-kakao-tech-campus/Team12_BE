@@ -7,7 +7,7 @@ import pickup_shuttle.pickup.config.ErrorMessage;
 import pickup_shuttle.pickup.config.ValidValue;
 
 @Builder
-public record SignUpRqDTO (
+public record CreateUserRq (
         @NotBlank(message = "은행명" + ErrorMessage.BADREQUEST_BLANK)
         @Size(max = ValidValue.STRING_MAX, message = "은행명" + ErrorMessage.BADREQUEST_SIZE)
         String bankName,

@@ -7,7 +7,7 @@ import pickup_shuttle.pickup.config.ErrorMessage;
 import pickup_shuttle.pickup.config.ValidValue;
 
 @Builder
-public record BeverageRqDTO(
+public record BeverageRq(
         @NotBlank(message = "음료" + ErrorMessage.BADREQUEST_BLANK)
         @Size(max = ValidValue.STRING_MAX, message = "음료" + ErrorMessage.BADREQUEST_SIZE)
         String name

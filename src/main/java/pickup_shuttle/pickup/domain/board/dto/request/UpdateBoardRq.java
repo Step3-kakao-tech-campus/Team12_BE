@@ -8,7 +8,7 @@ import pickup_shuttle.pickup.config.ErrorMessage;
 import pickup_shuttle.pickup.config.NotSpace;
 import pickup_shuttle.pickup.config.ValidValue;
 import pickup_shuttle.pickup.domain.beverage.Beverage;
-import pickup_shuttle.pickup.domain.beverage.dto.request.BeverageRqDTO;
+import pickup_shuttle.pickup.domain.beverage.dto.request.BeverageRq;
 import pickup_shuttle.pickup.domain.store.Store;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -17,11 +17,11 @@ import java.util.List;
 import java.util.Map;
 
 @Builder
-public record BoardModifyRqDTO(
+public record UpdateBoardRq(
         @NotSpace(message = "가게" + ErrorMessage.BADREQUEST_BLANK)
         @Size(max = ValidValue.STRING_MAX, message = "가게" + ErrorMessage.BADREQUEST_SIZE)
         String shopName,
-        List<@Valid BeverageRqDTO> beverages,
+        List<@Valid BeverageRq> beverages,
         @NotSpace(message = "위치" + ErrorMessage.BADREQUEST_BLANK)
         @Size(max = ValidValue.STRING_MAX, message = "위치" + ErrorMessage.BADREQUEST_SIZE)
         String destination,
@@ -34,12 +34,12 @@ public record BoardModifyRqDTO(
 ) {
     public Map<String, Object> patchValues(Store store){
         Map<String, Object> map = new HashMap<>();
-        ReflectionUtils.doWithFields(BoardModifyRqDTO.class, field -> {
+        ReflectionUtils.doWithFields(UpdateBoardRq.class, field -> {
             Object value = field.get(this);
             if (value != null) {
                 switch (field.getName()){
                     case "shopName": map.put("store", store); break;
-                    case "beverages" :  map.put("beverages", beverages((List<BeverageRqDTO>) value)); break;
+                    case "beverages" :  map.put("beverages", beverages((List<BeverageRq>) value)); break;
                     case "finishedAt" : map.put("finishedAt", localDateTime((String) value)); break;
                     default: map.put(field.getName(), value);
                 }
@@ -49,8 +49,8 @@ public record BoardModifyRqDTO(
         return map;
     }
 
-    private List<Beverage> beverages(List<BeverageRqDTO> BeverageRqDTOS) {
-        return BeverageRqDTOS.stream().map(
+    private List<Beverage> beverages(List<BeverageRq> beverageRqs) {
+        return beverageRqs.stream().map(
                         b -> Beverage.builder()
                                 .name(b.name())
                                 .build())
