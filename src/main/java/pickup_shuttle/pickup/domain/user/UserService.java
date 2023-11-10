@@ -259,7 +259,7 @@ public class UserService {
         } else throw new Exception403("일반 회원이 아닌 경우 학생 인증을 거절할 수 없습니다");
     }
 
-    public Slice<ReadWriterBoardListRp> getRequesterList(Long userId, Long lastBoardId, int size) {
+    public Slice<ReadWriterBoardListRp> myPageRequesterList(Long userId, Long lastBoardId, int size) {
         PageRequest pageRequest = PageRequest.of(0, size);
         Slice<Board> boardSlice = userRepositoryCustom.searchRequesterList(userId, lastBoardId, pageRequest);
 
@@ -276,8 +276,35 @@ public class UserService {
                 .toList();
         return new SliceImpl<>(responseDTOList, pageRequest, boardSlice.hasNext());
     }
-
-    public ReadWriterBoardRp getRequesterDetail(Long boardId) {
+    private ReadWriterBoardAfterRp requesterDetailAfter(Long boardId){
+        Board board = boardRepository.m4findByBoardId(boardId).orElseThrow(
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
+        );
+        Match match = matchRepository.mfindByMatchId(board.getMatch().getMatchId()).orElseThrow(
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "매칭된 공고글의 매치ID", "매치"))
+        );
+        List<BeverageRp> beverages = board.getBeverages().stream()
+                .map(b -> BeverageRp.builder()
+                        .name(b.getName())
+                        .build()
+                )
+                .toList();
+        return ReadWriterBoardAfterRp.builder()
+                .boardId(boardId)
+                .shopName(board.getStore().getName())
+                .destination(board.getDestination())
+                .beverages(beverages)
+                .tip(board.getTip())
+                .request(board.getRequest())
+                .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                .isMatch(board.isMatch())
+                .pickerBank(match.getUser().getBank())
+                .pickerAccount(match.getUser().getAccount())
+                .arrivalTime(match.getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).toEpochSecond(ZoneOffset.UTC))
+                .pickerPhoneNumber(match.getUser().getPhoneNumber())
+                .build();
+    }
+    private ReadWriterBoardBeforeRp requesterDetailBefore(Long boardId){
         Board board = boardRepository.m4findByBoardId(boardId).orElseThrow(
                 () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
         );
@@ -287,37 +314,26 @@ public class UserService {
                         .build()
                 )
                 .toList();
-        if (board.isMatch()) {
-            Match match = matchRepository.mfindByMatchId(board.getMatch().getMatchId()).orElseThrow(
-                    () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "매칭된 공고글의 매치ID", "매치"))
-            );
-            return ReadWriterBoardRp.builder()
-                    .boardId(boardId)
-                    .shopName(board.getStore().getName())
-                    .destination(board.getDestination())
-                    .beverages(beverages)
-                    .tip(board.getTip())
-                    .request(board.getRequest())
-                    .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
-                    .isMatch(board.isMatch())
-                    .pickerBank(match.getUser().getBank())
-                    .pickerAccount(match.getUser().getAccount())
-                    .arrivalTime(match.getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).toEpochSecond(ZoneOffset.UTC))
-                    .pickerPhoneNumber(match.getUser().getPhoneNumber())
-                    .build();
-        } else {
-            return ReadWriterBoardRp.builder()
-                    .boardId(boardId)
-                    .shopName(board.getStore().getName())
-                    .destination(board.getDestination())
-                    .beverages(beverages)
-                    .tip(board.getTip())
-                    .request(board.getRequest())
-                    .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
-                    .isMatch(board.isMatch())
-                    .build();
-        }
+        return ReadWriterBoardBeforeRp.builder()
+                .boardId(boardId)
+                .shopName(board.getStore().getName())
+                .destination(board.getDestination())
+                .beverages(beverages)
+                .tip(board.getTip())
+                .request(board.getRequest())
+                .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                .isMatch(board.isMatch())
+                .build();
+    }
 
+        public ReadWriterBoard myPageRequesterDetail(Long boardId) {
+        Board board = boardRepository.m4findByBoardId(boardId).orElseThrow(
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
+        );
+        if (board.isMatch()) {
+            return requesterDetailAfter(boardId);
+        }
+        return requesterDetailBefore(boardId);
     }
 
 
