@@ -73,6 +73,7 @@ public class UserService {
         user.setAccount(accountNum);
         return CreateUserRp.builder()
                 .message("회원가입이 완료되었습니다")
+                .nickname(user.getNickname())
                 .build();
     }
 

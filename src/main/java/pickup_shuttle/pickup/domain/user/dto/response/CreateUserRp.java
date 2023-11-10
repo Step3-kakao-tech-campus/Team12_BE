@@ -3,5 +3,6 @@ package pickup_shuttle.pickup.domain.user.dto.response;
 import lombok.Builder;
 
 @Builder
-public record CreateUserRp(String message) {
+public record CreateUserRp(String message,
+                           String nickname) {
 }
