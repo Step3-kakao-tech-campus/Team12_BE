@@ -13,9 +13,9 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import pickup_shuttle.pickup.config.ErrorMessage;
-import pickup_shuttle.pickup.domain.board.dto.request.BoardAgreeRqDTO;
-import pickup_shuttle.pickup.domain.board.dto.request.BoardModifyRqDTO;
-import pickup_shuttle.pickup.domain.board.dto.request.BoardWriteRqDTO;
+import pickup_shuttle.pickup.domain.board.dto.request.AcceptBoardRq;
+import pickup_shuttle.pickup.domain.board.dto.request.UpdateBoardRq;
+import pickup_shuttle.pickup.domain.board.dto.request.CreateBoardRq;
 import pickup_shuttle.pickup.security.service.JwtService;
 
 import java.util.ArrayList;
@@ -76,7 +76,7 @@ public class BoardControllerTest {
 
         //when
         ResultActions resultActions = mvc.perform(
-                get("/articles/before/{boardId}", boardId)
+                get("/articles/{boardId}", boardId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", accessToken)
         );
@@ -100,7 +100,7 @@ public class BoardControllerTest {
 
         //when
         ResultActions resultActions = mvc.perform(
-                get("/articles/after/{boardId}", boardId)
+                get("/articles/{boardId}", boardId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", accessToken)
         );
@@ -125,7 +125,7 @@ public class BoardControllerTest {
         void testWrite() throws Exception{
             //given
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
-            BoardWriteRqDTO boardWriteRqDTO = BoardWriteRqDTO.builder()
+            CreateBoardRq createBoardRq = CreateBoardRq.builder()
                     .store("스타벅스")
                     .beverage(beverags)
                     .destination("전남대 공대 시계탑")
@@ -133,7 +133,7 @@ public class BoardControllerTest {
                     .request("후딱후딱 갖다주십쇼!!!!!!!!!!!!!!")
                     .finishedAt("2023-11-18 19:00")
                     .build();
-            String requestBody = om.writeValueAsString(boardWriteRqDTO);
+            String requestBody = om.writeValueAsString(createBoardRq);
 
             //when
             ResultActions resultActions = mvc.perform(
@@ -156,7 +156,7 @@ public class BoardControllerTest {
         void testWriteNotFoundStore() throws Exception{
             //given
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
-            BoardWriteRqDTO boardWriteRqDTO = BoardWriteRqDTO.builder()
+            CreateBoardRq createBoardRq = CreateBoardRq.builder()
                     .store("팬도로시")
                     .beverage(beverags)
                     .destination("전남대 공대 시계탑")
@@ -164,7 +164,7 @@ public class BoardControllerTest {
                     .request("후딱후딱 갖다주십쇼!!!!!!!!!!!!!!")
                     .finishedAt("2023-11-18 19:00")
                     .build();
-            String requestBody = om.writeValueAsString(boardWriteRqDTO);
+            String requestBody = om.writeValueAsString(createBoardRq);
 
             //when
             ResultActions resultActions = mvc.perform(
@@ -188,7 +188,7 @@ public class BoardControllerTest {
         void testWriteBlankStore() throws Exception{
             //given
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
-            BoardWriteRqDTO boardWriteRqDTO = BoardWriteRqDTO.builder()
+            CreateBoardRq createBoardRq = CreateBoardRq.builder()
                     .store(" ")
                     .beverage(beverags)
                     .destination("전남대 공대 시계탑")
@@ -196,7 +196,7 @@ public class BoardControllerTest {
                     .request("후딱후딱 갖다주십쇼!!!!!!!!!!!!!!")
                     .finishedAt("2023-11-18 19:00")
                     .build();
-            String requestBody = om.writeValueAsString(boardWriteRqDTO);
+            String requestBody = om.writeValueAsString(createBoardRq);
 
             //when
             ResultActions resultActions = mvc.perform(
@@ -221,7 +221,7 @@ public class BoardControllerTest {
             //given
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
             beverags.add("");
-            BoardWriteRqDTO boardWriteRqDTO = BoardWriteRqDTO.builder()
+            CreateBoardRq createBoardRq = CreateBoardRq.builder()
                     .store("스타벅스")
                     .beverage(beverags)
                     .destination("전남대 공대 시계탑")
@@ -229,7 +229,7 @@ public class BoardControllerTest {
                     .request("후딱후딱 갖다주십쇼!!!!!!!!!!!!!!")
                     .finishedAt("2023-11-18 19:00")
                     .build();
-            String requestBody = om.writeValueAsString(boardWriteRqDTO);
+            String requestBody = om.writeValueAsString(createBoardRq);
 
             //when
             ResultActions resultActions = mvc.perform(
@@ -253,7 +253,7 @@ public class BoardControllerTest {
         void testWriteBlankDestination() throws Exception{
             //given
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
-            BoardWriteRqDTO boardWriteRqDTO = BoardWriteRqDTO.builder()
+            CreateBoardRq createBoardRq = CreateBoardRq.builder()
                     .store("스타벅스")
                     .beverage(beverags)
                     .destination(" ")
@@ -261,7 +261,7 @@ public class BoardControllerTest {
                     .request("후딱후딱 갖다주십쇼!!!!!!!!!!!!!!")
                     .finishedAt("2023-11-18 19:00")
                     .build();
-            String requestBody = om.writeValueAsString(boardWriteRqDTO);
+            String requestBody = om.writeValueAsString(createBoardRq);
 
             //when
             ResultActions resultActions = mvc.perform(
@@ -285,7 +285,7 @@ public class BoardControllerTest {
         void testWriteInvalidTip() throws Exception{
             //given
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
-            BoardWriteRqDTO boardWriteRqDTO = BoardWriteRqDTO.builder()
+            CreateBoardRq createBoardRq = CreateBoardRq.builder()
                     .store("스타벅스")
                     .beverage(beverags)
                     .destination("전남대 공대 시계탑")
@@ -293,7 +293,7 @@ public class BoardControllerTest {
                     .request("후딱후딱 갖다주십쇼!!!!!!!!!!!!!!")
                     .finishedAt("2023-11-18 19:00")
                     .build();
-            String requestBody = om.writeValueAsString(boardWriteRqDTO);
+            String requestBody = om.writeValueAsString(createBoardRq);
 
             //when
             ResultActions resultActions = mvc.perform(
@@ -317,7 +317,7 @@ public class BoardControllerTest {
         void testWriteBlankFinishAt() throws Exception{
             //given
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
-            BoardWriteRqDTO boardWriteRqDTO = BoardWriteRqDTO.builder()
+            CreateBoardRq createBoardRq = CreateBoardRq.builder()
                     .store("스타벅스")
                     .beverage(beverags)
                     .destination("전남대 공대 시계탑")
@@ -325,7 +325,7 @@ public class BoardControllerTest {
                     .request("후딱후딱 갖다주십쇼!!!!!!!!!!!!!!")
                     .finishedAt("")
                     .build();
-            String requestBody = om.writeValueAsString(boardWriteRqDTO);
+            String requestBody = om.writeValueAsString(createBoardRq);
 
             //when
             ResultActions resultActions = mvc.perform(
@@ -354,7 +354,7 @@ public class BoardControllerTest {
             //given
             Long boardId = 6L;
             String accessToken =  "Bearer " + jwtService.createAccessToken("3");
-            BoardAgreeRqDTO requestDTO = BoardAgreeRqDTO.builder()
+            AcceptBoardRq requestDTO = AcceptBoardRq.builder()
                     .arrivalTime(30)
                     .build();
             String requestBody = om.writeValueAsString(requestDTO);
@@ -382,7 +382,7 @@ public class BoardControllerTest {
         void testFailBoardAgree() throws Exception {
             Long boardId = 6L;
             String accessToken = "Bearer " + jwtService.createAccessToken("6");
-            BoardAgreeRqDTO requestDTO = BoardAgreeRqDTO.builder()
+            AcceptBoardRq requestDTO = AcceptBoardRq.builder()
                     .arrivalTime(30)
                     .build();
             String requestBody = om.writeValueAsString(requestDTO);
@@ -412,7 +412,7 @@ public class BoardControllerTest {
             //given
             Long boardId = 3L;
             String accessToken = "Bearer " + jwtService.createAccessToken("6");
-            BoardAgreeRqDTO requestDTO = BoardAgreeRqDTO.builder()
+            AcceptBoardRq requestDTO = AcceptBoardRq.builder()
                     .arrivalTime(30)
                     .build();
             String requestBody = om.writeValueAsString(requestDTO);
@@ -534,7 +534,7 @@ public class BoardControllerTest {
             Long boardId = 6L;
             String store = "더벤티";
             String accessToken = "Bearer " + jwtService.createAccessToken("6");
-            BoardModifyRqDTO requestDTO = BoardModifyRqDTO.builder()
+            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
                     .store(store)
                     .build();
             String requestBody = om.writeValueAsString(requestDTO);
@@ -569,7 +569,7 @@ public class BoardControllerTest {
             String store = "더벤티";
             int tip = 1;
             String accessToken = "Bearer " + jwtService.createAccessToken("6");
-            BoardModifyRqDTO requestDTO = BoardModifyRqDTO.builder()
+            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
                     .store(store)
                     .tip(tip)
                     .build();
@@ -607,7 +607,7 @@ public class BoardControllerTest {
             String request = "천천히 조심해서 오세요 :)";
             String finishedAt = "2023-11-03 07:25";
             String accessToken = "Bearer " + jwtService.createAccessToken("6");
-            BoardModifyRqDTO requestDTO = BoardModifyRqDTO.builder()
+            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
                     .store(store)
                     .beverage(beverags)
                     .destination(destination)
@@ -645,7 +645,7 @@ public class BoardControllerTest {
             // given
             Long boardId = 6L;
             String accessToken = "Bearer " + jwtService.createAccessToken("6");
-            BoardModifyRqDTO requestDTO = BoardModifyRqDTO.builder()
+            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
                     .build();
             String requestBody = om.writeValueAsString(requestDTO);
             //when
@@ -669,7 +669,7 @@ public class BoardControllerTest {
             Long boardId = 6L;
             String store = "팬도로시";
             String accessToken = "Bearer " + jwtService.createAccessToken("6");
-            BoardModifyRqDTO requestDTO = BoardModifyRqDTO.builder()
+            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
                     .store(store)
                     .build();
             String requestBody = om.writeValueAsString(requestDTO);
@@ -694,7 +694,7 @@ public class BoardControllerTest {
             Long boardId = 6L;
             String store = "더벤티";
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
-            BoardModifyRqDTO requestDTO = BoardModifyRqDTO.builder()
+            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
                     .store(store)
                     .build();
             String requestBody = om.writeValueAsString(requestDTO);
@@ -719,7 +719,7 @@ public class BoardControllerTest {
             Long boardId = 3L;
             String store = "더벤티";
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
-            BoardModifyRqDTO requestDTO = BoardModifyRqDTO.builder()
+            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
                     .store(store)
                     .build();
             String requestBody = om.writeValueAsString(requestDTO);
@@ -744,7 +744,7 @@ public class BoardControllerTest {
             Long boardId = 100L;
             String store = "더벤티";
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
-            BoardModifyRqDTO requestDTO = BoardModifyRqDTO.builder()
+            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
                     .store(store)
                     .build();
             String requestBody = om.writeValueAsString(requestDTO);
@@ -769,7 +769,7 @@ public class BoardControllerTest {
             Long boardId = 6L;
             String store = " ";
             String accessToken = "Bearer " + jwtService.createAccessToken("6");
-            BoardModifyRqDTO requestDTO = BoardModifyRqDTO.builder()
+            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
                     .store(store)
                     .build();
             String requestBody = om.writeValueAsString(requestDTO);
@@ -794,7 +794,7 @@ public class BoardControllerTest {
             Long boardId = 6L;
             beverags.add(" ");
             String accessToken = "Bearer " + jwtService.createAccessToken("6");
-            BoardModifyRqDTO requestDTO = BoardModifyRqDTO.builder()
+            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
                     .beverage(beverags)
                     .build();
             String requestBody = om.writeValueAsString(requestDTO);
@@ -820,7 +820,7 @@ public class BoardControllerTest {
             Long boardId = 6L;
             int tip = -1;
             String accessToken = "Bearer " + jwtService.createAccessToken("6");
-            BoardModifyRqDTO requestDTO = BoardModifyRqDTO.builder()
+            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
                     .tip(tip)
                     .build();
             String requestBody = om.writeValueAsString(requestDTO);
