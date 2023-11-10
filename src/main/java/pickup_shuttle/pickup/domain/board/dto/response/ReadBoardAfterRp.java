@@ -19,5 +19,5 @@ public record ReadBoardAfterRp(
         String pickerAccount,
         Long arrivalTime,
         String pickerPhoneNumber,
-        boolean isRequester
+        boolean isWriter
 ) implements CheckBeforeAfter{ }

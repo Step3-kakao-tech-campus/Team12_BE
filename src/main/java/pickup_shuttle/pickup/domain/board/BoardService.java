@@ -99,7 +99,7 @@ public class BoardService {
                 .isMatch(board.isMatch())
                 .shopName(board.getStore().getName())
                 .beverages(beverageRpDTOS)
-                .isRequester(board.getUser().getUserId().equals(userId))
+                .isWriter(board.getUser().getUserId().equals(userId))
                 .build();
     }
     //select 2번
@@ -130,7 +130,7 @@ public class BoardService {
                 .arrivalTime(board.getMatch().getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).toEpochSecond(ZoneOffset.UTC))
                 .isMatch(board.isMatch())
                 .beverages(beverageRpDTOS)
-                .isRequester(board.getUser().getUserId().equals(userId))
+                .isWriter(board.getUser().getUserId().equals(userId))
                 .beverages(beverageRpDTOS)
                 .build();
     }

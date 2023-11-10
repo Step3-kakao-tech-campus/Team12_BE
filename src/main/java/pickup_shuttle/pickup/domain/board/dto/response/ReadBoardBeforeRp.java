@@ -15,5 +15,5 @@ public record ReadBoardBeforeRp(
         String request,
         Long finishedAt,
         boolean isMatch,
-        boolean isRequester
+        boolean isWriter
 ) implements CheckBeforeAfter { }
