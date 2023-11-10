@@ -331,7 +331,7 @@ class UserControllerTest {
     @DisplayName("성공 : (작성자) 공고글 목록 보기")
     void testGetRequesterList() throws Exception {
         //given
-        String accessToken = "Bearer " + jwtService.createAccessToken("3");
+        String accessToken = "Bearer " + jwtService.createAccessToken("6");
 
         //when
         ResultActions resultActions = mvc.perform(
@@ -346,7 +346,7 @@ class UserControllerTest {
 
         //then
         resultActions.andExpect(jsonPath("$.success").value("true"));
-        resultActions.andExpect(jsonPath("$.response.content[0].boardId").value(3));
+        resultActions.andExpect(jsonPath("$.response.content[0].boardId").value(6));
     }
 
     @Test
@@ -356,7 +356,6 @@ class UserControllerTest {
         String accessToken = "Bearer " + jwtService.createAccessToken("2");
         String refreshToken = jwtService.createRefreshToken();
         System.out.println("refreshToken: " + refreshToken);
-        Long userId = 2L;
         String offset = "";
         String limit = "10";
         //when
@@ -374,7 +373,7 @@ class UserControllerTest {
 
         //then
         resultActions.andExpect(jsonPath("$.success").value("true"));
-        resultActions.andExpect(jsonPath("$.response.last").value("true"));
+        resultActions.andExpect(jsonPath("$.response.pageable.last").value("true"));
         resultActions.andExpect(jsonPath("$.response.content[0].boardId").value("4"));
         resultActions.andExpect(jsonPath("$.response.content[0].destination").value("전남대 공대7 220호관"));
     }
@@ -384,7 +383,6 @@ class UserControllerTest {
     void testFailPickerBoardList() throws Exception {
         //given
         String accessToken = "Bearer " + jwtService.createAccessToken("1");
-        Long userId = 1L;
         String offset = "";
         String limit = "10";
         //when

@@ -1,9 +1,12 @@
 package pickup_shuttle.pickup.domain.board.dto.request;
 
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Min;
 import lombok.Builder;
+import pickup_shuttle.pickup.config.ErrorMessage;
+import pickup_shuttle.pickup.config.ValidValue;
 
 @Builder
 public record AcceptBoardRq(
-      @PositiveOrZero(message = "도착예정 시간이 음수입니다") int arrivalTime
+        @Min(value = ValidValue.INTEGER_MIN, message = "도착예정시간" + ErrorMessage.BADREQUEST_MIN)
+        int arrivalTime
 ) { }

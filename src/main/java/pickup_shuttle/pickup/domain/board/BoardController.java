@@ -19,6 +19,7 @@ import pickup_shuttle.pickup.domain.board.dto.response.*;
 @RequestMapping("articles")
 public class BoardController {
     private final BoardService boardService;
+
     @GetMapping
     public ResponseEntity<ApiUtils.ApiResult<CustomPage<ReadBoardListRp>>> getBoardList(
             @RequestParam(value = "offset",required = false) Long lastBoardId,
@@ -30,14 +31,14 @@ public class BoardController {
     @PostMapping("/write")
     public ResponseEntity<ApiUtils.ApiResult<CreateBoardRp>> write(@RequestBody @Valid CreateBoardRq requestDTO,
                                                                    @Login Long userId){
-        boardService.checkListBlank(requestDTO.beverage());
         CreateBoardRp responseDTO = boardService.write(requestDTO, userId);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 
     @GetMapping("/{boardId}")
-    public ResponseEntity<ApiUtils.ApiResult<CheckBeforeAfter>> boardDetail(@PathVariable("boardId") Long boardId) {
-        CheckBeforeAfter responseDTO = boardService.checkBeforeAfter(boardId);
+    public ResponseEntity<ApiUtils.ApiResult<CheckBeforeAfter>> boardDetail(@PathVariable("boardId") Long boardId,
+                                                                            @Login Long userId){
+        CheckBeforeAfter responseDTO = boardService.checkBeforeAfter(boardId, userId);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 
@@ -50,16 +51,16 @@ public class BoardController {
     }
     @DeleteMapping("/delete/{boardId}")
     public ResponseEntity<ApiUtils.ApiResult<String>> delete(@PathVariable("boardId") Long boardId,
-                                                     @Login Long userId){
+                                                             @Login Long userId){
         boardService.boardDelete(boardId, userId);
-        return ResponseEntity.ok(ApiUtils.success("공고글 삭제 완료"));
+        return ResponseEntity.ok(ApiUtils.success("공고글 삭제를 완료하였습니다"));
     }
-    @PatchMapping("/modify/{boardId}")
+    @PutMapping("/modify/{boardId}")
     public ResponseEntity<ApiUtils.ApiResult<UpdateBoardRp>> modify(@PathVariable("boardId") Long boardId,
                                                                     @RequestBody @Valid UpdateBoardRq requestDTO,
                                                                     @Login Long userId){
-        boardService.checkListEmpty(requestDTO.beverage());
-        UpdateBoardRp responseDTO = boardService.modify(requestDTO,boardId, userId);
+        boardService.checkListEmpty(requestDTO.beverages());
+        UpdateBoardRp responseDTO = boardService.modify(requestDTO, boardId, userId);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 }

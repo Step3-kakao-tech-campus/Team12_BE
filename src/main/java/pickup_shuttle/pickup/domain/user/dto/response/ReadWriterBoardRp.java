@@ -2,7 +2,7 @@ package pickup_shuttle.pickup.domain.user.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
-import pickup_shuttle.pickup.domain.beverage.dto.Beverage;
+import pickup_shuttle.pickup.domain.beverage.dto.response.BeverageRp;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ public record ReadWriterBoardRp(
         Long boardId,
         String shopName,
         String destination,
-        List<Beverage> beverage,
+        List<BeverageRp> beverages,
         int tip,
         String request,
         Long finishedAt,
@@ -24,5 +24,4 @@ public record ReadWriterBoardRp(
         Long arrivalTime,
         @JsonInclude(JsonInclude.Include.NON_NULL)
         String pickerPhoneNumber
-) {
-}
+) { }

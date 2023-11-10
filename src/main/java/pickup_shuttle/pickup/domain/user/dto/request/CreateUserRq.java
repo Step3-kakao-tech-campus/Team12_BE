@@ -1,12 +1,17 @@
 package pickup_shuttle.pickup.domain.user.dto.request;
 
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
+import pickup_shuttle.pickup.config.ErrorMessage;
+import pickup_shuttle.pickup.config.ValidValue;
 
 @Builder
-public record CreateUserRq(
-    @NotEmpty(message = "은행 이름이 공백입니다.")
-     String bankName,
-    @NotEmpty(message = "계좌번호가 공백입니다.")
-     String accountNum
+public record CreateUserRq (
+        @NotBlank(message = "은행명" + ErrorMessage.BADREQUEST_BLANK)
+        @Size(max = ValidValue.STRING_MAX, message = "은행명" + ErrorMessage.BADREQUEST_SIZE)
+        String bankName,
+        @NotBlank(message = "계좌번호" + ErrorMessage.BADREQUEST_BLANK)
+        @Size(max = ValidValue.STRING_MAX, message = "계좌번호" + ErrorMessage.BADREQUEST_SIZE)
+        String accountNum
 ) {}

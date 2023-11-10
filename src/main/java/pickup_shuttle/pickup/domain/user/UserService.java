@@ -16,10 +16,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import pickup_shuttle.pickup._core.errors.exception.Exception400;
+import pickup_shuttle.pickup._core.errors.exception.Exception401;
+import pickup_shuttle.pickup._core.errors.exception.Exception403;
+import pickup_shuttle.pickup._core.errors.exception.Exception404;
 import pickup_shuttle.pickup._core.errors.exception.Exception500;
 import pickup_shuttle.pickup.config.ErrorMessage;
-import pickup_shuttle.pickup.domain.beverage.dto.Beverage;
+import pickup_shuttle.pickup.domain.beverage.dto.response.BeverageRp;
 import pickup_shuttle.pickup.domain.board.Board;
 import pickup_shuttle.pickup.domain.board.repository.BoardRepository;
 import pickup_shuttle.pickup.domain.board.repository.BoardRepositoryCustom;
@@ -64,7 +66,7 @@ public class UserService {
         String bankName = createUserRq.bankName();
         String accountNum = createUserRq.accountNum();
         User user = userRepository.findBySocialId(customOauth2User.getName()).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "인증된 유저의 이름", "유저"))
         );
         user.setRole(UserRole.USER);
         customOauth2User.setBankName(bankName);
@@ -79,7 +81,7 @@ public class UserService {
 
     public String userAuthStatus(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
         String userRole = user.getUserRole().getValue();
         String userUrl = user.getUrl();
@@ -94,15 +96,15 @@ public class UserService {
     public UpdateUserRp modifyUser(UpdateUserRq updateUserRq, Long userId) {
         Optional<User> user = userRepository.findById(userId);
         if(user.isEmpty()){
-            throw new Exception400("인증되지 않은 사용자 입니다");
+            throw new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"));
         }
         String userBankName = user.get().getBank();
         String userAccountNum = user.get().getAccount();
-        if(!updateUserRq.account().equals(userAccountNum)){
-            user.get().setAccount(updateUserRq.account());
+        if(!updateUserRq.accountNum().equals(userAccountNum)){
+            user.get().setAccount(updateUserRq.accountNum());
         }
-        if(!updateUserRq.bank().equals(userBankName)){
-            user.get().setBank(updateUserRq.bank());
+        if(!updateUserRq.bankName().equals(userBankName)){
+            user.get().setBank(updateUserRq.bankName());
         }
         return UpdateUserRp.builder()
                 .response("회원 수정이 완료되었습니다")
@@ -115,23 +117,23 @@ public class UserService {
         // 메타 데이터 설정
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(multipartFile.getSize());
-        if (!isImage(multipartFile.getContentType())) {
-            throw new Exception400("이미지 파일이 아닙니다");
+        if(!isImage(multipartFile.getContentType())){
+            throw new Exception403("이미지 파일이 아닌 경우 이미지를 업로드할 수 없습니다");
         }
         metadata.setContentType(multipartFile.getContentType());
         // 파일 읽기
         InputStream inputStream;
         try {
             inputStream = multipartFile.getInputStream();
-        } catch (Exception e) {
-            throw new Exception400("파일을 읽을 수 없습니다");
+        }catch(Exception e){
+            throw new Exception403("읽을 수 없는 이미지 파일인 경우 이미지를 업로드할 수 없습니다");
         }
         // 유저 검증
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
-        if (user.getUserRole().getValue().equals("ROLE_STUDENT"))
-            throw new Exception400("이미 인증된 유저입니다");
+        if(user.getUserRole().getValue().equals("ROLE_STUDENT"))
+            throw new Exception403("이미 인증된 유저인 경우 이미지를 업로드할 수 없습니다");
         // 업로드
         try {
             String fileName = dir + userId + ".jpg"; // 파일명 : {userId}.jpg
@@ -144,12 +146,12 @@ public class UserService {
 
     public GetUserImageRp getImageUrl(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
-        if (user.getUrl().isEmpty()) {
-            throw new Exception400("등록된 이미지가 존재하지 않습니다");
+        if(user.getUrl().equals("")){
+            throw new Exception403("등록된 이미지가 존재하지 않는 경우 이미지 URL을 가져올 수 없습니다");
         }
-        return GetUserImageRp.builder().url(getPresignedUrl(userId)).build(); // PreSigned URL 응답
+        return GetUserImageRp.builder().imageUrl(getPresignedUrl(userId)).build(); // PreSigned URL 응답
     }
 
     // PreSigned URL 발급
@@ -197,10 +199,10 @@ public class UserService {
 
     public ReadMypageRp myPage(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
         return ReadMypageRp.builder()
-                .role(user.getUserRole().getValue())
+                .userAuth(user.getUserRole().getValue())
                 .nickname(user.getNickname())
                 .build();
     }
@@ -221,44 +223,46 @@ public class UserService {
 
     public ReadUserAuthRp getAuthDetail(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
-        if (user.getUrl().isEmpty()) {
-            throw new Exception400("등록된 이미지가 존재하지 않습니다");
+        if(user.getUrl().equals("")){
+            throw new Exception403("등록된 이미지가 존재하지 않는 경우 상세 인증 정보를 볼 수 없습니다");
         }
         return ReadUserAuthRp.builder()
                 .nickname(user.getNickname())
-                .url(getPresignedUrl(userId))
+                .imageUrl(getPresignedUrl(userId))
                 .build();
     }
 
     @Transactional
     public String authApprove(ApproveUserRq requestDTO) {
         User user = userRepository.findById(requestDTO.userId()).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
         if (user.getUserRole() == UserRole.USER) {
             user.updateRole(UserRole.STUDENT);
             return "학생 인증이 승인되었습니다";
-        } else throw new Exception400("일반 회원이 아닙니다");
+        }
+        else throw new Exception403("일반 회원이 아닌 경우 학생 인증을 승인할 수 없습니다");
     }
 
     @Transactional
     public RejectUserAuthRp authReject(RejectUserRq requestDTO) {
         User user = userRepository.findById(requestDTO.userId()).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
         if (user.getUserRole() == UserRole.USER) {
            user.updateUrl("");
            return RejectUserAuthRp.builder()
                    .message("학생 인증이 거절되었습니다")
                    .build();
-        } else throw new Exception400("일반 회원이 아닙니다");
+        } else throw new Exception403("일반 회원이 아닌 경우 학생 인증을 거절할 수 없습니다");
     }
 
     public Slice<ReadWriterBoardListRp> getRequesterList(Long userId, Long lastBoardId, int size) {
         PageRequest pageRequest = PageRequest.of(0, size);
         Slice<Board> boardSlice = userRepositoryCustom.searchRequesterList(userId, lastBoardId, pageRequest);
+
         List<ReadWriterBoardListRp> responseDTOList = boardSlice.getContent().stream()
                 .filter(Utils::notOverDeadline)
                 .map(b -> ReadWriterBoardListRp.builder()
@@ -267,7 +271,7 @@ public class UserService {
                         .destination(b.getDestination())
                         .finishedAt(b.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
                         .tip(b.getTip())
-                        .match(b.isMatch())
+                        .isMatch(b.isMatch())
                         .build())
                 .toList();
         return new SliceImpl<>(responseDTOList, pageRequest, boardSlice.hasNext());
@@ -275,23 +279,23 @@ public class UserService {
 
     public ReadWriterBoardRp getRequesterDetail(Long boardId) {
         Board board = boardRepository.m4findByBoardId(boardId).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
         );
-        List<Beverage> beverage = board.getBeverages().stream()
-                .map(b -> Beverage.builder()
+        List<BeverageRp> beverages = board.getBeverages().stream()
+                .map(b -> BeverageRp.builder()
                         .name(b.getName())
                         .build()
                 )
                 .toList();
         if (board.isMatch()) {
             Match match = matchRepository.mfindByMatchId(board.getMatch().getMatchId()).orElseThrow(
-                    () -> new Exception400("매칭 정보를 찾을 수 없습니다")
+                    () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "매칭된 공고글의 매치ID", "매치"))
             );
             return ReadWriterBoardRp.builder()
                     .boardId(boardId)
                     .shopName(board.getStore().getName())
                     .destination(board.getDestination())
-                    .beverage(beverage)
+                    .beverages(beverages)
                     .tip(board.getTip())
                     .request(board.getRequest())
                     .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
@@ -306,7 +310,7 @@ public class UserService {
                     .boardId(boardId)
                     .shopName(board.getStore().getName())
                     .destination(board.getDestination())
-                    .beverage(beverage)
+                    .beverages(beverages)
                     .tip(board.getTip())
                     .request(board.getRequest())
                     .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
@@ -320,9 +324,6 @@ public class UserService {
     public Slice<ReadPickerBoardListRp> myPagePickerList(Long lastBoardId, int limit, Long userId) {
         PageRequest pageRequest = PageRequest.of(0, limit);
         Slice<Board> boardsSlice = boardRepositoryCustom.searchAllBySlice2(lastBoardId, pageRequest, userId);
-        if(boardsSlice.getContent().isEmpty()) {
-            throw new Exception400("수락한 공고글이 없습니다");
-        }
         return getPickerListResponseDTOs(pageRequest, boardsSlice);
     }
 
@@ -343,14 +344,15 @@ public class UserService {
 
     public ReadPickerBoardRp pickerBoardDetail(Long boardId, Long userId) {
         Board board = boardRepository.m5findByBoardId(boardId).orElseThrow(
-                () -> new Exception400("매칭이 완료되지 않은 공고글입니다")
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
         );
 
         if(!board.getMatch().getUser().getUserId().equals(userId)){
-            throw new Exception400("해당 공고글의 피커가 아닙니다");
+            throw new Exception403("해당 공고글의 피커가 아닌 경우 공고글을 상세 조회할 수 없습니다");
         }
-        List<Beverage> beverageList = board.getBeverages().stream()
-                .map(b -> Beverage.builder()
+
+        List<BeverageRp> beverageRpDTOList = board.getBeverages().stream()
+                .map(b -> BeverageRp.builder()
                         .name(b.getName())
                         .build())
                 .toList();
@@ -358,7 +360,7 @@ public class UserService {
                 .boardId(board.getBoardId())
                 .shopName(board.getStore().getName())
                 .destination(board.getDestination())
-                .beverage(beverageList)
+                .beverages(beverageRpDTOList)
                 .tip(board.getTip())
                 .request(board.getRequest())
                 .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
@@ -374,10 +376,10 @@ public class UserService {
     public LoginUserRp login(Authentication authentication) {
         CustomOauth2User customOauth2User = (CustomOauth2User) authentication.getPrincipal();
         if (customOauth2User == null) {
-            throw new Exception400("인증에 실패하였습니다.");
+            throw new Exception401("인증에 실패하였습니다.");
         }
         User user = userRepository.findBySocialId(customOauth2User.getName()).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "인증된 유저의 이름", "유저"))
         );
         String userPK = user.getUserId().toString();
         return LoginUserRp.builder()

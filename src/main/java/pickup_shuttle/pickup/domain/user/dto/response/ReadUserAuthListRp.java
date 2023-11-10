@@ -3,5 +3,7 @@ package pickup_shuttle.pickup.domain.user.dto.response;
 import lombok.Builder;
 
 @Builder
-public record ReadUserAuthListRp(Long userId, String nickname) {
-}
+public record ReadUserAuthListRp(
+        Long userId,
+        String nickname
+) { }

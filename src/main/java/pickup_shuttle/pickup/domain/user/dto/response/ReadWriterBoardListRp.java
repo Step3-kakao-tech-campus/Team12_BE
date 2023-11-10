@@ -9,6 +9,5 @@ public record ReadWriterBoardListRp(
         String destination,
         Long finishedAt,
         int tip,
-        boolean match
-) {
-}
+        boolean isMatch
+) { }

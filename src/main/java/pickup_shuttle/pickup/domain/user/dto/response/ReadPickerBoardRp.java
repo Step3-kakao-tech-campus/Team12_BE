@@ -1,7 +1,7 @@
 package pickup_shuttle.pickup.domain.user.dto.response;
 
 import lombok.Builder;
-import pickup_shuttle.pickup.domain.beverage.dto.Beverage;
+import pickup_shuttle.pickup.domain.beverage.dto.response.BeverageRp;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ public record ReadPickerBoardRp(
         Long boardId,
         String shopName,
         String destination,
-        List<Beverage> beverage,
+        List<BeverageRp> beverages,
         int tip,
         String request,
         Long finishedAt,

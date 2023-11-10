@@ -140,7 +140,6 @@ public class UserController {
         ReadWriterBoardRp responseDTO = userService.getRequesterDetail(boardId);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
-
     @GetMapping("/mypage/picker/list")
     public ResponseEntity<ApiUtils.ApiResult<CustomPage<ReadPickerBoardListRp>>> myPagePickerList(@RequestParam(value = "offset",required = false) Long lastBoardId,
                                                                                                   @RequestParam(value = "limit",defaultValue = "10") int size,
@@ -148,7 +147,6 @@ public class UserController {
         Slice<ReadPickerBoardListRp> responseDTO = userService.myPagePickerList(lastBoardId,size,userId);
         return ResponseEntity.ok(ApiUtils.success(new CustomPage<>(responseDTO)));
     }
-
     @GetMapping("/mypage/picker/list/{boardId}")
     public ResponseEntity<ApiUtils.ApiResult<ReadPickerBoardRp>> myPagePickerDetail(@PathVariable("boardId") Long boardId,
                                                                                     @Login Long userId) {

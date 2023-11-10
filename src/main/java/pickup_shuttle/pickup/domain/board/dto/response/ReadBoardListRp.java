@@ -4,11 +4,10 @@ import lombok.Builder;
 
 @Builder
 public record ReadBoardListRp(
-    Long boardId,
-    String shopName,
-    Long finishedAt,
-    int tip,
-    boolean isMatch,
-    String destination
-) {}
-
+        Long boardId,
+        String shopName,
+        Long finishedAt,
+        int tip,
+        boolean isMatch,
+        String destination
+) { }

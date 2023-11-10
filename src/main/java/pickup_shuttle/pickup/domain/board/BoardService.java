@@ -8,9 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 import pickup_shuttle.pickup._core.errors.exception.Exception400;
-import pickup_shuttle.pickup._core.errors.exception.Exception500;
+import pickup_shuttle.pickup._core.errors.exception.Exception403;
+import pickup_shuttle.pickup._core.errors.exception.Exception404;
 import pickup_shuttle.pickup.config.ErrorMessage;
-import pickup_shuttle.pickup.domain.beverage.dto.Beverage;
+import pickup_shuttle.pickup.domain.beverage.dto.request.BeverageRq;
+import pickup_shuttle.pickup.domain.beverage.dto.response.BeverageRp;
 import pickup_shuttle.pickup.domain.board.dto.request.AcceptBoardRq;
 import pickup_shuttle.pickup.domain.board.dto.request.UpdateBoardRq;
 import pickup_shuttle.pickup.domain.board.dto.request.CreateBoardRq;
@@ -66,29 +68,28 @@ public class BoardService {
     @Transactional
     public CreateBoardRp write(CreateBoardRq requestDTO, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
-        Store store = storeRepository.findByName(requestDTO.store()).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_STORE)
+        Store store = storeRepository.findByName(requestDTO.shopName()).orElseThrow(
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "가게명", "가게"))
         );
         Board board = requestDTO.toBoard(user, store);
-        try {
-            boardRepository.save(board);
-        } catch (Exception e) {
-            throw new Exception500("unknown server error");
-        }
+        boardRepository.save(board);
 
-        return new CreateBoardRp(board.getBoardId());
+        return CreateBoardRp.builder()
+                .boardId(board.getBoardId())
+                .build();
     }
-    private ReadBoardBeforeRp boardDetailBefore(Long boardId) {
+    private ReadBoardBeforeRp boardDetailBefore(Long boardId, Long userId) {
         Board board = boardRepository.mfindByBoardId(boardId).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
         );
-        List<Beverage> beverages = board.getBeverages().stream().map(
-                b -> Beverage.builder()
+        List<BeverageRp> beverageRpDTOS = board.getBeverages().stream().map(
+                b -> BeverageRp.builder()
                         .name(b.getName())
                         .build()
         ).toList();
+
         return ReadBoardBeforeRp.builder()
                 .boardId(board.getBoardId())
                 .destination(board.getDestination())
@@ -97,19 +98,20 @@ public class BoardService {
                 .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
                 .isMatch(board.isMatch())
                 .shopName(board.getStore().getName())
-                .beverage(beverages)
+                .beverages(beverageRpDTOS)
+                .isWriter(board.getUser().getUserId().equals(userId))
                 .build();
     }
     //select 2번
-    private ReadBoardAfterRp boardDetailAfter(Long boardId) {
+    private ReadBoardAfterRp boardDetailAfter(Long boardId, Long userId) {
         Board board = boardRepository.m2findByBoardId(boardId).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
         );
         User user = userRepository.findById(board.getMatch().getUser().getUserId()).orElseThrow(
-                () -> new Exception400("매칭 된 picker를 찾을 수 없습니다")
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "매칭된 공고글의 유저ID", "유저"))
         );
-        List<Beverage> beverages = board.getBeverages().stream().map(
-                b -> Beverage.builder()
+        List<BeverageRp> beverageRpDTOS = board.getBeverages().stream().map(
+                b -> BeverageRp.builder()
                         .name(b.getName())
                         .build()
         ).toList();
@@ -127,44 +129,46 @@ public class BoardService {
                 .pickerPhoneNumber(user.getPhoneNumber())
                 .arrivalTime(board.getMatch().getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).toEpochSecond(ZoneOffset.UTC))
                 .isMatch(board.isMatch())
-                .beverage(beverages)
+                .beverages(beverageRpDTOS)
+                .isWriter(board.getUser().getUserId().equals(userId))
+                .beverages(beverageRpDTOS)
                 .build();
     }
-    public CheckBeforeAfter checkBeforeAfter(Long boardId) {
+    public CheckBeforeAfter checkBeforeAfter(Long boardId, Long userId) {
         Board board = boardRepository.findById(boardId).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
         );
         if(board.isMatch()) {
-            return boardDetailAfter(boardId);
+            return boardDetailAfter(boardId, userId);
         }
-        return boardDetailBefore(boardId);
+        return boardDetailBefore(boardId, userId);
     }
 
     @Transactional
-    public AcceptBoardRp boardAgree(AcceptBoardRq requestDTo, Long boardId, Long userId) {
+    public AcceptBoardRp boardAgree(AcceptBoardRq requestDTO, Long boardId, Long userId) {
         Board board = boardRepository.mfindByBoardId(boardId).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
         );
         if(board.getMatch() != null) {
-            throw new Exception400("공고글이 이미 매칭 됐습니다");
+            throw new Exception403("공고글이 이미 매칭된 경우 공고글을 수락할 수 없습니다");
         }
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_USER)
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
-        Match match = matchService.createMatch(requestDTo.arrivalTime(),user);
+        Match match = matchService.createMatch(requestDTO.arrivalTime(),user);
         if(Objects.equals(match.getUser().getUserId(), board.getUser().getUserId())) {
-            throw new Exception400("공고글 작성자는 매칭 수락을 할 수 없습니다");
+            throw new Exception403("공고글 작성자가 매칭 수락을 시도하는 경우 공고글을 수락 할 수 없습니다");
         }
         board.updateMatch(match);
         board.updateIsMatch(true);
-        List<Beverage> beverages = board.getBeverages().stream().map(
-                b -> Beverage.builder()
+        List<BeverageRp> beverageRpDTOS = board.getBeverages().stream().map(
+                b -> BeverageRp.builder()
                         .name(b.getName())
                         .build()
         ).toList();
 
         return AcceptBoardRp.builder()
-                .beverage(beverages)
+                .beverages(beverageRpDTOS)
                 .shopName(board.getStore().getName())
                 .tip(board.getTip())
                 .destination(board.getDestination())
@@ -178,57 +182,59 @@ public class BoardService {
     public void boardDelete(Long boardId, Long userId){
         // 공고글 확인
         Board board = boardRepository.m3findByBoardId(boardId).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
         );
         // 공고글 작성자 확인
         if(!(board.getUser().getUserId().equals(userId)))
-            throw new Exception400("공고글의 작성자가 아닙니다");
+            throw new Exception403("공고글의 작성자가 아닌 경우 공고글을 삭제할 수 없습니다");
         // 매칭되었는지 확인
         if(board.isMatch())
-            throw new Exception400("이미 매칭된 공고글은 삭제 할 수 없습니다");
+            throw new Exception403("공고글이 이미 매칭된 경우 공고글을 삭제할 수 없습니다");
         // 삭제
-        try {
-            boardRepository.delete(board);
-        } catch (Exception e){
-            throw new Exception500("unknown server error");
-        }
+        boardRepository.delete(board);
     }
     @Transactional
     public UpdateBoardRp modify(UpdateBoardRq requestDTO, Long boardId, Long userId){
         // 공고글 확인
         Board board = boardRepository.m4findByBoardId(boardId).orElseThrow(
-                () -> new Exception400(ErrorMessage.UNKNOWN_BOARD)
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
         );
         // 공고글 작성자 확인
         if(!(board.getUser().getUserId().equals(userId)))
-            throw new Exception400("공고글의 작성자가 아닙니다");
+            throw new Exception403("공고글의 작성자가 아닌 경우 공고글을 수정할 수 없습니다");
         // 매칭 여부 확인
         if(board.isMatch())
-            throw new Exception400("이미 매칭된 공고글은 수정 할 수 없습니다");
+            throw new Exception403("공고글이 이미 매칭된 경우 공고글을 수정할 수 없습니다");
         // 가게 확인
         Store store = null;
-        if(requestDTO.store() != null){
-            store = storeRepository.findByName(requestDTO.store()).orElseThrow(
-                    () -> new Exception400(ErrorMessage.UNKNOWN_STORE));
+        if(requestDTO.shopName() != null){
+            store = storeRepository.findByName(requestDTO.shopName()).orElseThrow(
+                    () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "가게명", "가게"))
+            );
         }
         // 공고 수정
         Map<String, Object> mapToPatch = requestDTO.patchValues(store); // null 삭제
         if (!mapToPatch.isEmpty()){
             updatePatch(board, mapToPatch);
         } else{
-            throw new Exception400("수정할 값이 없습니다");
+            throw new Exception403("수정할 값이 없는 경우 공고글을 수정할 수 없습니다");
         }
 
-        List<String> beverages = board.getBeverages().stream().map(pickup_shuttle.pickup.domain.beverage.Beverage::getName).toList();
+        List<BeverageRp> beverageRpDTOS = board.getBeverages().stream().map(
+                b -> BeverageRp.builder()
+                        .name(b.getName())
+                        .build()
+        ).toList();
+
         return UpdateBoardRp.builder()
                 .boardId(board.getBoardId())
-                .store(board.getStore().getName())
-                .beverage(beverages)
+                .shopName(board.getStore().getName())
+                .beverages(beverageRpDTOS)
                 .destination(board.getDestination())
                 .tip(board.getTip())
                 .request(board.getRequest())
                 .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
-                .match(board.isMatch())
+                .isMatch(board.isMatch())
                 .build();
     }
     public void updatePatch(Board board, Map<String, Object> mapToPatch){
@@ -243,19 +249,12 @@ public class BoardService {
                 field.setAccessible(true);
                 ReflectionUtils.setField(field, board, v);
             }
-
         });
     }
 
-    public void checkListBlank(List<String> beverages) {
-        for(String b : beverages) {
-            if(b == null || b.isEmpty())
-                throw new Exception400("음료명에 빈 문자열 or null이 입력 되었습니다");
-        }
-    }
-    public void checkListEmpty(List<String> beverages){
-        if(beverages != null && beverages.isEmpty()){
-            throw new Exception400("음료를 입력하지 않았습니다");
+    public void checkListEmpty(List<BeverageRq> beverages){ //[](빈배열)만 보내는 경우 검사
+        if(beverages != null && beverages.size() == 0){
+            throw new Exception400("음료" + ErrorMessage.BADREQUEST_EMPTY);
         }
     }
 }
