@@ -24,7 +24,7 @@ public class WebConfig implements WebMvcConfigurer {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:3000") // 모든 출처 허용
+                        .allowedOrigins("https://k0d01653e1a11a.user-app.krampoline.com") // 모든 출처 허용
                         .allowedMethods("OPTIONS","GET", "POST", "DELETE", "PUT", "PATCH") // 모든 HTTP 메서드 허용
                         //       .allowedHeaders("Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization") // 모든 헤더 허용
                         .allowCredentials(true) // 쿠키 인증 요청 허용

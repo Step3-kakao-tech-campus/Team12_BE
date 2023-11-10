@@ -381,9 +381,26 @@ public class UserService {
         );
         String userPK = user.getUserId().toString();
         return LoginUserRp.builder()
-                .accessToken(jwtService.createAccessToken(userPK))
-                .nickname(user.getNickname())
-                .userAuth(user.getUserRole().getValue())
+                .AccessToken(jwtService.createAccessToken(userPK))
+                .nickName(user.getNickname())
+                .userAuth(getUserRole(userPK))
                 .build();
     }
+
+    public String getUserRole(String userPK){
+        Optional<User> optionalUser = userRepository.findById(Long.parseLong(userPK));
+        User user = optionalUser.get();
+        if(user.getUserRole() == UserRole.ADMIN){
+            return "ADMIN";
+        } else if(user.getUserRole() == UserRole.USER){
+            return "USER";
+        } else if(user.getUserRole() == UserRole.STUDENT){
+            return "STUDENT";
+        } else if (user.getUserRole() == UserRole.GUEST){
+            return "GUEST";
+        } else {
+            return "잘못 처리되었습니다.";
+        }
+    }
+
 }

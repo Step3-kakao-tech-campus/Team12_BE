@@ -41,7 +41,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if(request.getRequestURI().equals("/")||request.getRequestURI().equals("/login/callback") ||request.getRequestURI().equals("/signup") || request.getRequestURI().equals("/login/oauth2/code/kakao")|| request.getRequestURI().equals("/users/register/input")){
+        if(request.getRequestURI().equals("/api")||request.getRequestURI().equals("/articles?limit=3")||request.getRequestURI().equals("/articles?offset=10&limit=10")||request.getRequestURI().equals("/api/login/callback") ||request.getRequestURI().equals("/api/signup") || request.getRequestURI().equals("/api/login/oauth2/code/kakao")|| request.getRequestURI().equals("/api/users/register/input")){
             filterChain.doFilter(request,response); // "/login/callback" 요청이 들어오면, 다음 필터 호출
             return;  // return으로 이후 현재 필터 진행 막기 (안해주면 아래로 내려가서 계속 필터 진행시킴)
         }

@@ -39,6 +39,14 @@ public class UserController {
 
         return modelAndView;
     }
+    // 메인창
+    @GetMapping("/")
+    public ModelAndView mainPage() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("index");
+
+        return modelAndView;
+    }
 
 
     @PostMapping("/signup")
