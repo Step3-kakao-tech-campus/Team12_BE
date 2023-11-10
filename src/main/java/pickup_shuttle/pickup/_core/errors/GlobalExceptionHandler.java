@@ -1,13 +1,13 @@
 package pickup_shuttle.pickup._core.errors;
 
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import pickup_shuttle.pickup._core.errors.exception.Exception400;
+import pickup_shuttle.pickup._core.errors.exception.*;
 import pickup_shuttle.pickup._core.utils.ApiUtils;
-import pickup_shuttle.pickup._core.errors.exception.Exception500;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -16,6 +16,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> badRequest(Exception400 e){
         return new ResponseEntity<>(e.body(), e.status());
     }
+    @ExceptionHandler(Exception401.class)
+    public ResponseEntity<?> unAuthorized(Exception401 e){ return new ResponseEntity<>(e.body(), e.status()); }
+    @ExceptionHandler(Exception403.class)
+    public ResponseEntity<?> forbidden(Exception403 e){
+        return new ResponseEntity<>(e.body(), e.status());
+    }
+    @ExceptionHandler(Exception404.class)
+    public ResponseEntity<?> notFound(Exception404 e){ return new ResponseEntity<>(e.body(), e.status()); }
 
     @ExceptionHandler(Exception500.class)
     public ResponseEntity<?> serverError(Exception500 e){
