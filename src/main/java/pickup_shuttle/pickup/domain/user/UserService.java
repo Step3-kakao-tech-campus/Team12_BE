@@ -382,7 +382,7 @@ public class UserService {
         String userPK = user.getUserId().toString();
         return LoginUserRp.builder()
                 .AccessToken(jwtService.createAccessToken(userPK))
-                .nickname(user.getNickname())
+                .nickName(user.getNickname())
                 .userAuth(getUserRole(userPK))
                 .build();
     }
