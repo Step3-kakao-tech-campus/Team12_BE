@@ -99,7 +99,7 @@ public class BoardService {
                 .isMatch(board.isMatch())
                 .shopName(board.getStore().getName())
                 .beverages(beverageRpDTOS)
-                .isWriter(board.getUser().getUserId().equals(userId))
+                .isRequester(board.getUser().getUserId().equals(userId))
                 .build();
     }
     //select 2번
@@ -108,7 +108,7 @@ public class BoardService {
                 () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
         );
         User user = userRepository.findById(board.getMatch().getUser().getUserId()).orElseThrow(
-                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "매칭된 공고글의 유저ID", "유저"))
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "매칭된 공고글의 피커ID", "유저"))
         );
         List<BeverageRp> beverageRpDTOS = board.getBeverages().stream().map(
                 b -> BeverageRp.builder()
@@ -130,7 +130,7 @@ public class BoardService {
                 .arrivalTime(board.getMatch().getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).toEpochSecond(ZoneOffset.UTC))
                 .isMatch(board.isMatch())
                 .beverages(beverageRpDTOS)
-                .isWriter(board.getUser().getUserId().equals(userId))
+                .isRequester(board.getUser().getUserId().equals(userId))
                 .beverages(beverageRpDTOS)
                 .build();
     }

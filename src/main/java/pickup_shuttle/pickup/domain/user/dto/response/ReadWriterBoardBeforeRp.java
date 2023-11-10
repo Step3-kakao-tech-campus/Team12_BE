@@ -1,4 +1,4 @@
-package pickup_shuttle.pickup.domain.board.dto.response;
+package pickup_shuttle.pickup.domain.user.dto.response;
 
 import lombok.Builder;
 import pickup_shuttle.pickup.domain.beverage.dto.response.BeverageRp;
@@ -6,7 +6,7 @@ import pickup_shuttle.pickup.domain.beverage.dto.response.BeverageRp;
 import java.util.List;
 
 @Builder
-public record ReadBoardBeforeRp(
+public record ReadWriterBoardBeforeRp(
         Long boardId,
         String shopName,
         String destination,
@@ -14,6 +14,5 @@ public record ReadBoardBeforeRp(
         int tip,
         String request,
         Long finishedAt,
-        boolean isMatch,
-        boolean isRequester
-) implements CheckBeforeAfter { }
+        boolean isMatch
+) implements ReadWriterBoard { }

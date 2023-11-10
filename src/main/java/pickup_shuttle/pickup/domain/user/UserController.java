@@ -127,16 +127,16 @@ public class UserController {
     }
 
     @GetMapping("/mypage/requester/list")
-    public ResponseEntity<ApiUtils.ApiResult<CustomPage<ReadWriterBoardListRp>>> getRequesterList(
+    public ResponseEntity<ApiUtils.ApiResult<CustomPage<ReadWriterBoardListRp>>> myPageRequesterList(
             @Login Long userId,
             @RequestParam(value = "offset",required = false) Long lastBoardId,
             @RequestParam(value = "limit",defaultValue = "10") int size){
-        Slice<ReadWriterBoardListRp> responseDTO = userService.getRequesterList(userId, lastBoardId, size);
+        Slice<ReadWriterBoardListRp> responseDTO = userService.myPageRequesterList(userId, lastBoardId, size);
         return ResponseEntity.ok(ApiUtils.success(new CustomPage<>(responseDTO)));
     }
     @GetMapping("/mypage/requester/detail/{boardId}")
-    public ResponseEntity<ApiUtils.ApiResult<ReadWriterBoardRp>> getRequesterDetail(@PathVariable("boardId") Long boardId){
-        ReadWriterBoardRp responseDTO = userService.getRequesterDetail(boardId);
+    public ResponseEntity<ApiUtils.ApiResult<ReadWriterBoard>> myPageRequesterDetail(@PathVariable("boardId") Long boardId){
+        ReadWriterBoard responseDTO = userService.myPageRequesterDetail(boardId);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
     @GetMapping("/mypage/picker/list")
