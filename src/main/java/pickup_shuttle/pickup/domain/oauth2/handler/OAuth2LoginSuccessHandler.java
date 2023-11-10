@@ -10,7 +10,6 @@ import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import pickup_shuttle.pickup._core.errors.exception.Exception400;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
 import pickup_shuttle.pickup.domain.user.User;
 import pickup_shuttle.pickup.domain.user.UserRole;
@@ -31,30 +30,17 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         log.info("OAuth2 Login 성공!");
-        log.info("로그인 성공되었습니다!");
+        System.out.println("로그인 성공되었습니다!");
         CustomOauth2User oauth2User = (CustomOauth2User) authentication.getPrincipal();
-        // User의 Role이 Guest일 경우에 처음 요청한 회원이므로 회원가입 페이지로 리다이렉트
-        if(oauth2User.getUserRole() == UserRole.GUEST){
-            User findUser = userRepository.findBySocialId(oauth2User.getName())
-                    .orElseThrow(() -> new IllegalArgumentException("socialID에 해당하는 유저가 없습니다."));
-            jwtService.createAccessToken(findUser.getUserId().toString());
-            response.sendRedirect("http://localhost:3000/register/bank"); // 리다이렉트 주소 (계좌번호 입력)
-            jwtService.sendRefreshToken(response, null);
-            findUser.authorizeUser();
-
-        } else {
-            log.info("loginSuccess 실행");
-            loginSuccess(response, oauth2User);
-            redirectStrategy.sendRedirect(request, response, "http://localhost:3000/login/callback");
-        }
+        System.out.println("loginSuccess 실행");
+        loginSuccess(response, oauth2User);
+        redirectStrategy.sendRedirect(request, response, "https://k0d01653e1a11a.user-app.krampoline.com/login/callback");
     }
 
     private void loginSuccess(HttpServletResponse response, CustomOauth2User oauth2User) throws IOException {
-        String userPK = userRepository.findBySocialId(oauth2User.getName()).orElseThrow(
-                () -> new Exception400("해당 유저가 존재하지 않습니다.")
-        ).getUserId().toString();
-        log.info("리프레시 토큰과 엑세스 토큰 발행!, userPK: " + userPK);
-        // 엑세스 토큰은 "/login/callback"에서 응답 Body 형태로 응답해줄 예정.
+        String userPK = String.valueOf(userRepository.findBySocialId(oauth2User.getName()).get().getUserId());
+        System.out.println("리프레시 토큰과 엑세스 토큰 발행!, userPK: " + userPK);
+        String accessToken = null; // 엑세스 토큰은 "/login/callback"에서 응답 Body 형태로 응답해줄 예정.
         String refreshToken = jwtService.createRefreshToken();
 
         jwtService.sendRefreshToken(response, refreshToken);
