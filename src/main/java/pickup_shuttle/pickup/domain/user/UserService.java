@@ -40,6 +40,7 @@ import pickup_shuttle.pickup.security.service.JwtService;
 import pickup_shuttle.pickup.utils.Utils;
 
 import java.io.InputStream;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
@@ -278,7 +279,7 @@ public class UserService {
                         .boardId(b.getBoardId())
                         .shopName(b.getStore().getName())
                         .destination(b.getDestination())
-                        .finishedAt(b.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                        .finishedAt(b.getFinishedAt().atZone(ZoneId.of("Asia/Seoul")).toEpochSecond())
                         .tip(b.getTip())
                         .isMatch(b.isMatch())
                         .build())
@@ -305,11 +306,11 @@ public class UserService {
                 .beverages(beverages)
                 .tip(board.getTip())
                 .request(board.getRequest())
-                .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                .finishedAt(board.getFinishedAt().atZone(ZoneId.of("Asia/Seoul")).toEpochSecond())
                 .isMatch(board.isMatch())
                 .pickerBank(match.getUser().getBank())
                 .pickerAccount(match.getUser().getAccount())
-                .arrivalTime(match.getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).toEpochSecond(ZoneOffset.UTC))
+                .arrivalTime(match.getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).atZone(ZoneId.of("Asia/Seoul")).toEpochSecond())
                 .pickerPhoneNumber(match.getUser().getPhoneNumber())
                 .build();
     }
@@ -330,7 +331,7 @@ public class UserService {
                 .beverages(beverages)
                 .tip(board.getTip())
                 .request(board.getRequest())
-                .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                .finishedAt(board.getFinishedAt().atZone(ZoneId.of("Asia/Seoul")).toEpochSecond())
                 .isMatch(board.isMatch())
                 .build();
     }
@@ -358,7 +359,7 @@ public class UserService {
                 .map(b -> ReadPickerBoardListRp.builder()
                         .boardId(b.getBoardId())
                         .shopName(b.getStore().getName())
-                        .finishedAt(b.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                        .finishedAt(b.getFinishedAt().atZone(ZoneId.of("Asia/Seoul")).toEpochSecond())
                         .tip(b.getTip())
                         .isMatch(b.isMatch())
                         .destination(b.getDestination())
@@ -388,11 +389,11 @@ public class UserService {
                 .beverages(beverageRpDTOList)
                 .tip(board.getTip())
                 .request(board.getRequest())
-                .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                .finishedAt(board.getFinishedAt().atZone(ZoneId.of("Asia/Seoul")).toEpochSecond())
                 .isMatch(board.isMatch())
                 .pickerBank(board.getMatch().getUser().getBank())
                 .pickerAccount(board.getMatch().getUser().getAccount())
-                .arrivalTime(board.getMatch().getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).toEpochSecond(ZoneOffset.UTC))
+                .arrivalTime(board.getMatch().getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).atZone(ZoneId.of("Asia/Seoul")).toEpochSecond())
                 .pickerPhoneNumber(board.getMatch().getUser().getPhoneNumber())
                 .build();
 
