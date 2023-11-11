@@ -80,17 +80,20 @@ public class UserService {
                 .build();
     }
 
-    public String userAuthStatus(Long userId) {
+    public ReadAuthStatusRp userAuthStatus(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
         String userRole = user.getUserRole().getValue();
         String userUrl = user.getUrl();
-        return switch (userRole) {
+        String authStatus = switch (userRole) {
             case "ROLE_USER" -> userUrl.isEmpty() ? "미인증" : "인증 진행 중";
             case "ROLE_STUDENT" -> "인증";
             default -> "미인증";
         };
+        return ReadAuthStatusRp.builder()
+                .message(authStatus)
+                .build();
     }
 
     @Transactional

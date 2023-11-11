@@ -67,9 +67,9 @@ public class UserController {
 
     // 유저 인증 상태 (인증/미인증/인증 진행 중) 반환
     @GetMapping("/mypage/auth")
-    public ResponseEntity<ApiUtils.ApiResult<String>> userAuthStatus(@Login Long userId){
-        String status = userService.userAuthStatus(userId);
-        return ResponseEntity.ok(ApiUtils.success(status));
+    public ResponseEntity<ApiUtils.ApiResult<ReadAuthStatusRp>> userAuthStatus(@Login Long userId){
+        ReadAuthStatusRp responseDTO = userService.userAuthStatus(userId);
+        return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 
     @GetMapping("/modify")
