@@ -56,11 +56,11 @@ public class BoardController {
         return ResponseEntity.ok(ApiUtils.success("공고글 삭제를 완료하였습니다"));
     }
     @PutMapping("/modify/{boardId}")
-    public ResponseEntity<ApiUtils.ApiResult<UpdateBoardRp>> modify(@PathVariable("boardId") Long boardId,
+    public ResponseEntity<ApiUtils.ApiResult<UpdateBoardRp>> update(@PathVariable("boardId") Long boardId,
                                                                     @RequestBody @Valid UpdateBoardRq requestDTO,
                                                                     @Login Long userId){
         boardService.checkListEmpty(requestDTO.beverages());
-        UpdateBoardRp responseDTO = boardService.modify(requestDTO, boardId, userId);
+        UpdateBoardRp responseDTO = boardService.update(requestDTO, boardId, userId);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 }

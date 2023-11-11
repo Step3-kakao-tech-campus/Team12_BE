@@ -1,0 +1,47 @@
+= 공고글 수락
+:doctype: book
+:icons: font
+:toc: left
+:source-highlighter: highlightjs
+:toclevels: 2
+:sectnums:
+:docinfo: shared-head
+
+* 피커가 가게에 도착하기까지 걸리는 시간을 입력하고 공고글을 수락한다.
+
+== 공고글 수락
+=== Request
+include::{snippets}/test-board-accept/test-board-accept/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-accept/test-board-accept/response-body.adoc[]
+
+== 공고글 작성자가 공고글을 수락하려는 경우 공고글 수락 실패
+=== Request
+include::{snippets}/test-board-accept/test-board-accept-invalid-user/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-accept/test-board-accept-invalid-user/response-body.adoc[]
+
+== 공고글이 이미 매칭된 경우 공고글 수락 실패
+=== Request
+include::{snippets}/test-board-accept/test-board-accept-matched-board/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-accept/test-board-accept-matched-board/response-body.adoc[]
+
+
+== 도착예정시간이 0이하인 경우 공고글 수락 실패
+=== Request
+include::{snippets}/test-board-accept/test-board-accept-min-arraival-time/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-accept/test-board-accept-min-arraival-time/response-body.adoc[]
+
+== 공고글을 찾을 수 없는 경우 공고글 수락 실패
+=== Request
+include::{snippets}/test-board-accept/test-board-accept-not-found-board/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-accept/test-board-accept-not-found-board/response-body.adoc[]
+
+== 유저를 찾을 수 없는 경우 공고글 수락 실패
+=== Request
+include::{snippets}/test-board-accept/test-board-accept-not-found-user/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-accept/test-board-accept-not-found-user/response-body.adoc[]

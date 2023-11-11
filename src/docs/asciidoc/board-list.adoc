@@ -1,0 +1,46 @@
+= 공고글 목록 조회
+:doctype: book
+:icons: font
+:toc: left
+:source-highlighter: highlightjs
+:toclevels: 2
+:sectnums:
+:docinfo: shared-head
+
+* Query Parameter
+** limit = {Long}  (required = false)
+** offset = {int}  (default = 10)
+* 공고글을 최신순으로 정렬하여 응답한다.
+* limit 보다 작은 boardId를 가진 공고글 목록을 offset만큼 조회한다.
+* limit 값은 필수가 아니다. limit 값을 입력하지 않으면 가장 최신의 글 부터 offset 만큼 조회한다.
+* offset의 default는 10이므로 offset 값을 입력하지 않으면 10개의 공고글 목록을 조회한다.
+
+== 최신 3개의 공고글 목록 조회
+=== Request
+include::{snippets}/test-board-list/test-board-list1/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-list/test-board-list1/response-body.adoc[]
+
+== 최신 10개의 공고글 목록 조회1
+=== Request
+include::{snippets}/test-board-list/test-board-list2/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-list/test-board-list2/response-body.adoc[]
+
+== 최신 10개의 공고글 목록 조회2
+=== Request
+include::{snippets}/test-board-list/test-board-list3/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-list/test-board-list3/response-body.adoc[]
+
+== 3보다 작은 boardId를 가지는 10개의 공고글 목록 조회
+=== Request
+include::{snippets}/test-board-list/test-board-list4/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-list/test-board-list4/response-body.adoc[]
+
+== 0개의 공고글 목록 조회
+=== Request
+include::{snippets}/test-board-list/test-board-list5/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-list/test-board-list5/response-body.adoc[]

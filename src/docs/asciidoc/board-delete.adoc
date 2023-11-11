@@ -1,0 +1,35 @@
+= 공고글 삭제
+:doctype: book
+:icons: font
+:toc: left
+:source-highlighter: highlightjs
+:toclevels: 2
+:sectnums:
+:docinfo: shared-head
+
+* Path Parameter
+** Long boardId
+
+== 공고글 삭제
+=== Request
+include::{snippets}/test-board-delete/test-board-delete/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-delete/test-board-delete/response-body.adoc[]
+
+== 공고글의 작성자가 아닌 유저인 경우 공고글 삭제 실패
+=== Request
+include::{snippets}/test-board-delete/test-board-delete-invalid-user/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-delete/test-board-delete-invalid-user/response-body.adoc[]
+
+== 공고글이 이미 매칭된 경우 공고글 삭제 실패
+=== Request
+include::{snippets}/test-board-delete/test-board-delete-match/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-delete/test-board-delete-match/response-body.adoc[]
+
+== 공고글을 찾을 수 없는 경우 공고글 삭제 실패
+=== Request
+include::{snippets}/test-board-delete/test-board-delete-not-found/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-delete/test-board-delete-not-found/response-body.adoc[]
