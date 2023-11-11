@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import pickup_shuttle.pickup.config.ErrorMessage;
-import pickup_shuttle.pickup.domain.RestDocConfig;
+import pickup_shuttle.pickup.domain.RestDocsConfig;
 import pickup_shuttle.pickup.domain.beverage.dto.request.BeverageRq;
 import pickup_shuttle.pickup.domain.board.dto.request.AcceptBoardRq;
 import pickup_shuttle.pickup.domain.board.dto.request.UpdateBoardRq;
@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureRestDocs
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-public class BoardControllerTest extends RestDocConfig {
+public class BoardControllerTest extends RestDocsConfig {
     @Autowired
     private MockMvc mvc;
 
