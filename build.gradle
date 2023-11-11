@@ -75,10 +75,6 @@ dependencies {
 
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
-}
-
 // === ⭐ QueryDsl 빌드 옵션 (선택) ===
 def querydslDir = "$buildDir/generated/querydsl"
 
@@ -95,6 +91,7 @@ clean.doLast {
 }
 tasks.named('test') {
 	outputs.dir snippetsDir
+	systemProperty 'file.encoding', 'UTF-8'
 	useJUnitPlatform()
 }
 
