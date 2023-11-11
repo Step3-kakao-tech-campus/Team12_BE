@@ -1,6 +1,7 @@
 package pickup_shuttle.pickup.domain.board;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
@@ -11,6 +12,7 @@ import pickup_shuttle.pickup._core.errors.exception.Exception400;
 import pickup_shuttle.pickup._core.errors.exception.Exception403;
 import pickup_shuttle.pickup._core.errors.exception.Exception404;
 import pickup_shuttle.pickup.config.ErrorMessage;
+import pickup_shuttle.pickup.domain.beverage.Beverage;
 import pickup_shuttle.pickup.domain.beverage.dto.request.BeverageRq;
 import pickup_shuttle.pickup.domain.beverage.dto.response.BeverageRp;
 import pickup_shuttle.pickup.domain.board.dto.request.AcceptBoardRq;
@@ -20,6 +22,7 @@ import pickup_shuttle.pickup.domain.board.dto.response.*;
 import pickup_shuttle.pickup.domain.board.repository.BoardRepository;
 import pickup_shuttle.pickup.domain.board.repository.BoardRepositoryCustom;
 import pickup_shuttle.pickup.domain.match.Match;
+import pickup_shuttle.pickup.domain.match.MatchRepository;
 import pickup_shuttle.pickup.domain.match.MatchService;
 import pickup_shuttle.pickup.domain.store.Store;
 import pickup_shuttle.pickup.domain.store.StoreRepository;
@@ -35,6 +38,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class BoardService {
@@ -43,6 +47,7 @@ public class BoardService {
     private final UserRepository userRepository;
     private final StoreRepository storeRepository;
     private final MatchService matchService;
+    private final MatchRepository matchRepository;
 
     public Slice<ReadBoardListRp> boardList(Long lastBoardId, int limit) {
         PageRequest pageRequest = PageRequest.of(0, limit);
@@ -53,7 +58,6 @@ public class BoardService {
     //boardSlice로 ReadBoardListRp 만드는 과정
     private Slice<ReadBoardListRp> getBoardListResponseDTOs(PageRequest pageRequest, Slice<Board> boardSlice) {
         List<ReadBoardListRp> boardReadBoardListRp = boardSlice.getContent().stream()
-                .filter(Utils::notOverDeadline)
                 .map(b -> ReadBoardListRp.builder()
                         .boardId(b.getBoardId())
                         .shopName(b.getStore().getName())
@@ -242,7 +246,7 @@ public class BoardService {
         mapToPatch.forEach((k, v) -> {
             if (k.equals("beverages")){
                 board.getBeverages().clear();
-                board.getBeverages().addAll((List<pickup_shuttle.pickup.domain.beverage.Beverage>)v);
+                board.getBeverages().addAll((List<Beverage>)v);
                 board.getBeverages().forEach(b -> b.setBoard(board));
             }
             else{
