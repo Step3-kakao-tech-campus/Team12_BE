@@ -1,0 +1,93 @@
+= 공고글 작성
+:doctype: book
+:icons: font
+:toc: left
+:source-highlighter: highlightjs
+:toclevels: 2
+:sectnums:
+:docinfo: shared-head
+
+== 공고글 작성
+=== Request
+include::{snippets}/test-board-create/test-create/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-create/test-create/response-body.adoc[]
+
+== 음료명이 공백인 경우 공고글 작성 실패
+=== Request
+include::{snippets}/test-board-create/test-create-blank-beverage/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-create/test-create-blank-beverage/response-body.adoc[]
+
+== 음료 값이 없는 경우 공고글 작성 실패
+=== Request
+include::{snippets}/test-board-create/test-create-blank-beverages/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-create/test-create-blank-beverages/response-body.adoc[]
+
+== 위치가 공백인 경우 공고글 작성 실패
+=== Request
+include::{snippets}/test-board-create/test-create-blank-destination/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-create/test-create-blank-destination/response-body.adoc[]
+
+== 마감기한이 공백인 경우 공고글 작성 실패
+=== Request
+include::{snippets}/test-board-create/test-create-blank-finish-at/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-create/test-create-blank-finish-at/response-body.adoc[]
+
+== 가게명이 공백인 경우 공고글 작성 실패
+=== Request
+include::{snippets}/test-board-create/test-create-blank-shop-name/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-create/test-create-blank-shop-name/response-body.adoc[]
+
+== 마감기한의 형식이 맞지 않는 경우 공고글 작성 실패
+=== Request
+include::{snippets}/test-board-create/test-create-invalid-finished-at/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-create/test-create-invalid-finished-at/response-body.adoc[]
+
+
+== 음료의 길이가 제한을 초과하는 경우 공고글 작성 실패
+=== Request
+include::{snippets}/test-board-create/test-create-max-beverage-name/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-create/test-create-max-beverage-name/response-body.adoc[]
+
+== 위치의 길이가 제한을 초과하는 경우 공고글 작성 실패
+=== Request
+include::{snippets}/test-board-create/test-create-max-destination/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-create/test-create-max-destination/response-body.adoc[]
+
+== 요청사항의 길이가 제한을 초과하는 경우 공고글 작성 실패
+=== Request
+include::{snippets}/test-board-create/test-create-max-request/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-create/test-create-max-request/response-body.adoc[]
+
+== 가게명의 길이가 제한을 초과하는 경우 공고글 작성 실패
+=== Request
+include::{snippets}/test-board-create/test-create-max-shop-name/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-create/test-create-max-shop-name/response-body.adoc[]
+
+== 픽업팁이 0 이하인 경우 공고글 작성 실패
+=== Request
+include::{snippets}/test-board-create/test-create-min-tip/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-create/test-create-min-tip/response-body.adoc[]
+
+== 가게를 찾을 수 없는 경우 공고글 작성 실패
+=== Request
+include::{snippets}/test-board-create/test-create-not-found-store/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-create/test-create-not-found-store/response-body.adoc[]
+
+== 유저를 찾을 수 없는 경우 공고글 작성 실패
+=== Request
+include::{snippets}/test-board-create/test-create-not-found-user/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-create/test-create-not-found-user/response-body.adoc[]

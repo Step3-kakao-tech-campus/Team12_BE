@@ -1,0 +1,31 @@
+= 공고글 상세 조회
+:doctype: book
+:icons: font
+:toc: left
+:source-highlighter: highlightjs
+:toclevels: 2
+:sectnums:
+:docinfo: shared-head
+
+* Path Parameter
+** Long boardId
+* boardId를 가지는 공고글을 조회한다.
+* 매칭 후와 매칭 전의 공고글을 구분하여 응답한다.
+
+== 매칭 전 공고글 상세 조회
+=== Request
+include::{snippets}/test-board-detail/test-board-detail-before/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-detail/test-board-detail-before/response-body.adoc[]
+
+== 매칭 후 공고글 상세 조회
+=== Request
+include::{snippets}/test-board-detail/test-board-detail-after/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-detail/test-board-detail-after/response-body.adoc[]
+
+== boardId로 공고글을 찾지 못하는 경우 공고글 상세 조회 실패
+=== Request
+include::{snippets}/test-board-detail/test-board-detail-not-found-board/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-detail/test-board-detail-not-found-board/response-body.adoc[]
