@@ -1,3 +1,101 @@
+<p align="center">
+  <h2 align="center"><a href="https://k0d01653e1a11a.user-app.krampoline.com/">☕ 픽업 셔틀</a></h2>
+  <p align="center">카카오테크캠퍼스 1기 12조 픽업셔틀 팀입니다😇 </p>
+</p>
+
+## 저희 프로젝트를 소개합니다
+<img src="./images/main.png">
+
+### 편리하게 음료를 픽업하고, 픽업 받을 수 있는 [픽업셔틀](https://www.notion.so/106c1c4b0e4b41f5a0f8e543b9190129?pvs=25)입니다. ###
+
+
+## 프로젝트 구조
+### ERD
+<img src="./images/MYSQLERD.png">
+
+### 디렉터리 구조
+
+```
+📦src
+ ┣ 📂docs
+ ┃ ┗ 📂asciidoc
+ ┣ 📂main
+ ┃ ┣ 📂generated
+ ┃ ┃ ┗ 📂pickup_shuttle
+ ┃ ┃ ┃ ┗ 📂pickup
+ ┃ ┃ ┃ ┃ ┗ 📂domain
+ ┃ ┣ 📂java
+ ┃ ┃ ┗ 📂pickup_shuttle
+ ┃ ┃ ┃ ┗ 📂pickup
+ ┃ ┃ ┃ ┃ ┣ 📂config
+ ┃ ┃ ┃ ┃ ┣ 📂domain
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂beverage
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂board
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂match
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂oauth2
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂refreshToken
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂store
+ ┃ ┃ ┃ ┃ ┃ ┗ 📂user
+ ┃ ┃ ┃ ┃ ┣ 📂security
+ ┃ ┃ ┃ ┃ ┣ 📂utils
+ ┃ ┃ ┃ ┃ ┣ 📂_core
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂errors
+ ┃ ┃ ┃ ┃ ┃ ┗ 📂utils
+ ┃ ┗ 📂resources
+ ┃ ┃ ┣ 📂db
+ ┃ ┃ ┣ 📂static
+ ┃ ┃ ┣ 📂templates
+ ┗ 📂test
+ ┃ ┗ 📂java
+ ┃ ┃ ┗ 📂pickup_shuttle
+ ┃ ┃ ┃ ┗ 📂pickup
+ ┃ ┃ ┃ ┃ ┗ 📂domain
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂board
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂user
+```
+## Tech Stacks
+
+### Backend
+
+| 분류      | Stack                   |
+|-----------|-------------------------|
+| BACK-END | <img src="https://img.shields.io/badge/JAVA-007396?style=forthebage"/> <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=forthebage&logo=springboot&logoColor=white"/> <img src="https://img.shields.io/badge/junit5-25A162?style=forthebage&logo=junit5&logoColor=white"/> <img src="https://img.shields.io/badge/Mockito-569A31?style=forthebadge"/> |
+| DATABASE | <img src="https://img.shields.io/badge/MySQL-4479A1?style=forthebadge&logo=MySQL&logoColor=white"/>                                                                 
+| INFRA    | <img src="https://img.shields.io/badge/AWS S3-569A31?style=forthebadge&logo=amazons3&logoColor=white"/> 
+| CI/CD    | <img src="https://img.shields.io/badge/GitHub Actions-2088FF?style=forthebage&logo=GitHub Actions&logoColor=white"/> <img src="https://img.shields.io/badge/MySQL Container-4479A1?style=forthebage&logo=MySQL&logoColor=white"/> <img src="https://img.shields.io/badge/NGINX-009639?style=forthebadge&logo=nginx&logoColor=white"/>                     
+
+
+## 📒 참고 자료
+
+- ✏️ [Notion](https://www.notion.so/795e1d561316494f8a156b89ebbd386b?v=9cbace0e7f0d4c0aaac74fc0e76dd238&pvs=4)
+
+- 💡 [기획 및 디자인](https://www.figma.com/file/UHfny7FM7ZtXo0cTsBcuKY/12%EC%A1%B0?type=design&node-id=376-1660&mode=design)
+
+- 📜 [API 명세서](https://www.notion.so/API-0e2e4398bd8a4bc5914b42cd4b7141b8?pvs=25)
+
+- 📁 [ERD](https://www.erdcloud.com/d/p3PSvuW4mboit2zdD)
+
+- 📝‍️ [DTO명 컨벤션](https://www.notion.so/DTO-50ba69bbeaae4f358111e9fc15b37f72?pvs=25)
+
+- 📝‍️ [DTO 컨벤션](https://www.notion.so/DTO-5d7f2572d8994e8d91394e6fa985cdb2?pvs=25)
+
+- 📝️ [ErrorMessage 컨벤션](https://www.notion.so/61985a4e48834069b386b26513297960?pvs=25)
+
+- 📝️ [상태코드 컨벤션](https://www.notion.so/1fd98ba5856c401ea20ccaba42dec05c?pvs=25)
+
+- 📝‍️ [테스트 시나리오](https://www.notion.so/106c1c4b0e4b41f5a0f8e543b9190129?pvs=25)
+
+## 🙋 참여 인원
+|       Backend       |     Backend       |         Backend         |
+|:-------------------:|:-----------------:|:-----------------------:|
+| ![](https://github.com/LJH098.png?size=120) | ![](https://github.com/dnjfqhd12345.png?size=120) | ![](https://github.com/B-JuHyeon.png?size=120) | 
+|      [이진혁](https://github.com/LJH098)       |      [이기준](https://github.com/dnjfqhd12345)       |      [박주현](https://github.com/B-JuHyeon)       |
+
+
+
+
+
+
 # Team12_BE
 12조
 ## 카카오 테크 캠퍼스 3단계 진행 보드
