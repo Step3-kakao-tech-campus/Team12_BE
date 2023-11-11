@@ -195,11 +195,11 @@ public class BoardControllerTest extends RestDocsConfig {
 
             //then
             resultActions.andExpect(jsonPath("$.success").value("true"));
-//            resultActions.andExpect(jsonPath("$.response.boardId").value(6));
-//            resultActions.andExpect(jsonPath("$.response.shopName").value("메가MGC"));
-//            resultActions.andExpect(jsonPath("$.response.tip").value(2000));
-//            resultActions.andExpect(jsonPath("$.response.isMatch").value(false));
-//            resultActions.andExpect(jsonPath("$.response.isRequester").value(false));
+            resultActions.andExpect(jsonPath("$.response.boardId").value(6));
+            resultActions.andExpect(jsonPath("$.response.shopName").value("메가MGC"));
+            resultActions.andExpect(jsonPath("$.response.tip").value(2000));
+            resultActions.andExpect(jsonPath("$.response.isMatch").value(false));
+            resultActions.andExpect(jsonPath("$.response.isRequester").value(false));
             resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
         }
         @Test // 공고글 상세 조회 (매칭 후)
@@ -222,12 +222,12 @@ public class BoardControllerTest extends RestDocsConfig {
 
             //then
             resultActions.andExpect(jsonPath("$.success").value("true"));
-//            resultActions.andExpect(jsonPath("$.response.boardId").value("3"));
-//            resultActions.andExpect(jsonPath("$.response.shopName").value("더벤티"));
-//            resultActions.andExpect(jsonPath("$.response.tip").value("2000"));
-//            resultActions.andExpect(jsonPath("$.response.isMatch").value(true));
-//            resultActions.andExpect(jsonPath("$.response.isRequester").value(true));
-//            resultActions.andExpect(jsonPath("$.response.pickerPhoneNumber").value("010-0000-0000"));
+            resultActions.andExpect(jsonPath("$.response.boardId").value("3"));
+            resultActions.andExpect(jsonPath("$.response.shopName").value("더벤티"));
+            resultActions.andExpect(jsonPath("$.response.tip").value("2000"));
+            resultActions.andExpect(jsonPath("$.response.isMatch").value(true));
+            resultActions.andExpect(jsonPath("$.response.isRequester").value(true));
+            resultActions.andExpect(jsonPath("$.response.pickerPhoneNumber").value("010-0000-0000"));
             resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
         }
         @Test
@@ -287,8 +287,8 @@ public class BoardControllerTest extends RestDocsConfig {
             System.out.println("testCreate : " + responseBody);
 
             //then
-//            resultActions.andExpect(jsonPath("$.success").value("true"));
-//            resultActions.andExpect(jsonPath("$.response.boardId").value("7"));
+            resultActions.andExpect(jsonPath("$.success").value("true"));
+            resultActions.andExpect(jsonPath("$.response.boardId").value("7"));
             resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
         }
         @Test
@@ -755,11 +755,11 @@ public class BoardControllerTest extends RestDocsConfig {
 
             //then
             resultActions.andExpect(jsonPath("$.success").value("true"));
-//            resultActions.andExpect(jsonPath("$.response.shopName").value("메가MGC"));
-//            resultActions.andExpect(jsonPath("$.response.destination").value("전남대 공대7 222호관"));
-//            resultActions.andExpect(jsonPath("$.response.beverages[0].name").value("카페라떼 1잔"));
-//            resultActions.andExpect(jsonPath("$.response.tip").value("2000"));
-//            resultActions.andExpect(jsonPath("$.response.request").value("빨리 와주세요6"));
+            resultActions.andExpect(jsonPath("$.response.shopName").value("메가MGC"));
+            resultActions.andExpect(jsonPath("$.response.destination").value("전남대 공대7 222호관"));
+            resultActions.andExpect(jsonPath("$.response.beverages[0].name").value("카페라떼 1잔"));
+            resultActions.andExpect(jsonPath("$.response.tip").value("2000"));
+            resultActions.andExpect(jsonPath("$.response.request").value("빨리 와주세요6"));
             resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
         }
         @Test()
@@ -927,7 +927,7 @@ public class BoardControllerTest extends RestDocsConfig {
 
             //then
             resultActions.andExpect(jsonPath("$.success").value("true"));
-//            resultActions.andExpect(jsonPath("$.response.message").value("공고글 삭제를 완료하였습니다"));
+            resultActions.andExpect(jsonPath("$.response").value("공고글 삭제를 완료하였습니다"));
             resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
         }
         @Test
@@ -1004,75 +1004,75 @@ public class BoardControllerTest extends RestDocsConfig {
 
     @Nested
     class testBoardUpdate{
-//        @Test
-//        @DisplayName("성공 : 수정 값이 하나인 경우")
-//        void testBoardUpdate1() throws Exception {
-//            // given
-//            Long boardId = 6L;
-//            String shopName = "더벤티";
-//            String accessToken = "Bearer " + jwtService.createAccessToken("6");
-//            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
-//                    .shopName(shopName)
-//                    .build();
-//            String requestBody = om.writeValueAsString(requestDTO);
-//            //when
-//            ResultActions resultActions = mvc.perform(
-//                    put("/articles/modify/{boardId}", boardId)
-//                            .content(requestBody)
-//                            .contentType(MediaType.APPLICATION_JSON)
-//                            .header("Authorization", accessToken)
-//            );
-//            //eye
-//            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-//            System.out.println("testBoardUpdate1 : " + responseBody);
-//
-//            //then
-//            resultActions.andExpect(jsonPath("$.success").value("true"));
-//            resultActions.andExpect(jsonPath("$.response.boardId").value(boardId));
-//            resultActions.andExpect(jsonPath("$.response.shopName").value(shopName)); // 수정
-//            resultActions.andExpect(jsonPath("$.response.destination").value("전남대 공대7 222호관"));
-//            resultActions.andExpect(jsonPath("$.response.beverages[0].name").value("카페라떼 1잔"));
-//            resultActions.andExpect(jsonPath("$.response.tip").value(2000));
-//            resultActions.andExpect(jsonPath("$.response.request").value("빨리 와주세요6"));
-//            resultActions.andExpect(jsonPath("$.response.isMatch").value(false));
-//            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
-//        }
-//
-//        @Test
-//        @DisplayName("성공 : 수정 값이 둘인 경우")
-//        void testBoardUpdate2() throws Exception {
-//            // given
-//            Long boardId = 6L;
-//            String shopName = "더벤티";
-//            int tip = 1;
-//            String accessToken = "Bearer " + jwtService.createAccessToken("6");
-//            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
-//                    .shopName(shopName)
-//                    .tip(tip)
-//                    .build();
-//            String requestBody = om.writeValueAsString(requestDTO);
-//            //when
-//            ResultActions resultActions = mvc.perform(
-//                    put("/articles/modify/{boardId}", boardId)
-//                            .content(requestBody)
-//                            .contentType(MediaType.APPLICATION_JSON)
-//                            .header("Authorization", accessToken)
-//            );
-//            //eye
-//            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-//            System.out.println("testBoardUpdate2 : " + responseBody);
-//
-//            //then
-//            resultActions.andExpect(jsonPath("$.success").value("true"));
-//            resultActions.andExpect(jsonPath("$.response.boardId").value(boardId));
-//            resultActions.andExpect(jsonPath("$.response.shopName").value(shopName)); // 수정
-//            resultActions.andExpect(jsonPath("$.response.destination").value("전남대 공대7 222호관"));
-//            resultActions.andExpect(jsonPath("$.response.beverages[0].name").value("카페라떼 1잔"));
-//            resultActions.andExpect(jsonPath("$.response.tip").value(tip)); // 수정
-//            resultActions.andExpect(jsonPath("$.response.request").value("빨리 와주세요6"));
-//            resultActions.andExpect(jsonPath("$.response.isMatch").value(false));
-//            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
-//        }
+        @Test
+        @DisplayName("성공 : 수정 값이 하나인 경우")
+        void testBoardUpdate1() throws Exception {
+            // given
+            Long boardId = 6L;
+            String shopName = "더벤티";
+            String accessToken = "Bearer " + jwtService.createAccessToken("6");
+            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
+                    .shopName(shopName)
+                    .build();
+            String requestBody = om.writeValueAsString(requestDTO);
+            //when
+            ResultActions resultActions = mvc.perform(
+                    put("/articles/modify/{boardId}", boardId)
+                            .content(requestBody)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", accessToken)
+            );
+            //eye
+            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+            System.out.println("testBoardUpdate1 : " + responseBody);
+
+            //then
+            resultActions.andExpect(jsonPath("$.success").value("true"));
+            resultActions.andExpect(jsonPath("$.response.boardId").value(boardId));
+            resultActions.andExpect(jsonPath("$.response.shopName").value(shopName)); // 수정
+            resultActions.andExpect(jsonPath("$.response.destination").value("전남대 공대7 222호관"));
+            resultActions.andExpect(jsonPath("$.response.beverages[0].name").value("카페라떼 1잔"));
+            resultActions.andExpect(jsonPath("$.response.tip").value(2000));
+            resultActions.andExpect(jsonPath("$.response.request").value("빨리 와주세요6"));
+            resultActions.andExpect(jsonPath("$.response.isMatch").value(false));
+            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        }
+
+        @Test
+        @DisplayName("성공 : 수정 값이 둘인 경우")
+        void testBoardUpdate2() throws Exception {
+            // given
+            Long boardId = 6L;
+            String shopName = "더벤티";
+            int tip = 1;
+            String accessToken = "Bearer " + jwtService.createAccessToken("6");
+            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
+                    .shopName(shopName)
+                    .tip(tip)
+                    .build();
+            String requestBody = om.writeValueAsString(requestDTO);
+            //when
+            ResultActions resultActions = mvc.perform(
+                    put("/articles/modify/{boardId}", boardId)
+                            .content(requestBody)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", accessToken)
+            );
+            //eye
+            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+            System.out.println("testBoardUpdate2 : " + responseBody);
+
+            //then
+            resultActions.andExpect(jsonPath("$.success").value("true"));
+            resultActions.andExpect(jsonPath("$.response.boardId").value(boardId));
+            resultActions.andExpect(jsonPath("$.response.shopName").value(shopName)); // 수정
+            resultActions.andExpect(jsonPath("$.response.destination").value("전남대 공대7 222호관"));
+            resultActions.andExpect(jsonPath("$.response.beverages[0].name").value("카페라떼 1잔"));
+            resultActions.andExpect(jsonPath("$.response.tip").value(tip)); // 수정
+            resultActions.andExpect(jsonPath("$.response.request").value("빨리 와주세요6"));
+            resultActions.andExpect(jsonPath("$.response.isMatch").value(false));
+            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        }
         @Test
         @DisplayName("성공 : 공고글 전체를 수정하는 경우")
         void testBoardUpdateAll() throws Exception {
@@ -1108,15 +1108,15 @@ public class BoardControllerTest extends RestDocsConfig {
             System.out.println("testBoardUpdate3 : " + responseBody);
 
             //then
-//            resultActions.andExpect(jsonPath("$.success").value("true"));
-//            resultActions.andExpect(jsonPath("$.response.boardId").value(boardId));
-//            resultActions.andExpect(jsonPath("$.response.shopName").value(shopName));
-//            resultActions.andExpect(jsonPath("$.response.destination").value(destination));
-//            resultActions.andExpect(jsonPath("$.response.beverages[0].name").value("아이스 아메리카노 1잔"));
-//            resultActions.andExpect(jsonPath("$.response.tip").value(tip));
-//            resultActions.andExpect(jsonPath("$.response.request").value(request));
-//            resultActions.andExpect(jsonPath("$.response.finishedAt").value("1698996300"));
-//            resultActions.andExpect(jsonPath("$.response.isMatch").value(false));
+            resultActions.andExpect(jsonPath("$.success").value("true"));
+            resultActions.andExpect(jsonPath("$.response.boardId").value(boardId));
+            resultActions.andExpect(jsonPath("$.response.shopName").value(shopName));
+            resultActions.andExpect(jsonPath("$.response.destination").value(destination));
+            resultActions.andExpect(jsonPath("$.response.beverages[0].name").value("아이스 아메리카노 1잔"));
+            resultActions.andExpect(jsonPath("$.response.tip").value(tip));
+            resultActions.andExpect(jsonPath("$.response.request").value(request));
+            resultActions.andExpect(jsonPath("$.response.finishedAt").value("1698996300"));
+            resultActions.andExpect(jsonPath("$.response.isMatch").value(false));
             resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
         }
         @Test
