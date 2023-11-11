@@ -4,14 +4,14 @@
 </p>
 
 ## 저희 프로젝트를 소개합니다
-<img src="./images/main.png">
+<img src="./images/main.png" width="450" height="204"/>
 
 ### 편리하게 음료를 픽업하고, 픽업 받을 수 있는 [픽업셔틀](https://www.notion.so/106c1c4b0e4b41f5a0f8e543b9190129?pvs=25)입니다. ###
 
 
 ## 프로젝트 구조
 ### ERD
-<img src="./images/MYSQLERD.png">
+<img src="./images/MYSQLERD.png" width="450" height="450">
 
 ### 디렉터리 구조
 
@@ -86,10 +86,10 @@
 - 📝‍️ [테스트 시나리오](https://www.notion.so/106c1c4b0e4b41f5a0f8e543b9190129?pvs=25)
 
 ## 🙋 참여 인원
-|       Backend       |     Backend       |         Backend         |
+|       Backend       |         Backend       |         Backend         |
 |:-------------------:|:-----------------:|:-----------------------:|
-| ![](https://github.com/LJH098.png?size=120) | ![](https://github.com/dnjfqhd12345.png?size=120) | ![](https://github.com/B-JuHyeon.png?size=120) | 
-|      [이진혁](https://github.com/LJH098)       |      [이기준](https://github.com/dnjfqhd12345)       |      [박주현](https://github.com/B-JuHyeon)       |
+| ![](https://github.com/LJH098.png?size=50) | ![](https://github.com/dnjfqhd12345.png?size=100) | ![](https://github.com/B-JuHyeon.png?size=50) | 
+| [이진혁](https://github.com/LJH098)| [이기준](https://github.com/dnjfqhd12345)|[박주현](https://github.com/B-JuHyeon)  |
 
 
 
