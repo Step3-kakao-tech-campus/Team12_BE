@@ -1,0 +1,25 @@
+= PickUp Shuttle APIs
+https://github.com/Step3-kakao-tech-campus/Team12_BE
+:doctype: book
+:icons: font
+:toc: left
+:source-highlighter: highlightjs
+:toclevels: 3
+:sectnums:
+:docinfo: shared-head
+
+== Board API
+
+=== link:board-list.html[공고글 목록, window=_blank]
+=== link:board-detail.html[공고글 상세조회, window=_blank]
+=== link:board-create.html[공고글 작성, window=_blank]
+=== link:board-delete.html[공고글 삭제, window=_blank]
+=== link:board-update.html[공고글 수정, window=_blank]
+=== link:board-accpet.html[공고글 수락, window=_blank]
+
+// include::../asciidoc/board-list.adoc[]
+// include::../asciidoc/board-detail.adoc[]
+// include::../asciidoc/board-create.adoc[]
+// include::../asciidoc/board-delete.adoc[]
+// include::../asciidoc/board-update.adoc[]
+// include::../asciidoc/board-accept.adoc[]

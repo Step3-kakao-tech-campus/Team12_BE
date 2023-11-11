@@ -24,8 +24,6 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
     private final UserRepository userRepository;
 
-    private static final String KAKAO = "kakao";
-
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         log.info("CustomOAuth2UserService.loadUser() 실행 - OAuth2 로그인 요청 진입");
@@ -42,7 +40,6 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
          * http://localhost:8080/login/kakao에서 kakao가 registrationId
          * userNameAttributeName은 이후에 nameAttributeKey로 설정된다.
          */
-        String registrationId = userRequest.getClientRegistration().getRegistrationId();
         String userNameAttributeName = userRequest.getClientRegistration()
                 .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName(); // OAuth2 로그인 시 키(PK)가 되는 값
         Map<String, Object> attributes = oAuth2User.getAttributes(); // 소셜 로그인에서 API가 제공하는 userInfo의 json값 (유저정보들)
@@ -68,9 +65,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
 
     private User getUser(OAuthAttributes attributes) {
-        System.out.println("getId는: " + attributes.getKakaoOAuth2UserInfo().getId());
         User findUser = userRepository.findBySocialId(attributes.getKakaoOAuth2UserInfo().getId()).orElse(null);
-
         if (findUser == null) {
             return saveUser(attributes);
         }

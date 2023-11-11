@@ -1,3 +1,157 @@
+<p align="center">
+  <h2 align="center"><a href="https://k0d01653e1a11a.user-app.krampoline.com/">☕ 픽업 셔틀</a></h2>
+  <p align="center">카카오테크캠퍼스 1기 12조 픽업셔틀 팀입니다😇 </p>
+</p>
+
+## 저희 프로젝트를 소개합니다
+<img src = "https://github.com/Step3-kakao-tech-campus/Team12_BE/assets/114290599/6999fc27-4d12-436c-8564-7e6693aa7528">
+
+<img src = "https://github.com/Step3-kakao-tech-campus/Team12_BE/assets/114290599/1ff68c37-814b-43a8-91da-bc4cb87c6d0e">
+
+<img src="https://github.com/Step3-kakao-tech-campus/Team12_BE/assets/114290599/8f494e42-601a-484c-b548-0fda714bc7be"/>
+
+### 편리하게 음료를 픽업하고, 픽업 받을 수 있는 [픽업셔틀](https://k0d01653e1a11a.user-app.krampoline.com/)입니다. ###
+### 배포 주소 (FE): https://k0d01653e1a11a.user-app.krampoline.com/ ###
+### 배포 주소 (BE): https://k0d01653e1a11a.user-app.krampoline.com/api ###
+
+## ❗ 프로젝트에서 고민한 점
+### 사용자 로그인 과정에 대한 고민
+```
+사용자로부터 ID와 PW를 입력 받아서 로그인 하는 과정과 카카오 OAuth 로그인 중 어떤 것을 구현할지 고민을 하였습니다. 저희는 최대한 사용자가 회원가입할 때 편의성을 제공해주기 위해서 OAuth 로그인 과정을 선택하였습니다.
+OAuth 처리할 때 redirect uri를 백엔드 서버 주소로 할 것인가 프론트엔드 서버 주소로 할 것인가에 대한 고민
+KAKAO OAuth 로그인을 구현하기 위해서 카카오로부터 인가코드받고 카카오로부터 엑세스 토큰과 리프레시 토큰을 요청하는 부분을 프론트엔드와 백엔드가 각각 역할을 나누는 방식으로 구현할지 아니면 모든 과정을 백엔드에서 처리할지 고민하였습니다.
+결국은 카카오로부터 인가코드를 받고 엑세스 토큰과 리프레시 토큰을 요청하는 모든 과정을 백엔드에서 처리하는 것으로 구현하였습니다. 즉, redirect uri를 백엔드 서버 주소로 설정하였었는데, 이 방법을 선택했던 이유는 최대한 프론트엔드 개발하는데 있어서 최대한 신경을 덜 쓸 수 있도록 편의성을 제공해주기 위해서였습니다.
+```
+
+### 인증 과정
+```
+저희 서비스는 인증 과정을 JWT로 구성하였습니다. JWT를 사용하게 된 이유는 쿠키는 보안에 너무 취약하고 세션으로 사용하게 된다면 사용자수가 많아지게 되면 서버에 과부하가 생길 수 있다고 판단하였기 때문에 인증 절차를 JWT로 사용하기로 결정하였습니다.
+엑세스 토큰은 응답 Body를 통해 프론트엔드로 넘겨주고 리프레시 토큰은 DB 테이블을 만들어서 저장하는 식으로 구성하였습니다. 엑세스 토큰 기간과 리프레시 토큰 기간을 얼마로 둘 건지에 대해서도 고민을 했는데 엑세스 토큰은 30분 리프레시 토큰은 2주로 정했습니다.
+```
+
+### 배포
+```
+크램폴린에 배포할 때 저희는 먼저 프론트엔드 서버와 백엔드 서버를 서로 다른 도메인을 사용하여 배포하려고 했습니다. 하지만 여기에서 많은 문제점들이 발생하였었는데, CORS, SameSite 정책으로 프론트엔드 서버와 백엔드 서버 간에 통신이 제대로 안되는 문제점이 있었고, 프론트엔드에서 “카카오 로그인”버튼을 클릭해도 로그인 처리를 백엔드에서 모두 처리하기 때문에 백엔드 Spring Security의 SecurityContext에서 인증 객체가 제대로 관리가 되지 않아서 아무리 로그인이 성공해도 인증 객체가 저장이 되지 않는다는 문제점이 발생하였습니다. 도메인이 다름으로써 프론트엔드 서버와 백엔드 서버 간의 통신할 때 여러 문제점들이 계속 발생이 되어 따라서 프론트엔드와 백엔드 서버를 각각 다른 도메인으로 두지 않고 하나의 쿠버네티스 네임스페이스에서 프론트엔드와 백엔드, MySQL, Nginx를 모두 동작시키는 식으로 해결하였습니다. 하나의 네임스페이스에서 동작을 시킴으로써 위에 적었던 모든 문제점들을 해결할 수 있었습니다.
+```
+
+### 이미지 업로드
+```
+저희는 이미지 업로드를 S3로 할 것인지 DB에 바이너리 데이터 형식으로 저장할 것인지에 대해서 고민을 하였었습니다. 학교에서 DB 과목을 배웠을 당시에는 DB에 이미지 저장은 바이너리 데이터 형식으로 저장하는 걸로 배웠었기 때문에 이미지 업로드 관련해서는 바이너리 데이터 형식으로 저장하려고 했었습니다. 하지만 조원들과의 상의를 하면서 인터넷에 자료를 찾아보니깐 DB에 비해서 Amazon S3에 저장해서 사용하는 것이 더 많은 장점이 있다는 것을 알게 되었습니다. 주로 성능, 확장성, DB 비용, 빠른 로딩 시간에서 S3가 DB에 비해서 이점을 얻을 수 있다는 것을 알았기에 DB에 바이너리를 저장하는 것이 아닌 S3에 이미지를 업로드 하는 식으로 새롭게 사용해보기로 결정하였습니다. DB에 바이너리 데이터 형식으로 저장하는 것보단 S3 형식으로 이미지를 업로드하기 위해서 스프링 부트에서 사전 세팅하는데 시간이 좀 걸렸지만 확실히 DB에 바이너리 형식으로 업로드 하는 것에 비해 S3에 업로드를 해보니 DB 과부하에 대한 걱정이 사라지게 되었고 속도 측면에서도 빨라지게 되어서 서비스를 운영하는 측면에 있어서 성능 최적화를 얻을 수 있게 되었습니다.
+```
+## 프로젝트 구조
+### ERD
+<img src="https://github.com/Step3-kakao-tech-campus/Team12_BE/assets/114290599/b0ae89f6-545f-4796-94df-b29556a928b0">
+
+### 디렉터리 구조
+
+```
+📦src
+ ┣ 📂docs
+ ┃ ┗ 📂asciidoc
+ ┣ 📂main
+ ┃ ┣ 📂generated
+ ┃ ┃ ┗ 📂pickup_shuttle
+ ┃ ┃ ┃ ┗ 📂pickup
+ ┃ ┃ ┃ ┃ ┗ 📂domain
+ ┃ ┣ 📂java
+ ┃ ┃ ┗ 📂pickup_shuttle
+ ┃ ┃ ┃ ┗ 📂pickup
+ ┃ ┃ ┃ ┃ ┣ 📂config
+ ┃ ┃ ┃ ┃ ┣ 📂domain
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂beverage
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂board
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂match
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂oauth2
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂refreshToken
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂store
+ ┃ ┃ ┃ ┃ ┃ ┗ 📂user
+ ┃ ┃ ┃ ┃ ┣ 📂security
+ ┃ ┃ ┃ ┃ ┣ 📂utils
+ ┃ ┃ ┃ ┃ ┣ 📂_core
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂errors
+ ┃ ┃ ┃ ┃ ┃ ┗ 📂utils
+ ┃ ┗ 📂resources
+ ┃ ┃ ┣ 📂db
+ ┃ ┃ ┣ 📂static
+ ┃ ┃ ┣ 📂templates
+ ┗ 📂test
+ ┃ ┗ 📂java
+ ┃ ┃ ┗ 📂pickup_shuttle
+ ┃ ┃ ┃ ┗ 📂pickup
+ ┃ ┃ ┃ ┃ ┗ 📂domain
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂board
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂user
+```
+## 🪪 Tech Stacks
+
+### Backend
+
+| 분류      | Stack                   |
+|-----------|-------------------------|
+| BACK-END | <img src="https://img.shields.io/badge/JAVA-007396?style=forthebage"/> <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=forthebage&logo=springboot&logoColor=white"/> |
+| DATABASE | <img src="https://img.shields.io/badge/MySQL-4479A1?style=forthebadge&logo=MySQL&logoColor=white"/>                                                         
+|Version Control|<img src = "https://img.shields.io/badge/git-%23F05033.svg?style=forthebage&logo=git&logoColor=white"> <img src ="https://img.shields.io/badge/github-%23121011.svg?style=forthebage&logo=github&logoColor=white">
+| INFRA    | <img src="https://img.shields.io/badge/AWS S3-569A31?style=forthebadge&logo=amazons3&logoColor=white"/> <img src="https://img.shields.io/badge/Krampoline-F7DF1E?style=forthebadge&logo=kakao&logoColor=white">
+
+
+## 📒 참고 자료
+
+
+- 💡 [기획 및 디자인](https://www.figma.com/file/UHfny7FM7ZtXo0cTsBcuKY/12%EC%A1%B0?type=design&node-id=376-1660&mode=design)
+
+- 📜 [API 명세서](https://www.notion.so/API-0e2e4398bd8a4bc5914b42cd4b7141b8?pvs=4)
+
+- 🔍‍️ [DTO명 컨벤션](https://bronzed-amount-986.notion.site/DTO-0770d09a84e642819245e1c4846ba314?pvs=4)
+
+- 📌‍️ [DTO 컨벤션](https://bronzed-amount-986.notion.site/DTO-0770d09a84e642819245e1c4846ba314?pvs=4)
+
+- ⚠️ [ErrorMessage 컨벤션](https://bronzed-amount-986.notion.site/d3f8c995552048e4bcdfe549291d68c2?pvs=4)
+
+- 🚨 [상태코드 컨벤션](https://bronzed-amount-986.notion.site/46b20e72652d4f74b71accee9f73c04f?pvs=4)
+
+- 🎞️‍️ [테스트 시나리오](https://bronzed-amount-986.notion.site/2bb8c9e7c2094d15a7e3c88ec09ea41f?pvs=4)
+
+## 🙋 참여 인원
+
+<table>
+    <tr align="center">
+        <td style="min-width: 150px;">
+            <a href="https://github.com/LJH098">
+              <img src="https://github.com/LJH098.png" width="100">
+              <br />
+              <b>이진혁 </br>(LJH098)</b>
+            </a> 
+        </td>
+        <td style="min-width: 150px;">
+            <a href="https://github.com/dnjfqhd12345">
+              <img src="https://github.com/dnjfqhd12345.png" width="100">
+              <br />
+              <b>이기준</br> (dnjfqhd12345)</b>
+            </a>
+        </td>
+        <td style="min-width: 150px;">
+            <a href="https://github.com/B-JuHyeon">
+              <img src="https://github.com/B-JuHyeon.png" width="100">
+              <br />
+              <b>박주현 </br>(B-JuHyeon)</b>
+            </a>
+        </td>
+    </tr>
+    <tr align="center">
+        </td>
+                <td>
+            Backend
+        </td>
+                <td>
+            Backend
+        </td>   <td>
+            Backend
+        </td>
+    </tr>
+</table>
+
+
+
 # Team12_BE
 12조
 ## 카카오 테크 캠퍼스 3단계 진행 보드

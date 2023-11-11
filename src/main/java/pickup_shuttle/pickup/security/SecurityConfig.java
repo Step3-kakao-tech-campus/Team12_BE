@@ -1,6 +1,5 @@
 package pickup_shuttle.pickup.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +14,6 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -37,7 +35,6 @@ public class SecurityConfig {
 
     private final JwtService jwtService;
     private final UserRepository userRepository;
-    private final ObjectMapper objectMapper;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
     private final CustomOAuth2UserService customOAuth2UserService;
@@ -47,6 +44,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.formLogin(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.disable())
                 .csrf(AbstractHttpConfigurer::disable)
 
                 .headers((headers) -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
@@ -55,7 +53,11 @@ public class SecurityConfig {
                         .requestMatchers(new AntPathRequestMatcher("/admin")).hasAuthority("ROLE_ADMIN")
                         .requestMatchers(new AntPathRequestMatcher("/users/register/input")).hasAuthority("ROLE_GUEST")
                         .requestMatchers(
-                                new AntPathRequestMatcher("/"),
+                                new AntPathRequestMatcher("/**"),
+                                new AntPathRequestMatcher("/api/**"),
+                                new AntPathRequestMatcher("/api/articles"),
+                                new AntPathRequestMatcher("/api/articles?limit=3"),
+                                new AntPathRequestMatcher("/api/articles?offset=10&limit=10"),
                                 new AntPathRequestMatcher("/login/callback"),
                                 new AntPathRequestMatcher("/users/register/input"),
                                 new AntPathRequestMatcher("/css/**"),
@@ -90,6 +92,18 @@ public class SecurityConfig {
 
         return http.build();
 
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("https://k0d01653e1a11a.user-app.krampoline.com"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedHeaders(Arrays.asList("Authorization","authorization", "Authorization-refresh", "Cache-Control", "Content-Type"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Bean

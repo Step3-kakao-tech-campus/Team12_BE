@@ -1,0 +1,98 @@
+= 공고글 수정
+:doctype: book
+:icons: font
+:toc: left
+:source-highlighter: highlightjs
+:toclevels: 2
+:sectnums:
+:docinfo: shared-head
+
+== 공고글 수정
+=== Request
+include::{snippets}/test-board-update/test-board-update-all/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-update/test-board-update-all/response-body.adoc[]
+
+== 음료가 공백인 경우 공고글 수정 실패
+=== Request
+include::{snippets}/test-board-update/test-board-update-blank-beverage/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-update/test-board-update-blank-beverage/response-body.adoc[]
+
+== 음료 값이 없는 경우 공고글 수정 실패
+=== Request
+include::{snippets}/test-board-update/test-board-update-blank-beverages/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-update/test-board-update-blank-beverages/response-body.adoc[]
+
+== 가게명이 공백인 경우 공고글 수정 실패
+=== Request
+include::{snippets}/test-board-update/test-board-update-blank-shop-name/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-update/test-board-update-blank-shop-name/response-body.adoc[]
+
+== 위치가 공백인 경우 공고글 수정 실패
+=== Request
+include::{snippets}/test-board-update/test-board-update-blank-destination/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-update/test-board-update-blank-destination/response-body.adoc[]
+
+== 마감기한의 형식이 맞지 않는 경우 공고글 수정 실패
+=== Request
+include::{snippets}/test-board-update/test-board-update-invalid-finished-at/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-update/test-board-update-invalid-finished-at/response-body.adoc[]
+
+== 공고글의 작성자가 아닌 경우 공고글 수정 실패
+=== Request
+include::{snippets}/test-board-update/test-board-update-invalid-user/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-update/test-board-update-invalid-user/response-body.adoc[]
+
+== 공고글이 매칭되어 있는 경우 공고글 수정 실패
+=== Request
+include::{snippets}/test-board-update/test-board-update-match/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-update/test-board-update-match/response-body.adoc[]
+
+== 음료명의 길이가 제한을 초과하는 경우 공고글 수정 실패
+=== Request
+include::{snippets}/test-board-update/test-board-update-max-beverage/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-update/test-board-update-max-beverage/response-body.adoc[]
+
+== 위치의 길이가 제한을 초과하는 경우 공고글 수정 실패
+=== Request
+include::{snippets}/test-board-update/test-board-update-max-destination/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-update/test-board-update-max-destination/response-body.adoc[]
+
+== 요청사항의 길이가 제한을 초과하는 경우 공고글 수정 실패
+=== Request
+include::{snippets}/test-board-update/test-board-update-max-request/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-update/test-board-update-max-request/response-body.adoc[]
+
+== 가게의 길이가 제한을 초과하는 경우 공고글 수정 실패
+=== Request
+include::{snippets}/test-board-update/test-board-update-max-shop-name/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-update/test-board-update-max-shop-name/response-body.adoc[]
+
+== 픽업팁이 0 이하인 경우 공고글 수정 실패
+=== Request
+include::{snippets}/test-board-update/test-board-update-min-tip/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-update/test-board-update-min-tip/response-body.adoc[]
+
+== 공고글을 찾을 수 없는 경우 공고글 수정 실패
+=== Request
+include::{snippets}/test-board-update/test-board-update-not-found/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-update/test-board-update-not-found/response-body.adoc[]
+
+== 가게를 찾을 수 없는 경우 공고글 수정 실패
+=== Request
+include::{snippets}/test-board-update/test-board-update-not-found-store/http-request.adoc[]
+=== Response
+include::{snippets}/test-board-update/test-board-update-not-found-store/response-body.adoc[]

@@ -30,19 +30,16 @@ import java.util.Optional;
 @Log4j2
 public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
-    private static final String NO_CHECK_URL = "/login/callback";
-
     private final JwtService jwtService;
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
-
     private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if(request.getRequestURI().equals("/")||request.getRequestURI().equals("/login/callback") ||request.getRequestURI().equals("/signup") || request.getRequestURI().equals("/login/oauth2/code/kakao")|| request.getRequestURI().equals("/users/register/input")){
-            filterChain.doFilter(request,response); // "/login/callback" 요청이 들어오면, 다음 필터 호출
+        if(request.getRequestURI().equals("/api/")||request.getRequestURI().equals("/api/articles")||request.getRequestURI().equals("/api/login/callback") ||request.getRequestURI().equals("/api/signup") || request.getRequestURI().equals("/api/login/oauth2/code/kakao")|| request.getRequestURI().equals("/api/users/register/input")){
+            filterChain.doFilter(request,response); // if문에 있는 URI 요청이 들어오면, 다음 필터 호출
             return;  // return으로 이후 현재 필터 진행 막기 (안해주면 아래로 내려가서 계속 필터 진행시킴)
         }
 
@@ -141,7 +138,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                 .password(password)
                 .roles(myUser.getUserRole().name())
                 .build();
-        System.out.println("saveAuthentication userDetailsUser.getUsername(): " + userDetailsUser.getUsername());
         Authentication authentication =
                 new UsernamePasswordAuthenticationToken(userDetailsUser, null,
                         authoritiesMapper.mapAuthorities(userDetailsUser.getAuthorities()));

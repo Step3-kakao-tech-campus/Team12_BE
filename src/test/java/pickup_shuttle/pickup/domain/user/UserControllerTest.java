@@ -3,20 +3,19 @@ package pickup_shuttle.pickup.domain.user;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
-import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.ResultActions;
-import pickup_shuttle.pickup.domain.user.dto.request.UserAuthApproveRqDTO;
-import pickup_shuttle.pickup.domain.user.repository.UserRepository;
+import pickup_shuttle.pickup.domain.user.dto.request.ApproveUserRq;
+import pickup_shuttle.pickup.domain.user.dto.request.RejectUserRq;
 import pickup_shuttle.pickup.security.service.JwtService;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @Sql("classpath:db/teardown.sql")
@@ -177,7 +176,7 @@ class UserControllerTest {
             //given
             String accessToken = "Bearer " + jwtService.createAccessToken("1"); //ADMIN
             Long userId = 2L; // 학생 인증을 신청한 일반회원
-            UserAuthApproveRqDTO requestDTO = UserAuthApproveRqDTO.builder()
+            ApproveUserRq requestDTO = ApproveUserRq.builder()
                     .userId(userId)
                     .build();
             String requestBody = om.writeValueAsString(requestDTO);
@@ -204,7 +203,7 @@ class UserControllerTest {
             //given
             String accessToken = "Bearer " + jwtService.createAccessToken("1"); //ADMIN
             Long userId = 7L; // GUEST
-            UserAuthApproveRqDTO requestDTO = UserAuthApproveRqDTO.builder()
+            ApproveUserRq requestDTO = ApproveUserRq.builder()
                     .userId(userId)
                     .build();
             String requestBody = om.writeValueAsString(requestDTO);
@@ -226,6 +225,59 @@ class UserControllerTest {
         }
     }
 
+    @Test
+    @DisplayName("성공 : 학생 인증 거절")
+    void testAuthReject() throws Exception{
+        //given
+        String accessToken = "Bearer " + jwtService.createAccessToken("1"); //ADMIN
+        Long userId = 2L; // 학생 인증을 신청한 일반회원
+        RejectUserRq requestDTO = RejectUserRq.builder()
+                .userId(userId)
+                .build();
+        String requestBody = om.writeValueAsString(requestDTO);
+        //when
+        ResultActions resultActions = mvc.perform(
+                put("/admin/auth/reject")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", accessToken)
+        );
+
+        //eye
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("testAuthApprove : " + responseBody);
+
+        //then
+        resultActions.andExpect(jsonPath("$.success").value("true"));
+        resultActions.andExpect(jsonPath("$.response.message").value("학생 인증이 거절되었습니다"));
+    }
+
+    @Test
+    @DisplayName("실패 : 유저 권한이 일반사용자가 아닐 경우")
+    void testFailAuthReject() throws Exception {
+        //given
+        String accessToken = "Bearer " + jwtService.createAccessToken("1"); //ADMIN
+        Long userId = 3L; // 학생 인증을 신청한 일반회원
+        RejectUserRq requestDTO = RejectUserRq.builder()
+                .userId(userId)
+                .build();
+        String requestBody = om.writeValueAsString(requestDTO);
+        //when
+        ResultActions resultActions = mvc.perform(
+                put("/admin/auth/reject")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", accessToken)
+        );
+
+        //eye
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("testAuthApprove : " + responseBody);
+
+        //then
+        resultActions.andExpect(jsonPath("$.success").value("false"));
+        resultActions.andExpect(jsonPath("$.error.message").value("일반 회원이 아닙니다"));
+    }
     @Nested
     class testGetRequesterDetail{
         @Test
@@ -279,7 +331,7 @@ class UserControllerTest {
     @DisplayName("성공 : (작성자) 공고글 목록 보기")
     void testGetRequesterList() throws Exception {
         //given
-        String accessToken = "Bearer " + jwtService.createAccessToken("3");
+        String accessToken = "Bearer " + jwtService.createAccessToken("6");
 
         //when
         ResultActions resultActions = mvc.perform(
@@ -294,9 +346,8 @@ class UserControllerTest {
 
         //then
         resultActions.andExpect(jsonPath("$.success").value("true"));
-        resultActions.andExpect(jsonPath("$.response.content[0].boardId").value(3));
+        resultActions.andExpect(jsonPath("$.response.content[0].boardId").value(6));
     }
-}
 
     @Test
     @DisplayName("성공 : 피커 공고글 목록")
@@ -305,7 +356,6 @@ class UserControllerTest {
         String accessToken = "Bearer " + jwtService.createAccessToken("2");
         String refreshToken = jwtService.createRefreshToken();
         System.out.println("refreshToken: " + refreshToken);
-        Long userId = 2L;
         String offset = "";
         String limit = "10";
         //when
@@ -323,7 +373,7 @@ class UserControllerTest {
 
         //then
         resultActions.andExpect(jsonPath("$.success").value("true"));
-        resultActions.andExpect(jsonPath("$.response.last").value("true"));
+        resultActions.andExpect(jsonPath("$.response.pageable.last").value("true"));
         resultActions.andExpect(jsonPath("$.response.content[0].boardId").value("4"));
         resultActions.andExpect(jsonPath("$.response.content[0].destination").value("전남대 공대7 220호관"));
     }
@@ -333,7 +383,6 @@ class UserControllerTest {
     void testFailPickerBoardList() throws Exception {
         //given
         String accessToken = "Bearer " + jwtService.createAccessToken("1");
-        Long userId = 1L;
         String offset = "";
         String limit = "10";
         //when

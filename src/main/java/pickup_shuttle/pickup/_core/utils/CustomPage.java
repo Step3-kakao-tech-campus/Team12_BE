@@ -17,13 +17,11 @@ public class CustomPage<T> {
 
     @Getter
     private class CustomPageable {
-        private int pageSize;
         private int numberOfElements;
         private boolean empty;
         private boolean last;
 
         public CustomPageable(Slice<T> slice){
-            this.pageSize = slice.getSize();
             this.numberOfElements = slice.getNumberOfElements();
             this.empty = slice.isEmpty();
             this.last = slice.isLast();
