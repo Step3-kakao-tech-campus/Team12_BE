@@ -184,7 +184,7 @@ public class BoardService {
     }
 
     @Transactional
-    public void boardDelete(Long boardId, Long userId){
+    public DeleteBoardRp boardDelete(Long boardId, Long userId){
         // 공고글 확인
         Board board = boardRepository.m3findByBoardId(boardId).orElseThrow(
                 () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
@@ -197,6 +197,9 @@ public class BoardService {
             throw new Exception403("공고글이 이미 매칭된 경우 공고글을 삭제할 수 없습니다");
         // 삭제
         boardRepository.delete(board);
+        return DeleteBoardRp.builder()
+                .message("공고글 삭제를 완료하였습니다")
+                .build();
     }
     @Transactional
     public UpdateBoardRp update(UpdateBoardRq requestDTO, Long boardId, Long userId){
