@@ -21,12 +21,8 @@ import pickup_shuttle.pickup._core.errors.exception.Exception403;
 import pickup_shuttle.pickup._core.errors.exception.Exception404;
 import pickup_shuttle.pickup._core.errors.exception.Exception500;
 import pickup_shuttle.pickup.config.ErrorMessage;
-import pickup_shuttle.pickup.domain.beverage.dto.response.BeverageRp;
-import pickup_shuttle.pickup.domain.board.Board;
-import pickup_shuttle.pickup.domain.board.dto.response.*;
 import pickup_shuttle.pickup.domain.board.repository.BoardRepository;
 import pickup_shuttle.pickup.domain.board.repository.BoardRepositoryCustom;
-import pickup_shuttle.pickup.domain.match.Match;
 import pickup_shuttle.pickup.domain.match.MatchRepository;
 import pickup_shuttle.pickup.domain.oauth2.CustomOauth2User;
 import pickup_shuttle.pickup.domain.user.dto.request.ApproveUserRq;
@@ -35,12 +31,9 @@ import pickup_shuttle.pickup.domain.user.dto.request.RejectUserRq;
 import pickup_shuttle.pickup.domain.user.dto.request.UpdateUserRq;
 import pickup_shuttle.pickup.domain.user.dto.response.*;
 import pickup_shuttle.pickup.domain.user.repository.UserRepository;
-import pickup_shuttle.pickup.domain.user.repository.UserRepositoryCustom;
 import pickup_shuttle.pickup.security.service.JwtService;
-import pickup_shuttle.pickup.utils.Utils;
 
 import java.io.InputStream;
-import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -51,7 +44,6 @@ import java.util.Optional;
 @Slf4j
 public class UserService {
     private final UserRepository userRepository;
-    private final UserRepositoryCustom userRepositoryCustom;
     private final BoardRepository boardRepository;
     private final MatchRepository matchRepository;
     private final AmazonS3 amazonS3;
@@ -80,20 +72,18 @@ public class UserService {
                 .build();
     }
 
-    public ReadUserAuthStatusRp userAuthStatus(Long userId) {
+    public GetUserRp userAuthStatus(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
         String userRole = user.getUserRole().getValue();
         String userUrl = user.getUrl();
-        String authStatus = switch (userRole) {
-            case "ROLE_USER" -> userUrl.isEmpty() ? "미인증" : "인증 진행 중";
-            case "ROLE_STUDENT" -> "인증";
-            default -> "미인증";
+        return switch (userRole) {
+            case "ROLE_USER" -> userUrl.isEmpty() ? GetUserRp.builder().message("미인증").build()
+                    : GetUserRp.builder().message("인증 진행 중").build();
+            case "ROLE_STUDENT" -> GetUserRp.builder().message("인증").build();
+            default -> GetUserRp.builder().message("미인증").build();
         };
-        return ReadUserAuthStatusRp.builder()
-                .message(authStatus)
-                .build();
     }
 
     @Transactional
@@ -117,7 +107,7 @@ public class UserService {
 
 
     @Transactional
-    public UpdateUserImageRp uploadImage(MultipartFile multipartFile, Long userId) {
+    public UploadImageRp uploadImage(MultipartFile multipartFile, Long userId) {
         // 메타 데이터 설정
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(multipartFile.getSize());
@@ -146,9 +136,7 @@ public class UserService {
         } catch (Exception e) {
             throw new Exception500("AWS 이미지 업로드를 실패했습니다");
         }
-        return UpdateUserImageRp.builder()
-                .message("이미지 url 저장이 완료되었습니다")
-                .build();
+        return UploadImageRp.builder().message("이미지 업로드가 완료되었습니다").build();
     }
 
     public GetUserImageRp getImageUrl(Long userId) {
@@ -216,7 +204,7 @@ public class UserService {
 
     public Slice<ReadUserAuthListRp> getAuthList(Long lastUserId, int size) {
         PageRequest pageRequest = PageRequest.of(0, size);
-        Slice<User> userSlice = userRepositoryCustom.searchAuthList(lastUserId, pageRequest);
+        Slice<User> userSlice = boardRepositoryCustom.searchAuthList(lastUserId, pageRequest);
 
         List<ReadUserAuthListRp> readUserAuthListRpDTOList = userSlice.getContent().stream()
                 .filter(u -> !u.getUrl().isEmpty())
@@ -248,9 +236,7 @@ public class UserService {
         );
         if (user.getUserRole() == UserRole.USER) {
             user.updateRole(UserRole.STUDENT);
-            return ApproveUserRp.builder()
-                    .message("학생 인증이 승인되었습니다")
-                    .build();
+            return ApproveUserRp.builder().message("학생 인증이 승인되었습니다").build();
         }
         else throw new Exception403("일반 회원이 아닌 경우 학생 인증을 승인할 수 없습니다");
     }
@@ -268,135 +254,7 @@ public class UserService {
         } else throw new Exception403("일반 회원이 아닌 경우 학생 인증을 거절할 수 없습니다");
     }
 
-    public Slice<ReadWriterBoardListRp> myPageRequesterList(Long userId, Long lastBoardId, int size) {
-        PageRequest pageRequest = PageRequest.of(0, size);
-        Slice<Board> boardSlice = userRepositoryCustom.searchRequesterList(userId, lastBoardId, pageRequest);
 
-        List<ReadWriterBoardListRp> responseDTOList = boardSlice.getContent().stream()
-                .filter(Utils::notOverDeadline)
-                .map(b -> ReadWriterBoardListRp.builder()
-                        .boardId(b.getBoardId())
-                        .shopName(b.getStore().getName())
-                        .destination(b.getDestination())
-                        .finishedAt(b.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
-                        .tip(b.getTip())
-                        .isMatch(b.isMatch())
-                        .build())
-                .toList();
-        return new SliceImpl<>(responseDTOList, pageRequest, boardSlice.hasNext());
-    }
-    private ReadWriterBoardAfterRp requesterDetailAfter(Long boardId){
-        Board board = boardRepository.m4findByBoardId(boardId).orElseThrow(
-                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
-        );
-        Match match = matchRepository.mfindByMatchId(board.getMatch().getMatchId()).orElseThrow(
-                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "매칭된 공고글의 매치ID", "매치"))
-        );
-        List<BeverageRp> beverages = board.getBeverages().stream()
-                .map(b -> BeverageRp.builder()
-                        .name(b.getName())
-                        .build()
-                )
-                .toList();
-        return ReadWriterBoardAfterRp.builder()
-                .boardId(boardId)
-                .shopName(board.getStore().getName())
-                .destination(board.getDestination())
-                .beverages(beverages)
-                .tip(board.getTip())
-                .request(board.getRequest())
-                .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
-                .isMatch(board.isMatch())
-                .pickerBank(match.getUser().getBank())
-                .pickerAccount(match.getUser().getAccount())
-                .arrivalTime(match.getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).toEpochSecond(ZoneOffset.UTC))
-                .pickerPhoneNumber(match.getUser().getPhoneNumber())
-                .build();
-    }
-    private ReadWriterBoardBeforeRp requesterDetailBefore(Long boardId){
-        Board board = boardRepository.m4findByBoardId(boardId).orElseThrow(
-                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
-        );
-        List<BeverageRp> beverages = board.getBeverages().stream()
-                .map(b -> BeverageRp.builder()
-                        .name(b.getName())
-                        .build()
-                )
-                .toList();
-        return ReadWriterBoardBeforeRp.builder()
-                .boardId(boardId)
-                .shopName(board.getStore().getName())
-                .destination(board.getDestination())
-                .beverages(beverages)
-                .tip(board.getTip())
-                .request(board.getRequest())
-                .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
-                .isMatch(board.isMatch())
-                .build();
-    }
-
-        public ReadWriterBoard myPageRequesterDetail(Long boardId) {
-        Board board = boardRepository.m4findByBoardId(boardId).orElseThrow(
-                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
-        );
-        if (board.isMatch()) {
-            return requesterDetailAfter(boardId);
-        }
-        return requesterDetailBefore(boardId);
-    }
-
-
-    public Slice<ReadPickerBoardListRp> myPagePickerList(Long lastBoardId, int limit, Long userId) {
-        PageRequest pageRequest = PageRequest.of(0, limit);
-        Slice<Board> boardsSlice = boardRepositoryCustom.searchAllBySlice2(lastBoardId, pageRequest, userId);
-        return getPickerListResponseDTOs(pageRequest, boardsSlice);
-    }
-
-    private Slice<ReadPickerBoardListRp> getPickerListResponseDTOs(PageRequest pageRequest, Slice<Board> boardSlice) {
-        List<ReadPickerBoardListRp> boardBoardListRpDTO = boardSlice.getContent().stream()
-                .filter(Utils::notOverDeadline)
-                .map(b -> ReadPickerBoardListRp.builder()
-                        .boardId(b.getBoardId())
-                        .shopName(b.getStore().getName())
-                        .finishedAt(b.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
-                        .tip(b.getTip())
-                        .isMatch(b.isMatch())
-                        .destination(b.getDestination())
-                        .build())
-                .toList();
-        return new SliceImpl<>(boardBoardListRpDTO,pageRequest,boardSlice.hasNext());
-    }
-
-    public ReadPickerBoardRp pickerBoardDetail(Long boardId, Long userId) {
-        Board board = boardRepository.m5findByBoardId(boardId).orElseThrow(
-                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
-        );
-
-        if(!board.getMatch().getUser().getUserId().equals(userId)){
-            throw new Exception403("해당 공고글의 피커가 아닌 경우 공고글을 상세 조회할 수 없습니다");
-        }
-
-        List<BeverageRp> beverageRpDTOList = board.getBeverages().stream()
-                .map(b -> BeverageRp.builder()
-                        .name(b.getName())
-                        .build())
-                .toList();
-        return ReadPickerBoardRp.builder()
-                .boardId(board.getBoardId())
-                .shopName(board.getStore().getName())
-                .destination(board.getDestination())
-                .beverages(beverageRpDTOList)
-                .tip(board.getTip())
-                .request(board.getRequest())
-                .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
-                .isMatch(board.isMatch())
-                .pickerBank(board.getMatch().getUser().getBank())
-                .pickerAccount(board.getMatch().getUser().getAccount())
-                .arrivalTime(board.getMatch().getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).toEpochSecond(ZoneOffset.UTC))
-                .pickerPhoneNumber(board.getMatch().getUser().getPhoneNumber())
-                .build();
-
-    }
 
     public LoginUserRp login(Authentication authentication) {
         CustomOauth2User customOauth2User = (CustomOauth2User) authentication.getPrincipal();

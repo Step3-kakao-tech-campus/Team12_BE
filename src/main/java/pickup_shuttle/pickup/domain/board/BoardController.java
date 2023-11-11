@@ -63,4 +63,5 @@ public class BoardController {
         UpdateBoardRp responseDTO = boardService.update(requestDTO, boardId, userId);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
+
 }

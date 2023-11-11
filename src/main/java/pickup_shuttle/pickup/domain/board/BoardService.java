@@ -197,9 +197,7 @@ public class BoardService {
             throw new Exception403("공고글이 이미 매칭된 경우 공고글을 삭제할 수 없습니다");
         // 삭제
         boardRepository.delete(board);
-        return DeleteBoardRp.builder()
-                .message("공고글 삭제를 완료하였습니다")
-                .build();
+        return DeleteBoardRp.builder().message("공고글 삭제를 완료하였습니다").build();
     }
     @Transactional
     public UpdateBoardRp update(UpdateBoardRq requestDTO, Long boardId, Long userId){
@@ -264,5 +262,135 @@ public class BoardService {
         if(beverages != null && beverages.size() == 0){
             throw new Exception400("음료" + ErrorMessage.BADREQUEST_EMPTY);
         }
+    }
+
+    public Slice<ReadWriterBoardListRp> myPageRequesterList(Long userId, Long lastBoardId, int size) {
+        PageRequest pageRequest = PageRequest.of(0, size);
+        Slice<Board> boardSlice = boardRepositoryCustom.searchRequesterList(userId, lastBoardId, pageRequest);
+
+        List<ReadWriterBoardListRp> responseDTOList = boardSlice.getContent().stream()
+                .filter(Utils::notOverDeadline)
+                .map(b -> ReadWriterBoardListRp.builder()
+                        .boardId(b.getBoardId())
+                        .shopName(b.getStore().getName())
+                        .destination(b.getDestination())
+                        .finishedAt(b.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                        .tip(b.getTip())
+                        .isMatch(b.isMatch())
+                        .build())
+                .toList();
+        return new SliceImpl<>(responseDTOList, pageRequest, boardSlice.hasNext());
+    }
+    private ReadWriterBoardAfterRp requesterDetailAfter(Long boardId){
+        Board board = boardRepository.m4findByBoardId(boardId).orElseThrow(
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT3, "공고글ID", "공고글","음료","가게"))
+        );
+        Match match = matchRepository.mfindByMatchId(board.getMatch().getMatchId()).orElseThrow(
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT2, "매칭된 공고글의 매치ID", "매치","유저"))
+        );
+        List<BeverageRp> beverages = board.getBeverages().stream()
+                .map(b -> BeverageRp.builder()
+                        .name(b.getName())
+                        .build()
+                )
+                .toList();
+        return ReadWriterBoardAfterRp.builder()
+                .boardId(boardId)
+                .shopName(board.getStore().getName())
+                .destination(board.getDestination())
+                .beverages(beverages)
+                .tip(board.getTip())
+                .request(board.getRequest())
+                .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                .isMatch(board.isMatch())
+                .pickerBank(match.getUser().getBank())
+                .pickerAccount(match.getUser().getAccount())
+                .arrivalTime(match.getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).toEpochSecond(ZoneOffset.UTC))
+                .pickerPhoneNumber(match.getUser().getPhoneNumber())
+                .build();
+    }
+    private ReadWriterBoardBeforeRp requesterDetailBefore(Long boardId){
+        Board board = boardRepository.m4findByBoardId(boardId).orElseThrow(
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
+        );
+        List<BeverageRp> beverages = board.getBeverages().stream()
+                .map(b -> BeverageRp.builder()
+                        .name(b.getName())
+                        .build()
+                )
+                .toList();
+        return ReadWriterBoardBeforeRp.builder()
+                .boardId(boardId)
+                .shopName(board.getStore().getName())
+                .destination(board.getDestination())
+                .beverages(beverages)
+                .tip(board.getTip())
+                .request(board.getRequest())
+                .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                .isMatch(board.isMatch())
+                .build();
+    }
+
+    public ReadWriterBoard myPageRequesterDetail(Long boardId) {
+        Board board = boardRepository.m4findByBoardId(boardId).orElseThrow(
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT3, "공고글ID", "공고글","음료","가게"))
+        );
+        if (board.isMatch()) {
+            return requesterDetailAfter(boardId);
+        }
+        return requesterDetailBefore(boardId);
+    }
+
+
+    public Slice<ReadPickerBoardListRp> myPagePickerList(Long lastBoardId, int limit, Long userId) {
+        PageRequest pageRequest = PageRequest.of(0, limit);
+        Slice<Board> boardsSlice = boardRepositoryCustom.searchAllBySlice2(lastBoardId, pageRequest, userId);
+        return getPickerListResponseDTOs(pageRequest, boardsSlice);
+    }
+
+    private Slice<ReadPickerBoardListRp> getPickerListResponseDTOs(PageRequest pageRequest, Slice<Board> boardSlice) {
+        List<ReadPickerBoardListRp> boardBoardListRpDTO = boardSlice.getContent().stream()
+                .filter(Utils::notOverDeadline)
+                .map(b -> ReadPickerBoardListRp.builder()
+                        .boardId(b.getBoardId())
+                        .shopName(b.getStore().getName())
+                        .finishedAt(b.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                        .tip(b.getTip())
+                        .isMatch(b.isMatch())
+                        .destination(b.getDestination())
+                        .build())
+                .toList();
+        return new SliceImpl<>(boardBoardListRpDTO,pageRequest,boardSlice.hasNext());
+    }
+
+    public ReadPickerBoardRp pickerBoardDetail(Long boardId, Long userId) {
+        Board board = boardRepository.m5findByBoardId(boardId).orElseThrow(
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글","음료","가게","매치"))
+        );
+
+        if(!board.getMatch().getUser().getUserId().equals(userId)){
+            throw new Exception403("해당 공고글의 피커가 아닌 경우 공고글을 상세 조회할 수 없습니다");
+        }
+
+        List<BeverageRp> beverageRpDTOList = board.getBeverages().stream()
+                .map(b -> BeverageRp.builder()
+                        .name(b.getName())
+                        .build())
+                .toList();
+        return ReadPickerBoardRp.builder()
+                .boardId(board.getBoardId())
+                .shopName(board.getStore().getName())
+                .destination(board.getDestination())
+                .beverages(beverageRpDTOList)
+                .tip(board.getTip())
+                .request(board.getRequest())
+                .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                .isMatch(board.isMatch())
+                .pickerBank(board.getMatch().getUser().getBank())
+                .pickerAccount(board.getMatch().getUser().getAccount())
+                .arrivalTime(board.getMatch().getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).toEpochSecond(ZoneOffset.UTC))
+                .pickerPhoneNumber(board.getMatch().getUser().getPhoneNumber())
+                .build();
+
     }
 }
