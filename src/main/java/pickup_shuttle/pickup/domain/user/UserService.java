@@ -80,20 +80,17 @@ public class UserService {
                 .build();
     }
 
-    public ReadUserAuthStatusRp userAuthStatus(Long userId) {
+    public String userAuthStatus(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
         String userRole = user.getUserRole().getValue();
         String userUrl = user.getUrl();
-        String authStatus = switch (userRole) {
+        return switch (userRole) {
             case "ROLE_USER" -> userUrl.isEmpty() ? "미인증" : "인증 진행 중";
             case "ROLE_STUDENT" -> "인증";
             default -> "미인증";
         };
-        return ReadUserAuthStatusRp.builder()
-                .message(authStatus)
-                .build();
     }
 
     @Transactional
@@ -117,7 +114,7 @@ public class UserService {
 
 
     @Transactional
-    public UpdateUserImageRp uploadImage(MultipartFile multipartFile, Long userId) {
+    public void uploadImage(MultipartFile multipartFile, Long userId) {
         // 메타 데이터 설정
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(multipartFile.getSize());
@@ -146,9 +143,6 @@ public class UserService {
         } catch (Exception e) {
             throw new Exception500("AWS 이미지 업로드를 실패했습니다");
         }
-        return UpdateUserImageRp.builder()
-                .message("이미지 url 저장이 완료되었습니다")
-                .build();
     }
 
     public GetUserImageRp getImageUrl(Long userId) {
@@ -242,15 +236,13 @@ public class UserService {
     }
 
     @Transactional
-    public ApproveUserRp authApprove(ApproveUserRq requestDTO) {
+    public String authApprove(ApproveUserRq requestDTO) {
         User user = userRepository.findById(requestDTO.userId()).orElseThrow(
                 () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
         if (user.getUserRole() == UserRole.USER) {
             user.updateRole(UserRole.STUDENT);
-            return ApproveUserRp.builder()
-                    .message("학생 인증이 승인되었습니다")
-                    .build();
+            return "학생 인증이 승인되었습니다";
         }
         else throw new Exception403("일반 회원이 아닌 경우 학생 인증을 승인할 수 없습니다");
     }

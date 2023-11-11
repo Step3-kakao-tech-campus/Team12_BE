@@ -50,10 +50,10 @@ public class BoardController {
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
     @DeleteMapping("/delete/{boardId}")
-    public ResponseEntity<ApiUtils.ApiResult<DeleteBoardRp>> delete(@PathVariable("boardId") Long boardId,
+    public ResponseEntity<ApiUtils.ApiResult<String>> delete(@PathVariable("boardId") Long boardId,
                                                              @Login Long userId){
-        DeleteBoardRp responseDTO = boardService.boardDelete(boardId, userId);
-        return ResponseEntity.ok(ApiUtils.success(responseDTO));
+        boardService.boardDelete(boardId, userId);
+        return ResponseEntity.ok(ApiUtils.success("공고글 삭제를 완료하였습니다"));
     }
     @PutMapping("/modify/{boardId}")
     public ResponseEntity<ApiUtils.ApiResult<UpdateBoardRp>> update(@PathVariable("boardId") Long boardId,
