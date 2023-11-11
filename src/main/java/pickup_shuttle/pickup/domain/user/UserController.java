@@ -67,8 +67,8 @@ public class UserController {
 
     // 유저 인증 상태 (인증/미인증/인증 진행 중) 반환
     @GetMapping("/mypage/auth")
-    public ResponseEntity<ApiUtils.ApiResult<ReadAuthStatusRp>> userAuthStatus(@Login Long userId){
-        ReadAuthStatusRp responseDTO = userService.userAuthStatus(userId);
+    public ResponseEntity<ApiUtils.ApiResult<ReadUserAuthStatusRp>> userAuthStatus(@Login Long userId){
+        ReadUserAuthStatusRp responseDTO = userService.userAuthStatus(userId);
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 
@@ -88,10 +88,10 @@ public class UserController {
 
     // 이미지 업로드
     @PutMapping("/mypage/image/url")
-    public ResponseEntity<ApiUtils.ApiResult<String>> uploadImage(@ModelAttribute @Valid UpdateUserImageRq requestDTO,
+    public ResponseEntity<ApiUtils.ApiResult<UpdateUserImageRp>> uploadImage(@ModelAttribute @Valid UpdateUserImageRq requestDTO,
                                        @Login Long userId) {
-        userService.uploadImage(requestDTO.image(), userId);
-        return ResponseEntity.ok(ApiUtils.success("이미지 url 저장이 완료되었습니다"));
+        UpdateUserImageRp responseDTO = userService.uploadImage(requestDTO.image(), userId);
+        return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
     // presigendUrl(GET) 발급
     @GetMapping("/mypage/image/url")

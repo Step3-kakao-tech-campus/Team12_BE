@@ -3,6 +3,6 @@ package pickup_shuttle.pickup.domain.user.dto.response;
 import lombok.Builder;
 
 @Builder
-public record ReadAuthStatusRp(
+public record UpdateUserImageRp(
         String message
 ) { }

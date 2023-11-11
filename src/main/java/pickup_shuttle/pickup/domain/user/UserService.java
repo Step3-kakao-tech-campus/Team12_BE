@@ -80,7 +80,7 @@ public class UserService {
                 .build();
     }
 
-    public ReadAuthStatusRp userAuthStatus(Long userId) {
+    public ReadUserAuthStatusRp userAuthStatus(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
@@ -91,7 +91,7 @@ public class UserService {
             case "ROLE_STUDENT" -> "인증";
             default -> "미인증";
         };
-        return ReadAuthStatusRp.builder()
+        return ReadUserAuthStatusRp.builder()
                 .message(authStatus)
                 .build();
     }
@@ -117,7 +117,7 @@ public class UserService {
 
 
     @Transactional
-    public void uploadImage(MultipartFile multipartFile, Long userId) {
+    public UpdateUserImageRp uploadImage(MultipartFile multipartFile, Long userId) {
         // 메타 데이터 설정
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(multipartFile.getSize());
@@ -146,6 +146,9 @@ public class UserService {
         } catch (Exception e) {
             throw new Exception500("AWS 이미지 업로드를 실패했습니다");
         }
+        return UpdateUserImageRp.builder()
+                .message("이미지 url 저장이 완료되었습니다")
+                .build();
     }
 
     public GetUserImageRp getImageUrl(Long userId) {
