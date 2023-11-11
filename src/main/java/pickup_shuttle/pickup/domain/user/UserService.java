@@ -40,6 +40,7 @@ import pickup_shuttle.pickup.security.service.JwtService;
 import pickup_shuttle.pickup.utils.Utils;
 
 import java.io.InputStream;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
@@ -278,7 +279,7 @@ public class UserService {
                         .boardId(b.getBoardId())
                         .shopName(b.getStore().getName())
                         .destination(b.getDestination())
-                        .finishedAt(b.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                        .finishedAt(b.getFinishedAt().atZone(ZoneId.of("Asia/Seoul")).toEpochSecond())
                         .tip(b.getTip())
                         .isMatch(b.isMatch())
                         .build())
@@ -305,11 +306,11 @@ public class UserService {
                 .beverages(beverages)
                 .tip(board.getTip())
                 .request(board.getRequest())
-                .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                .finishedAt(board.getFinishedAt().atZone(ZoneId.of("Asia/Seoul")).toEpochSecond())
                 .isMatch(board.isMatch())
                 .pickerBank(match.getUser().getBank())
                 .pickerAccount(match.getUser().getAccount())
-                .arrivalTime(match.getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).toEpochSecond(ZoneOffset.UTC))
+                .arrivalTime(match.getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).atZone(ZoneId.of("Asia/Seoul")).toEpochSecond())
                 .pickerPhoneNumber(match.getUser().getPhoneNumber())
                 .build();
     }
@@ -330,7 +331,7 @@ public class UserService {
                 .beverages(beverages)
                 .tip(board.getTip())
                 .request(board.getRequest())
-                .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                .finishedAt(board.getFinishedAt().atZone(ZoneId.of("Asia/Seoul")).toEpochSecond())
                 .isMatch(board.isMatch())
                 .build();
     }
@@ -358,7 +359,7 @@ public class UserService {
                 .map(b -> ReadPickerBoardListRp.builder()
                         .boardId(b.getBoardId())
                         .shopName(b.getStore().getName())
-                        .finishedAt(b.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                        .finishedAt(b.getFinishedAt().atZone(ZoneId.of("Asia/Seoul")).toEpochSecond())
                         .tip(b.getTip())
                         .isMatch(b.isMatch())
                         .destination(b.getDestination())
@@ -388,39 +389,42 @@ public class UserService {
                 .beverages(beverageRpDTOList)
                 .tip(board.getTip())
                 .request(board.getRequest())
-                .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                .finishedAt(board.getFinishedAt().atZone(ZoneId.of("Asia/Seoul")).toEpochSecond())
                 .isMatch(board.isMatch())
                 .pickerBank(board.getMatch().getUser().getBank())
                 .pickerAccount(board.getMatch().getUser().getAccount())
-                .arrivalTime(board.getMatch().getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).toEpochSecond(ZoneOffset.UTC))
+                .arrivalTime(board.getMatch().getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).atZone(ZoneId.of("Asia/Seoul")).toEpochSecond())
                 .pickerPhoneNumber(board.getMatch().getUser().getPhoneNumber())
                 .build();
 
     }
 
     public LoginUserRp login(Authentication authentication) {
-        CustomOauth2User customOauth2User = (CustomOauth2User) authentication.getPrincipal();
-        if (customOauth2User == null) {
-            throw new Exception401("인증에 실패하였습니다.");
-        }
-        User user = userRepository.findBySocialId(customOauth2User.getName()).orElseThrow(
-                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "인증된 유저의 이름", "유저"))
-        );
-        String userPK = user.getUserId().toString();
-        String userRole = "";
-        if(user.getUserRole() == UserRole.ADMIN){
-            userRole = "ADMIN";
-        } else if(user.getUserRole() == UserRole.USER){
-            userRole = "USER";
-        } else if(user.getUserRole() == UserRole.STUDENT){
-            userRole = "STUDENT";
-        } else
-            userRole = "GUEST";
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof CustomOauth2User) {
+            CustomOauth2User customOauth2User = (CustomOauth2User) principal;
+            User user = userRepository.findBySocialId(customOauth2User.getName()).orElseThrow(
+                    () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "인증된 유저의 이름", "유저"))
+            );
+            String userPK = user.getUserId().toString();
+            String userRole = "";
+            if(user.getUserRole() == UserRole.ADMIN){
+                userRole = "ADMIN";
+            } else if(user.getUserRole() == UserRole.USER){
+                userRole = "USER";
+            } else if(user.getUserRole() == UserRole.STUDENT){
+                userRole = "STUDENT";
+            } else
+                userRole = "GUEST";
 
             return LoginUserRp.builder()
-                .AccessToken(jwtService.createAccessToken(userPK))
-                .nickName(user.getNickname())
-                .userAuth(userRole)
-                .build();
+                    .AccessToken(jwtService.createAccessToken(userPK))
+                    .nickName(user.getNickname())
+                    .userAuth(userRole)
+                    .build();
+        } else {
+            throw new RuntimeException("인증에 실패하였습니다.");
+        }
     }
 }

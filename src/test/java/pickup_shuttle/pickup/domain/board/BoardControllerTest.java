@@ -53,8 +53,9 @@ public class BoardControllerTest extends RestDocsConfig {
                 .name("핫 아메리카노 1잔")
                 .build());
     }
+
     @Nested
-    class testBoardList{
+    class testBoardList {
         @Test //공고글 목록 조회
         @DisplayName("성공 : limit 3인 경우 공고글 목록 조회")
         void testBoardList1() throws Exception {
@@ -79,6 +80,7 @@ public class BoardControllerTest extends RestDocsConfig {
             resultActions.andExpect(jsonPath("$.response.pageable.numberOfElements").value(3));
             resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
         }
+
         @Test
         @DisplayName("성공 : limit 10인 경우 공고글 목록 조회")
         void testBoardList2() throws Exception {
@@ -102,6 +104,7 @@ public class BoardControllerTest extends RestDocsConfig {
             resultActions.andExpect(jsonPath("$.success").value("true"));
             resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
         }
+
         @Test
         @DisplayName("성공 : Query Parameter가 없는 경우 공고글 목록 조회")
         void testBoardList3() throws Exception {
@@ -123,6 +126,7 @@ public class BoardControllerTest extends RestDocsConfig {
             resultActions.andExpect(jsonPath("$.success").value("true"));
             resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
         }
+
         @Test
         @DisplayName("성공 : offset 3, limit 10 경우 공고글 목록 조회")
         void testBoardList4() throws Exception {
@@ -147,6 +151,7 @@ public class BoardControllerTest extends RestDocsConfig {
             resultActions.andExpect(jsonPath("$.success").value("true"));
             resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
         }
+
         @Test
         @DisplayName("성공 : offset이 0 경우 공고글 목록 조회")
         void testBoardList5() throws Exception {
@@ -173,8 +178,9 @@ public class BoardControllerTest extends RestDocsConfig {
         }
 
     }
+
     @Nested
-    class testBoardDetail{
+    class testBoardDetail {
         @Test // 공고글 상세 조회 (매칭 전)
         @DisplayName("성공 : 공고글 상세 조회 (매칭 전)")
         void testBoardDetailBefore() throws Exception {
@@ -202,6 +208,7 @@ public class BoardControllerTest extends RestDocsConfig {
             resultActions.andExpect(jsonPath("$.response.isRequester").value(false));
             resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
         }
+
         @Test // 공고글 상세 조회 (매칭 후)
         @DisplayName("성공 : 공고글 상세 조회 (매칭 후)")
         void testBoardDetailAfter() throws Exception {
@@ -230,6 +237,7 @@ public class BoardControllerTest extends RestDocsConfig {
             resultActions.andExpect(jsonPath("$.response.pickerPhoneNumber").value("010-0000-0000"));
             resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
         }
+
         @Test
         @DisplayName("실패 : 상세조회하려는 공고글의 boardId와 일치하는 board가 없는 경우")
         void testBoardDetailNotFoundBoard() throws Exception {
@@ -258,10 +266,10 @@ public class BoardControllerTest extends RestDocsConfig {
     }
 
     @Nested
-    class testBoardCreate{
+    class testBoardCreate {
         @Test
         @DisplayName("성공 : 공고글 작성하기")
-        void testCreate() throws Exception{
+        void testCreate() throws Exception {
             //given
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
             CreateBoardRq boardCreateRqDTO = CreateBoardRq.builder()
@@ -291,9 +299,10 @@ public class BoardControllerTest extends RestDocsConfig {
             resultActions.andExpect(jsonPath("$.response.boardId").value("7"));
             resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
         }
+
         @Test
         @DisplayName("실패 : 서비스에서 제공하지 않는 가게의 경우")
-        void testCreateNotFoundStore() throws Exception{
+        void testCreateNotFoundStore() throws Exception {
             //given
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
             CreateBoardRq boardCreateRqDTO = CreateBoardRq.builder()
@@ -324,9 +333,10 @@ public class BoardControllerTest extends RestDocsConfig {
             resultActions.andExpect(jsonPath("$.error.status").value(404));
             resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
         }
+
         @Test
         @DisplayName("실패 : 가게명의 길이가 60을 초과하는 경우")
-        void testCreateMaxShopName() throws Exception{
+        void testCreateMaxShopName() throws Exception {
             //given
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
             CreateBoardRq boardCreateRqDTO = CreateBoardRq.builder()
@@ -357,9 +367,10 @@ public class BoardControllerTest extends RestDocsConfig {
             resultActions.andExpect(jsonPath("$.error.status").value(400));
             resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
         }
+
         @Test
         @DisplayName("실패 : 가게명이 공백인 경우")
-        void testCreateBlankShopName() throws Exception{
+        void testCreateBlankShopName() throws Exception {
             //given
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
             CreateBoardRq boardCreateRqDTO = CreateBoardRq.builder()
@@ -390,9 +401,10 @@ public class BoardControllerTest extends RestDocsConfig {
             resultActions.andExpect(jsonPath("$.error.status").value(400));
             resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
         }
+
         @Test
         @DisplayName("실패 : 음료명의 길이가 60을 초과하는 경우")
-        void testCreateMaxBeverageName() throws Exception{
+        void testCreateMaxBeverageName() throws Exception {
             //given
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
             beverages.add(BeverageRq.builder()
@@ -426,9 +438,10 @@ public class BoardControllerTest extends RestDocsConfig {
             resultActions.andExpect(jsonPath("$.error.status").value(400));
             resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
         }
+
         @Test
         @DisplayName("실패 : 음료명이 공백인 경우")
-        void testCreateBlankBeverage() throws Exception{
+        void testCreateBlankBeverage() throws Exception {
             //given
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
             beverages.add(BeverageRq.builder()
@@ -462,9 +475,10 @@ public class BoardControllerTest extends RestDocsConfig {
             resultActions.andExpect(jsonPath("$.error.status").value(400));
             resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
         }
+
         @Test
         @DisplayName("실패 : 음료가 없는 경우")
-        void testCreateBlankBeverages() throws Exception{
+        void testCreateBlankBeverages() throws Exception {
             //given
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
             beverages.clear();
@@ -496,9 +510,10 @@ public class BoardControllerTest extends RestDocsConfig {
             resultActions.andExpect(jsonPath("$.error.status").value(400));
             resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
         }
+
         @Test
         @DisplayName("실패 : 위치의 길이가 60을 초과하는 경우")
-        void testCreateMaxDestination() throws Exception{
+        void testCreateMaxDestination() throws Exception {
             //given
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
             CreateBoardRq boardCreateRqDTO = CreateBoardRq.builder()
@@ -529,9 +544,10 @@ public class BoardControllerTest extends RestDocsConfig {
             resultActions.andExpect(jsonPath("$.error.status").value(400));
             resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
         }
+
         @Test
         @DisplayName("실패 : 위치가 공백인 경우")
-        void testCreateBlankDestination() throws Exception{
+        void testCreateBlankDestination() throws Exception {
             //given
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
             CreateBoardRq boardCreateRqDTO = CreateBoardRq.builder()
@@ -562,9 +578,10 @@ public class BoardControllerTest extends RestDocsConfig {
             resultActions.andExpect(jsonPath("$.error.status").value(400));
             resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
         }
+
         @Test
         @DisplayName("실패 : 픽업팁이 0 이하인 경우")
-        void testCreateMinTip() throws Exception{
+        void testCreateMinTip() throws Exception {
             //given
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
             CreateBoardRq boardCreateRqDTO = CreateBoardRq.builder()
@@ -595,9 +612,10 @@ public class BoardControllerTest extends RestDocsConfig {
             resultActions.andExpect(jsonPath("$.error.status").value(400));
             resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
         }
+
         @Test
         @DisplayName("실패 : 요청사항의 길이가 60을 초과하는 경우")
-        void testCreateMaxRequest() throws Exception{
+        void testCreateMaxRequest() throws Exception {
             //given
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
             CreateBoardRq boardCreateRqDTO = CreateBoardRq.builder()
@@ -628,9 +646,10 @@ public class BoardControllerTest extends RestDocsConfig {
             resultActions.andExpect(jsonPath("$.error.status").value(400));
             resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
         }
+
         @Test
         @DisplayName("실패 : 마감기간이 공백인 경우")
-        void testCreateBlankFinishAt() throws Exception{
+        void testCreateBlankFinishAt() throws Exception {
             //given
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
             CreateBoardRq boardCreateRqDTO = CreateBoardRq.builder()
@@ -660,9 +679,10 @@ public class BoardControllerTest extends RestDocsConfig {
             resultActions.andExpect(jsonPath("$.error.status").value(400));
             resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
         }
+
         @Test
         @DisplayName("실패 : 마감기간의 형식이 yyyy-MM-dd HH:mm이 아닌 경우")
-        void testCreateInvalidFinishedAt() throws Exception{
+        void testCreateInvalidFinishedAt() throws Exception {
             //given
             String accessToken = "Bearer " + jwtService.createAccessToken("3");
             CreateBoardRq boardCreateRqDTO = CreateBoardRq.builder()
@@ -693,834 +713,796 @@ public class BoardControllerTest extends RestDocsConfig {
             resultActions.andExpect(jsonPath("$.error.status").value(400));
             resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
         }
-        @Test
-        @DisplayName("실패 : 공고글을 작성하려는 유저의 userId와 일치하는 유저가 없는 경우")
-        void testCreateNotFoundUser() throws Exception{
-            //given
-            String accessToken = "Bearer " + jwtService.createAccessToken("100");
-            CreateBoardRq boardCreateRqDTO = CreateBoardRq.builder()
-                    .shopName("스타벅스")
-                    .beverages(beverages)
-                    .destination("전남대 공대 시계탑")
-                    .tip(1000)
-                    .request("후딱후딱 갖다주십쇼!!!!!!!!!!!!!!")
-                    .finishedAt("2023-11-18 19:00")
-                    .build();
-            String requestBody = om.writeValueAsString(boardCreateRqDTO);
 
-            //when
-            ResultActions resultActions = mvc.perform(
-                    post("/articles/write")
-                            .content(requestBody)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
+        @Nested
+        class testBoardAccept {
+            @Test
+            @DisplayName("성공 : 공고글 수락")
+            void testBoardAccept() throws Exception {
+                //given
+                Long boardId = 6L;
+                String accessToken = "Bearer " + jwtService.createAccessToken("3");
+                AcceptBoardRq requestDTO = AcceptBoardRq.builder()
+                        .arrivalTime(30)
+                        .build();
+                String requestBody = om.writeValueAsString(requestDTO);
 
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testCreateNotFoundUser : " + responseBody);
+                //when
+                ResultActions resultActions = mvc.perform(
+                        post("/articles/agree/{boardId}", boardId)
+                                .content(requestBody)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", accessToken)
+                );
 
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저")));
-            resultActions.andExpect(jsonPath("$.error.status").value(404));
-            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
-        }
-    }
+                //eye
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                System.out.println("testBoardAccept : " + responseBody);
 
-    @Nested
-    class testBoardAccept {
-        @Test
-        @DisplayName("성공 : 공고글 수락")
-        void testBoardAccept() throws Exception{
-            //given
-            Long boardId = 6L;
-            String accessToken =  "Bearer " + jwtService.createAccessToken("3");
-            AcceptBoardRq requestDTO = AcceptBoardRq.builder()
-                    .arrivalTime(30)
-                    .build();
-            String requestBody = om.writeValueAsString(requestDTO);
+                //then
+                resultActions.andExpect(jsonPath("$.success").value("true"));
+                resultActions.andExpect(jsonPath("$.response.shopName").value("메가MGC"));
+                resultActions.andExpect(jsonPath("$.response.destination").value("전남대 공대7 222호관"));
+                resultActions.andExpect(jsonPath("$.response.beverages[0].name").value("카페라떼 1잔"));
+                resultActions.andExpect(jsonPath("$.response.tip").value("2000"));
+                resultActions.andExpect(jsonPath("$.response.request").value("빨리 와주세요6"));
+                resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+            }
 
-            //when
-            ResultActions resultActions = mvc.perform(
-                    post("/articles/agree/{boardId}", boardId)
-                            .content(requestBody)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
+            @Test()
+            @DisplayName("실패 : 수락하려는 공고글의 boardId로 공고글을 찾을 수 없는 경우")
+            void testBoardAcceptNotFoundBoard() throws Exception {
+                Long boardId = 100L;
+                String accessToken = "Bearer " + jwtService.createAccessToken("3");
+                AcceptBoardRq requestDTO = AcceptBoardRq.builder()
+                        .arrivalTime(30)
+                        .build();
+                String requestBody = om.writeValueAsString(requestDTO);
 
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testBoardAccept : " + responseBody);
+                //when
+                ResultActions resultActions = mvc.perform(
+                        post("/articles/agree/{boardId}", boardId)
+                                .content(requestBody)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", accessToken)
+                );
 
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("true"));
-            resultActions.andExpect(jsonPath("$.response.shopName").value("메가MGC"));
-            resultActions.andExpect(jsonPath("$.response.destination").value("전남대 공대7 222호관"));
-            resultActions.andExpect(jsonPath("$.response.beverages[0].name").value("카페라떼 1잔"));
-            resultActions.andExpect(jsonPath("$.response.tip").value("2000"));
-            resultActions.andExpect(jsonPath("$.response.request").value("빨리 와주세요6"));
-            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
-        }
-        @Test()
-        @DisplayName("실패 : 수락하려는 공고글의 boardId로 공고글을 찾을 수 없는 경우")
-        void testBoardAcceptNotFoundBoard() throws Exception {
-            Long boardId = 100L;
-            String accessToken = "Bearer " + jwtService.createAccessToken("3");
-            AcceptBoardRq requestDTO = AcceptBoardRq.builder()
-                    .arrivalTime(30)
-                    .build();
-            String requestBody = om.writeValueAsString(requestDTO);
+                //eye
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                System.out.println("testBoardAcceptNotFoundBoard : " + responseBody);
 
-            //when
-            ResultActions resultActions = mvc.perform(
-                    post("/articles/agree/{boardId}", boardId)
-                            .content(requestBody)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
+                //then
+                resultActions.andExpect(jsonPath("$.success").value("false"));
+                resultActions.andExpect(jsonPath("$.error.message").value(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글")));
+                resultActions.andExpect(jsonPath("$.error.status").value(404));
+                resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+            }
 
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testBoardAcceptNotFoundBoard : " + responseBody);
+            @Test()
+            @DisplayName("실패 : 도착예정시간이 0 이하인 경우")
+            void testBoardAcceptMinArraivalTime() throws Exception {
+                Long boardId = 6L;
+                String accessToken = "Bearer " + jwtService.createAccessToken("3");
+                AcceptBoardRq requestDTO = AcceptBoardRq.builder()
+                        .arrivalTime(0)
+                        .build();
+                String requestBody = om.writeValueAsString(requestDTO);
 
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글")));
-            resultActions.andExpect(jsonPath("$.error.status").value(404));
-            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
-        }
-        @Test()
-        @DisplayName("실패 : 공고글을 수락하려는 유저의 userId와 일치하는 유저가 없는 경우")
-        void testBoardAcceptNotFoundUser() throws Exception {
-            Long boardId = 6L;
-            String accessToken = "Bearer " + jwtService.createAccessToken("100");
-            AcceptBoardRq requestDTO = AcceptBoardRq.builder()
-                    .arrivalTime(30)
-                    .build();
-            String requestBody = om.writeValueAsString(requestDTO);
+                //when
+                ResultActions resultActions = mvc.perform(
+                        post("/articles/agree/{boardId}", boardId)
+                                .content(requestBody)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", accessToken)
+                );
 
-            //when
-            ResultActions resultActions = mvc.perform(
-                    post("/articles/agree/{boardId}", boardId)
-                            .content(requestBody)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
+                //eye
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                System.out.println("testBoardAcceptMinArraivalTime : " + responseBody);
 
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testBoardAcceptNotFoundBoard : " + responseBody);
+                //then
+                resultActions.andExpect(jsonPath("$.success").value("false"));
+                resultActions.andExpect(jsonPath("$.error.message").value("도착예정시간" + ErrorMessage.BADREQUEST_MIN));
+                resultActions.andExpect(jsonPath("$.error.status").value(400));
+                resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
 
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저")));
-            resultActions.andExpect(jsonPath("$.error.status").value(404));
-            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
-        }
-        @Test()
-        @DisplayName("실패 : 도착예정시간이 0 이하인 경우")
-        void testBoardAcceptMinArraivalTime() throws Exception {
-            Long boardId = 6L;
-            String accessToken = "Bearer " + jwtService.createAccessToken("3");
-            AcceptBoardRq requestDTO = AcceptBoardRq.builder()
-                    .arrivalTime(0)
-                    .build();
-            String requestBody = om.writeValueAsString(requestDTO);
+            }
 
-            //when
-            ResultActions resultActions = mvc.perform(
-                    post("/articles/agree/{boardId}", boardId)
-                            .content(requestBody)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
+            @Test()
+            @DisplayName("실패 : 공고글을 수락하려는 유저가 공고글의 작성자인 경우")
+            void testBoardAcceptInvalidUser() throws Exception {
+                Long boardId = 6L;
+                String accessToken = "Bearer " + jwtService.createAccessToken("6");
+                AcceptBoardRq requestDTO = AcceptBoardRq.builder()
+                        .arrivalTime(30)
+                        .build();
+                String requestBody = om.writeValueAsString(requestDTO);
 
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testBoardAcceptMinArraivalTime : " + responseBody);
+                //when
+                ResultActions resultActions = mvc.perform(
+                        post("/articles/agree/{boardId}", boardId)
+                                .content(requestBody)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", accessToken)
+                );
 
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value( "도착예정시간" + ErrorMessage.BADREQUEST_MIN));
-            resultActions.andExpect(jsonPath("$.error.status").value(400));
-            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+                //eye
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                System.out.println("testBoardAcceptInvalidUser : " + responseBody);
 
-        }
-        @Test()
-        @DisplayName("실패 : 공고글을 수락하려는 유저가 공고글의 작성자인 경우")
-        void testBoardAcceptInvalidUser() throws Exception {
-            Long boardId = 6L;
-            String accessToken = "Bearer " + jwtService.createAccessToken("6");
-            AcceptBoardRq requestDTO = AcceptBoardRq.builder()
-                    .arrivalTime(30)
-                    .build();
-            String requestBody = om.writeValueAsString(requestDTO);
+                //then
+                resultActions.andExpect(jsonPath("$.success").value("false"));
+                resultActions.andExpect(jsonPath("$.error.message").value("공고글 작성자가 매칭 수락을 시도하는 경우 공고글을 수락 할 수 없습니다"));
+                resultActions.andExpect(jsonPath("$.error.status").value(403));
+                resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+            }
 
-            //when
-            ResultActions resultActions = mvc.perform(
-                    post("/articles/agree/{boardId}", boardId)
-                            .content(requestBody)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
+            @Test
+            @DisplayName("실패 : 수락하려는 공고글이 이미 매칭된 경우")
+            void testBoardAcceptMatchedBoard() throws Exception {
+                //given
+                Long boardId = 3L;
+                String accessToken = "Bearer " + jwtService.createAccessToken("6");
+                AcceptBoardRq requestDTO = AcceptBoardRq.builder()
+                        .arrivalTime(30)
+                        .build();
+                String requestBody = om.writeValueAsString(requestDTO);
 
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testBoardAcceptInvalidUser : " + responseBody);
+                //when
+                ResultActions resultActions = mvc.perform(
+                        post("/articles/agree/{boardId}", boardId)
+                                .content(requestBody)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", accessToken)
+                );
 
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("공고글 작성자가 매칭 수락을 시도하는 경우 공고글을 수락 할 수 없습니다"));
-            resultActions.andExpect(jsonPath("$.error.status").value(403));
-            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+                //eye
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                System.out.println("testBoardAcceptMatchedBoard : " + responseBody);
+
+                //then
+                resultActions.andExpect(jsonPath("$.success").value("false"));
+                resultActions.andExpect(jsonPath("$.error.message").value("공고글이 이미 매칭된 경우 공고글을 수락할 수 없습니다"));
+                resultActions.andExpect(jsonPath("$.error.status").value(403));
+                resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+            }
         }
 
-        @Test
-        @DisplayName("실패 : 수락하려는 공고글이 이미 매칭된 경우")
-        void testBoardAcceptMatchedBoard() throws Exception{
-            //given
-            Long boardId = 3L;
-            String accessToken = "Bearer " + jwtService.createAccessToken("6");
-            AcceptBoardRq requestDTO = AcceptBoardRq.builder()
-                    .arrivalTime(30)
-                    .build();
-            String requestBody = om.writeValueAsString(requestDTO);
+        @Nested
+        class testBoardDelete {
+            @Test
+            @DisplayName("성공 : 공고글 삭제")
+            void testBoardDelete() throws Exception {
+                // given
+                Long boardId = 6L;
+                String accessToken = "Bearer " + jwtService.createAccessToken("6");
+                //when
+                ResultActions resultActions = mvc.perform(
+                        delete("/articles/delete/{boardId}", boardId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", accessToken)
+                );
 
-            //when
-            ResultActions resultActions = mvc.perform(
-                    post("/articles/agree/{boardId}", boardId)
-                            .content(requestBody)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
+                //eye
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                System.out.println("testBoardDelete : " + responseBody);
 
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testBoardAcceptMatchedBoard : " + responseBody);
+                //then
+                resultActions.andExpect(jsonPath("$.success").value("true"));
+                resultActions.andExpect(jsonPath("$.response").value("공고글 삭제를 완료하였습니다"));
+                resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+            }
 
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("공고글이 이미 매칭된 경우 공고글을 수락할 수 없습니다"));
-            resultActions.andExpect(jsonPath("$.error.status").value(403));
-            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
-        }
-    }
-    @Nested
-    class testBoardDelete {
-        @Test
-        @DisplayName("성공 : 공고글 삭제")
-        void testBoardDelete() throws Exception {
-            // given
-            Long boardId = 6L;
-            String accessToken = "Bearer " + jwtService.createAccessToken("6");
-            //when
-            ResultActions resultActions = mvc.perform(
-                    delete("/articles/delete/{boardId}", boardId)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
+            @Test
+            @DisplayName("실패 : 삭제하려는 공고글의 boardId로 공고글을 찾을 수 없는 경우")
+            void testBoardDeleteNotFound() throws Exception {
+                // given
+                Long boardId = 100L;
+                String accessToken = "Bearer " + jwtService.createAccessToken("3");
+                //when
+                ResultActions resultActions = mvc.perform(
+                        delete("/articles/delete/{boardId}", boardId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", accessToken)
+                );
 
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testBoardDelete : " + responseBody);
+                //eye
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                System.out.println("testBoardDeleteNotFound : " + responseBody);
 
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("true"));
-            resultActions.andExpect(jsonPath("$.response").value("공고글 삭제를 완료하였습니다"));
-            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
-        }
-        @Test
-        @DisplayName("실패 : 삭제하려는 공고글의 boardId로 공고글을 찾을 수 없는 경우")
-        void testBoardDeleteNotFound() throws Exception {
-            // given
-            Long boardId = 100L;
-            String accessToken = "Bearer " + jwtService.createAccessToken("3");
-            //when
-            ResultActions resultActions = mvc.perform(
-                    delete("/articles/delete/{boardId}", boardId)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
+                //then
+                resultActions.andExpect(jsonPath("$.success").value("false"));
+                resultActions.andExpect(jsonPath("$.error.message").value(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글")));
+                resultActions.andExpect(jsonPath("$.error.status").value(404));
+                resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+            }
 
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testBoardDeleteNotFound : " + responseBody);
+            @Test
+            @DisplayName("실패 : 공고글을 삭제하려는 유저가 공고글의 작성자가 아닌 경우")
+            void testBoardDeleteInvalidUser() throws Exception {
+                // given
+                Long boardId = 6L;
+                String accessToken = "Bearer " + jwtService.createAccessToken("3");
+                //when
+                ResultActions resultActions = mvc.perform(
+                        delete("/articles/delete/{boardId}", boardId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", accessToken)
+                );
 
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글")));
-            resultActions.andExpect(jsonPath("$.error.status").value(404));
-            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
-        }
-        @Test
-        @DisplayName("실패 : 공고글을 삭제하려는 유저가 공고글의 작성자가 아닌 경우")
-        void testBoardDeleteInvalidUser() throws Exception {
-            // given
-            Long boardId = 6L;
-            String accessToken = "Bearer " + jwtService.createAccessToken("3");
-            //when
-            ResultActions resultActions = mvc.perform(
-                    delete("/articles/delete/{boardId}", boardId)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
+                //eye
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                System.out.println("testBoardDeleteInvalidUser : " + responseBody);
 
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testBoardDeleteInvalidUser : " + responseBody);
+                //then
+                resultActions.andExpect(jsonPath("$.success").value("false"));
+                resultActions.andExpect(jsonPath("$.error.message").value("공고글의 작성자가 아닌 경우 공고글을 삭제할 수 없습니다"));
+                resultActions.andExpect(jsonPath("$.error.status").value(403));
+                resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+            }
 
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("공고글의 작성자가 아닌 경우 공고글을 삭제할 수 없습니다"));
-            resultActions.andExpect(jsonPath("$.error.status").value(403));
-            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
-        }
-        @Test
-        @DisplayName("실패 : 삭제하려는 공고글이 이미 매칭된 경우")
-        void testBoardDeleteMatch() throws Exception {
-            // given
-            Long boardId = 3L;
-            String accessToken = "Bearer " + jwtService.createAccessToken("3");
-            //when
-            ResultActions resultActions = mvc.perform(
-                    delete("/articles/delete/{boardId}", boardId)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
+            @Test
+            @DisplayName("실패 : 삭제하려는 공고글이 이미 매칭된 경우")
+            void testBoardDeleteMatch() throws Exception {
+                // given
+                Long boardId = 3L;
+                String accessToken = "Bearer " + jwtService.createAccessToken("3");
+                //when
+                ResultActions resultActions = mvc.perform(
+                        delete("/articles/delete/{boardId}", boardId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", accessToken)
+                );
 
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testBoardDeleteMatch : " + responseBody);
+                //eye
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                System.out.println("testBoardDeleteMatch : " + responseBody);
 
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("공고글이 이미 매칭된 경우 공고글을 삭제할 수 없습니다"));
-            resultActions.andExpect(jsonPath("$.error.status").value(403));
-            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+                //then
+                resultActions.andExpect(jsonPath("$.success").value("false"));
+                resultActions.andExpect(jsonPath("$.error.message").value("공고글이 이미 매칭된 경우 공고글을 삭제할 수 없습니다"));
+                resultActions.andExpect(jsonPath("$.error.status").value(403));
+                resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+            }
+
         }
 
-    }
+        @Nested
+        class testBoardUpdate {
+            @Test
+            @DisplayName("성공 : 수정 값이 하나인 경우")
+            void testBoardUpdate1() throws Exception {
+                // given
+                Long boardId = 6L;
+                String shopName = "더벤티";
+                String accessToken = "Bearer " + jwtService.createAccessToken("6");
+                UpdateBoardRq requestDTO = UpdateBoardRq.builder()
+                        .shopName(shopName)
+                        .build();
+                String requestBody = om.writeValueAsString(requestDTO);
+                //when
+                ResultActions resultActions = mvc.perform(
+                        put("/articles/modify/{boardId}", boardId)
+                                .content(requestBody)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", accessToken)
+                );
+                //eye
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                System.out.println("testBoardUpdate1 : " + responseBody);
 
-    @Nested
-    class testBoardUpdate{
-        @Test
-        @DisplayName("성공 : 수정 값이 하나인 경우")
-        void testBoardUpdate1() throws Exception {
-            // given
-            Long boardId = 6L;
-            String shopName = "더벤티";
-            String accessToken = "Bearer " + jwtService.createAccessToken("6");
-            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
-                    .shopName(shopName)
-                    .build();
-            String requestBody = om.writeValueAsString(requestDTO);
-            //when
-            ResultActions resultActions = mvc.perform(
-                    put("/articles/modify/{boardId}", boardId)
-                            .content(requestBody)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testBoardUpdate1 : " + responseBody);
+                //then
+                resultActions.andExpect(jsonPath("$.success").value("true"));
+                resultActions.andExpect(jsonPath("$.response.boardId").value(boardId));
+                resultActions.andExpect(jsonPath("$.response.shopName").value(shopName)); // 수정
+                resultActions.andExpect(jsonPath("$.response.destination").value("전남대 공대7 222호관"));
+                resultActions.andExpect(jsonPath("$.response.beverages[0].name").value("카페라떼 1잔"));
+                resultActions.andExpect(jsonPath("$.response.tip").value(2000));
+                resultActions.andExpect(jsonPath("$.response.request").value("빨리 와주세요6"));
+                resultActions.andExpect(jsonPath("$.response.isMatch").value(false));
+                resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+            }
 
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("true"));
-            resultActions.andExpect(jsonPath("$.response.boardId").value(boardId));
-            resultActions.andExpect(jsonPath("$.response.shopName").value(shopName)); // 수정
-            resultActions.andExpect(jsonPath("$.response.destination").value("전남대 공대7 222호관"));
-            resultActions.andExpect(jsonPath("$.response.beverages[0].name").value("카페라떼 1잔"));
-            resultActions.andExpect(jsonPath("$.response.tip").value(2000));
-            resultActions.andExpect(jsonPath("$.response.request").value("빨리 와주세요6"));
-            resultActions.andExpect(jsonPath("$.response.isMatch").value(false));
-            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
-        }
+            @Test
+            @DisplayName("성공 : 수정 값이 둘인 경우")
+            void testBoardUpdate2() throws Exception {
+                // given
+                Long boardId = 6L;
+                String shopName = "더벤티";
+                int tip = 1;
+                String accessToken = "Bearer " + jwtService.createAccessToken("6");
+                UpdateBoardRq requestDTO = UpdateBoardRq.builder()
+                        .shopName(shopName)
+                        .tip(tip)
+                        .build();
+                String requestBody = om.writeValueAsString(requestDTO);
+                //when
+                ResultActions resultActions = mvc.perform(
+                        put("/articles/modify/{boardId}", boardId)
+                                .content(requestBody)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", accessToken)
+                );
+                //eye
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                System.out.println("testBoardUpdate2 : " + responseBody);
 
-        @Test
-        @DisplayName("성공 : 수정 값이 둘인 경우")
-        void testBoardUpdate2() throws Exception {
-            // given
-            Long boardId = 6L;
-            String shopName = "더벤티";
-            int tip = 1;
-            String accessToken = "Bearer " + jwtService.createAccessToken("6");
-            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
-                    .shopName(shopName)
-                    .tip(tip)
-                    .build();
-            String requestBody = om.writeValueAsString(requestDTO);
-            //when
-            ResultActions resultActions = mvc.perform(
-                    put("/articles/modify/{boardId}", boardId)
-                            .content(requestBody)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testBoardUpdate2 : " + responseBody);
+                //then
+                resultActions.andExpect(jsonPath("$.success").value("true"));
+                resultActions.andExpect(jsonPath("$.response.boardId").value(boardId));
+                resultActions.andExpect(jsonPath("$.response.shopName").value(shopName)); // 수정
+                resultActions.andExpect(jsonPath("$.response.destination").value("전남대 공대7 222호관"));
+                resultActions.andExpect(jsonPath("$.response.beverages[0].name").value("카페라떼 1잔"));
+                resultActions.andExpect(jsonPath("$.response.tip").value(tip)); // 수정
+                resultActions.andExpect(jsonPath("$.response.request").value("빨리 와주세요6"));
+                resultActions.andExpect(jsonPath("$.response.isMatch").value(false));
+                resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+            }
 
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("true"));
-            resultActions.andExpect(jsonPath("$.response.boardId").value(boardId));
-            resultActions.andExpect(jsonPath("$.response.shopName").value(shopName)); // 수정
-            resultActions.andExpect(jsonPath("$.response.destination").value("전남대 공대7 222호관"));
-            resultActions.andExpect(jsonPath("$.response.beverages[0].name").value("카페라떼 1잔"));
-            resultActions.andExpect(jsonPath("$.response.tip").value(tip)); // 수정
-            resultActions.andExpect(jsonPath("$.response.request").value("빨리 와주세요6"));
-            resultActions.andExpect(jsonPath("$.response.isMatch").value(false));
-            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
-        }
-        @Test
-        @DisplayName("성공 : 공고글 전체를 수정하는 경우")
-        void testBoardUpdateAll() throws Exception {
-            // given
-            Long boardId = 6L;
-            String shopName = "더벤티";
-            beverages.add(BeverageRq.builder()
-                    .name("아이스티 1잔")
-                    .build());
-            String destination = "정보마루";
-            int tip = 1;
-            String request = "천천히 조심해서 오세요 :)";
-            String finishedAt = "2023-11-03 07:25";
-            String accessToken = "Bearer " + jwtService.createAccessToken("6");
-            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
-                    .shopName(shopName)
-                    .beverages(beverages)
-                    .destination(destination)
-                    .tip(tip)
-                    .request(request)
-                    .finishedAt(finishedAt)
-                    .build();
-            String requestBody = om.writeValueAsString(requestDTO);
-            //when
-            ResultActions resultActions = mvc.perform(
-                    put("/articles/modify/{boardId}", boardId)
-                            .content(requestBody)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testBoardUpdate3 : " + responseBody);
+            @Test
+            @DisplayName("성공 : 공고글 전체를 수정하는 경우")
+            void testBoardUpdateAll() throws Exception {
+                // given
+                Long boardId = 6L;
+                String shopName = "더벤티";
+                beverages.add(BeverageRq.builder()
+                        .name("아이스티 1잔")
+                        .build());
+                String destination = "정보마루";
+                int tip = 1;
+                String request = "천천히 조심해서 오세요 :)";
+                String finishedAt = "2023-11-03 07:25";
+                String accessToken = "Bearer " + jwtService.createAccessToken("6");
+                UpdateBoardRq requestDTO = UpdateBoardRq.builder()
+                        .shopName(shopName)
+                        .beverages(beverages)
+                        .destination(destination)
+                        .tip(tip)
+                        .request(request)
+                        .finishedAt(finishedAt)
+                        .build();
+                String requestBody = om.writeValueAsString(requestDTO);
+                //when
+                ResultActions resultActions = mvc.perform(
+                        put("/articles/modify/{boardId}", boardId)
+                                .content(requestBody)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", accessToken)
+                );
+                //eye
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                System.out.println("testBoardUpdate3 : " + responseBody);
 
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("true"));
-            resultActions.andExpect(jsonPath("$.response.boardId").value(boardId));
-            resultActions.andExpect(jsonPath("$.response.shopName").value(shopName));
-            resultActions.andExpect(jsonPath("$.response.destination").value(destination));
-            resultActions.andExpect(jsonPath("$.response.beverages[0].name").value("아이스 아메리카노 1잔"));
-            resultActions.andExpect(jsonPath("$.response.tip").value(tip));
-            resultActions.andExpect(jsonPath("$.response.request").value(request));
-            resultActions.andExpect(jsonPath("$.response.finishedAt").value("1698996300"));
-            resultActions.andExpect(jsonPath("$.response.isMatch").value(false));
-            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
-        }
-        @Test
-        @DisplayName("실패 : 수정하려는 공고글의 boardId로 공고글을 찾을 수 없는 경우")
-        void testBoardUpdateNotFound() throws Exception {
-            // given
-            Long boardId = 100L;
-            String shopName = "더벤티";
-            String accessToken = "Bearer " + jwtService.createAccessToken("3");
-            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
-                    .shopName(shopName)
-                    .build();
-            String requestBody = om.writeValueAsString(requestDTO);
-            //when
-            ResultActions resultActions = mvc.perform(
-                    put("/articles/modify/{boardId}", boardId)
-                            .content(requestBody)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testBoardUpdateNotFound : " + responseBody);
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글")));
-            resultActions.andExpect(jsonPath("$.error.status").value(404));
-            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
-        }
-        @Test
-        @DisplayName("실패 : 공고글을 수정하려는 유저가 공고글의 작성자가 아닌 경우")
-        void testBoardUpdateInvalidUser() throws Exception {
-            // given
-            Long boardId = 6L;
-            String shopName = "더벤티";
-            String accessToken = "Bearer " + jwtService.createAccessToken("3");
-            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
-                    .shopName(shopName)
-                    .build();
-            String requestBody = om.writeValueAsString(requestDTO);
-            //when
-            ResultActions resultActions = mvc.perform(
-                    put("/articles/modify/{boardId}", boardId)
-                            .content(requestBody)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testBoardUpdateInvalidUser : " + responseBody);
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("공고글의 작성자가 아닌 경우 공고글을 수정할 수 없습니다"));
-            resultActions.andExpect(jsonPath("$.error.status").value(403));
-            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
-        }
-        @Test
-        @DisplayName("실패 : 수정하려는 공고글이 이미 매칭된 경우")
-        void testBoardUpdateMatch() throws Exception {
-            // given
-            Long boardId = 3L;
-            String shopName = "더벤티";
-            String accessToken = "Bearer " + jwtService.createAccessToken("3");
-            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
-                    .shopName(shopName)
-                    .build();
-            String requestBody = om.writeValueAsString(requestDTO);
-            //when
-            ResultActions resultActions = mvc.perform(
-                    put("/articles/modify/{boardId}", boardId)
-                            .content(requestBody)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testBoardUpdateMatch : " + responseBody);
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("공고글이 이미 매칭된 경우 공고글을 수정할 수 없습니다"));
-            resultActions.andExpect(jsonPath("$.error.status").value(403));
-            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
-        }
-        @Test
-        @DisplayName("실패 : 서비스에서 제공하지 않는 가게의 경우")
-        void testBoardUpdateNotFoundStore() throws Exception {
-            // given
-            Long boardId = 6L;
-            String shopName = "팬도로시";
-            String accessToken = "Bearer " + jwtService.createAccessToken("6");
-            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
-                    .shopName(shopName)
-                    .build();
-            String requestBody = om.writeValueAsString(requestDTO);
-            //when
-            ResultActions resultActions = mvc.perform(
-                    put("/articles/modify/{boardId}", boardId)
-                            .content(requestBody)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testBoardUpdateNotFoundStore : " + responseBody);
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value(String.format(ErrorMessage.NOTFOUND_FORMAT, "가게명", "가게")));
-            resultActions.andExpect(jsonPath("$.error.status").value(404));
-            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
-        }
-        @Test
-        @DisplayName("실패 : 수정할 값이 없는 경우")
-        void testBoardUpdateNoFields() throws Exception {
-            // given
-            Long boardId = 6L;
-            String accessToken = "Bearer " + jwtService.createAccessToken("6");
-            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
-                    .build();
-            String requestBody = om.writeValueAsString(requestDTO);
-            //when
-            ResultActions resultActions = mvc.perform(
-                    put("/articles/modify/{boardId}", boardId)
-                            .content(requestBody)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testBoardUpdateNoFields : " + responseBody);
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("수정할 값이 없는 경우 공고글을 수정할 수 없습니다"));
-            resultActions.andExpect(jsonPath("$.error.status").value(403));
-            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
-        }
-        @Test
-        @DisplayName("실패 : 가게명이 공백인 경우")
-        void testBoardUpdateBlankShopName() throws Exception {
-            // given
-            Long boardId = 6L;
-            String shopName = " ";
-            String accessToken = "Bearer " + jwtService.createAccessToken("6");
-            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
-                    .shopName(shopName)
-                    .build();
-            String requestBody = om.writeValueAsString(requestDTO);
-            //when
-            ResultActions resultActions = mvc.perform(
-                    put("/articles/modify/{boardId}", boardId)
-                            .content(requestBody)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testBoardUpdateBlankStore : " + responseBody);
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("가게" + ErrorMessage.BADREQUEST_BLANK));
-            resultActions.andExpect(jsonPath("$.error.status").value(400));
-            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
-        }
-        @Test
-        @DisplayName("실패 : 가게명의 길이가 60을 초과하는 경우")
-        void testBoardUpdateMaxShopName() throws Exception {
-            // given
-            Long boardId = 6L;
-            String shopName = "더                                  벤                        티";
-            String accessToken = "Bearer " + jwtService.createAccessToken("6");
-            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
-                    .shopName(shopName)
-                    .build();
-            String requestBody = om.writeValueAsString(requestDTO);
-            //when
-            ResultActions resultActions = mvc.perform(
-                    put("/articles/modify/{boardId}", boardId)
-                            .content(requestBody)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testBoardUpdateBlankStore : " + responseBody);
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("가게" + ErrorMessage.BADREQUEST_SIZE));
-            resultActions.andExpect(jsonPath("$.error.status").value(400));
-            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
-        }
-        @Test
-        @DisplayName("실패 : 음료명이 공백인 경우")
-        void testBoardUpdateBlankBeverage() throws Exception {
-            // given
-            Long boardId = 6L;
-            beverages.add(BeverageRq.builder()
-                    .name(" ")
-                    .build());
-            String accessToken = "Bearer " + jwtService.createAccessToken("6");
-            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
-                    .beverages(beverages)
-                    .build();
-            String requestBody = om.writeValueAsString(requestDTO);
-            //when
-            ResultActions resultActions = mvc.perform(
-                    put("/articles/modify/{boardId}", boardId)
-                            .content(requestBody)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testBoardUpdateBlankBeverage : " + responseBody);
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("음료" + ErrorMessage.BADREQUEST_BLANK));
-            resultActions.andExpect(jsonPath("$.error.status").value(400));
-            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
-        }
-        @Test
-        @DisplayName("실패 : 음료명의 길이가 60을 초과하는 경우")
-        void testBoardUpdateMaxBeverage() throws Exception {
-            // given
-            Long boardId = 6L;
-            beverages.add(BeverageRq.builder()
-                    .name("아메리카노                                                               1잔 ")
-                    .build());
-            String accessToken = "Bearer " + jwtService.createAccessToken("6");
-            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
-                    .beverages(beverages)
-                    .build();
-            String requestBody = om.writeValueAsString(requestDTO);
-            //when
-            ResultActions resultActions = mvc.perform(
-                    put("/articles/modify/{boardId}", boardId)
-                            .content(requestBody)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testBoardUpdateBlankBeverage : " + responseBody);
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("음료" + ErrorMessage.BADREQUEST_SIZE));
-            resultActions.andExpect(jsonPath("$.error.status").value(400));
-            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
-        }
-        @Test
-        @DisplayName("실패 : 음료가 없는 경우")
-        void testBoardUpdateBlankBeverages() throws Exception {
-            // given
-            Long boardId = 6L;
-            beverages.clear();
-            String accessToken = "Bearer " + jwtService.createAccessToken("6");
-            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
-                    .beverages(beverages)
-                    .build();
-            String requestBody = om.writeValueAsString(requestDTO);
-            //when
-            ResultActions resultActions = mvc.perform(
-                    put("/articles/modify/{boardId}", boardId)
-                            .content(requestBody)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testBoardUpdateBlankBeverage : " + responseBody);
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("음료" + ErrorMessage.BADREQUEST_EMPTY));
-            resultActions.andExpect(jsonPath("$.error.status").value(400));
-            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
-        }
-        @Test
-        @DisplayName("실패 : 위치가 공백인 경우")
-        void testBoardUpdateBlankDestination() throws Exception {
-            // given
-            Long boardId = 6L;
-            String accessToken = "Bearer " + jwtService.createAccessToken("6");
-            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
-                    .destination(" ")
-                    .build();
-            String requestBody = om.writeValueAsString(requestDTO);
-            //when
-            ResultActions resultActions = mvc.perform(
-                    put("/articles/modify/{boardId}", boardId)
-                            .content(requestBody)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testBoardUpdateBlankBeverage : " + responseBody);
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("위치" + ErrorMessage.BADREQUEST_BLANK));
-            resultActions.andExpect(jsonPath("$.error.status").value(400));
-            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
-        }
-        @Test
-        @DisplayName("실패 : 위치의 길이가 60을 초과하는 경우")
-        void testBoardUpdateMaxDestination() throws Exception {
-            // given
-            Long boardId = 6L;
-            String accessToken = "Bearer " + jwtService.createAccessToken("6");
-            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
-                    .destination("공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대")
-                    .build();
-            String requestBody = om.writeValueAsString(requestDTO);
-            //when
-            ResultActions resultActions = mvc.perform(
-                    put("/articles/modify/{boardId}", boardId)
-                            .content(requestBody)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testBoardUpdateBlankBeverage : " + responseBody);
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("위치" + ErrorMessage.BADREQUEST_SIZE));
-            resultActions.andExpect(jsonPath("$.error.status").value(400));
-            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
-        }
-        @Test
-        @DisplayName("실패 : 픽업팁이 0 이하인 경우")
-        void testBoardUpdateMinTip() throws Exception {
-            // given
-            Long boardId = 6L;
-            int tip = 0;
-            String accessToken = "Bearer " + jwtService.createAccessToken("6");
-            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
-                    .tip(tip)
-                    .build();
-            String requestBody = om.writeValueAsString(requestDTO);
-            //when
-            ResultActions resultActions = mvc.perform(
-                    put("/articles/modify/{boardId}", boardId)
-                            .content(requestBody)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testBoardUpdateInvalidTip : " + responseBody);
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("픽업팁" + ErrorMessage.BADREQUEST_MIN));
-            resultActions.andExpect(jsonPath("$.error.status").value(400));
-            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
-        }
-        @Test
-        @DisplayName("실패 : 요청사항의 길이가 60을 초과하는 경우")
-        void testBoardUpdateMaxRequest() throws Exception {
-            // given
-            Long boardId = 6L;
-            String accessToken = "Bearer " + jwtService.createAccessToken("6");
-            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
-                    .request("요청사항요청사항요청사항요청사항요청사항요청사항요청사항요청사항요청사항요청사항요청사항요청사항요청사항요청사항요청사항요청사항")
-                    .build();
-            String requestBody = om.writeValueAsString(requestDTO);
-            //when
-            ResultActions resultActions = mvc.perform(
-                    put("/articles/modify/{boardId}", boardId)
-                            .content(requestBody)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testBoardUpdateInvalidTip : " + responseBody);
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("요청사항" + ErrorMessage.BADREQUEST_SIZE));
-            resultActions.andExpect(jsonPath("$.error.status").value(400));
-            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
-        }
-        @Test
-        @DisplayName("실패 : 마감기간의 형식이 yyyy-MM-dd HH:mm이 아닌 경우")
-        void testBoardUpdateInvalidFinishedAt() throws Exception {
-            // given
-            Long boardId = 6L;
-            String accessToken = "Bearer " + jwtService.createAccessToken("6");
-            UpdateBoardRq requestDTO = UpdateBoardRq.builder()
-                    .finishedAt("2023-11-18 19:00:00")
-                    .build();
-            String requestBody = om.writeValueAsString(requestDTO);
-            //when
-            ResultActions resultActions = mvc.perform(
-                    put("/articles/modify/{boardId}", boardId)
-                            .content(requestBody)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", accessToken)
-            );
-            //eye
-            String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-            System.out.println("testBoardUpdateInvalidTip : " + responseBody);
-            //then
-            resultActions.andExpect(jsonPath("$.success").value("false"));
-            resultActions.andExpect(jsonPath("$.error.message").value("마감기간은 yyyy-MM-dd HH:mm 형식이어야 합니다"));
-            resultActions.andExpect(jsonPath("$.error.status").value(400));
-            resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+                //then
+                resultActions.andExpect(jsonPath("$.success").value("true"));
+                resultActions.andExpect(jsonPath("$.response.boardId").value(boardId));
+                resultActions.andExpect(jsonPath("$.response.shopName").value(shopName));
+                resultActions.andExpect(jsonPath("$.response.destination").value(destination));
+                resultActions.andExpect(jsonPath("$.response.beverages[0].name").value("아이스 아메리카노 1잔"));
+                resultActions.andExpect(jsonPath("$.response.tip").value(tip));
+                resultActions.andExpect(jsonPath("$.response.request").value(request));
+                resultActions.andExpect(jsonPath("$.response.finishedAt").value("1698996300"));
+                resultActions.andExpect(jsonPath("$.response.isMatch").value(false));
+                resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+            }
+
+            @Test
+            @DisplayName("실패 : 수정하려는 공고글의 boardId로 공고글을 찾을 수 없는 경우")
+            void testBoardUpdateNotFound() throws Exception {
+                // given
+                Long boardId = 100L;
+                String shopName = "더벤티";
+                String accessToken = "Bearer " + jwtService.createAccessToken("3");
+                UpdateBoardRq requestDTO = UpdateBoardRq.builder()
+                        .shopName(shopName)
+                        .build();
+                String requestBody = om.writeValueAsString(requestDTO);
+                //when
+                ResultActions resultActions = mvc.perform(
+                        put("/articles/modify/{boardId}", boardId)
+                                .content(requestBody)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", accessToken)
+                );
+                //eye
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                System.out.println("testBoardUpdateNotFound : " + responseBody);
+                //then
+                resultActions.andExpect(jsonPath("$.success").value("false"));
+                resultActions.andExpect(jsonPath("$.error.message").value(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글")));
+                resultActions.andExpect(jsonPath("$.error.status").value(404));
+                resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+            }
+
+            @Test
+            @DisplayName("실패 : 공고글을 수정하려는 유저가 공고글의 작성자가 아닌 경우")
+            void testBoardUpdateInvalidUser() throws Exception {
+                // given
+                Long boardId = 6L;
+                String shopName = "더벤티";
+                String accessToken = "Bearer " + jwtService.createAccessToken("3");
+                UpdateBoardRq requestDTO = UpdateBoardRq.builder()
+                        .shopName(shopName)
+                        .build();
+                String requestBody = om.writeValueAsString(requestDTO);
+                //when
+                ResultActions resultActions = mvc.perform(
+                        put("/articles/modify/{boardId}", boardId)
+                                .content(requestBody)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", accessToken)
+                );
+                //eye
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                System.out.println("testBoardUpdateInvalidUser : " + responseBody);
+                //then
+                resultActions.andExpect(jsonPath("$.success").value("false"));
+                resultActions.andExpect(jsonPath("$.error.message").value("공고글의 작성자가 아닌 경우 공고글을 수정할 수 없습니다"));
+                resultActions.andExpect(jsonPath("$.error.status").value(403));
+                resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+            }
+
+            @Test
+            @DisplayName("실패 : 수정하려는 공고글이 이미 매칭된 경우")
+            void testBoardUpdateMatch() throws Exception {
+                // given
+                Long boardId = 3L;
+                String shopName = "더벤티";
+                String accessToken = "Bearer " + jwtService.createAccessToken("3");
+                UpdateBoardRq requestDTO = UpdateBoardRq.builder()
+                        .shopName(shopName)
+                        .build();
+                String requestBody = om.writeValueAsString(requestDTO);
+                //when
+                ResultActions resultActions = mvc.perform(
+                        put("/articles/modify/{boardId}", boardId)
+                                .content(requestBody)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", accessToken)
+                );
+                //eye
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                System.out.println("testBoardUpdateMatch : " + responseBody);
+                //then
+                resultActions.andExpect(jsonPath("$.success").value("false"));
+                resultActions.andExpect(jsonPath("$.error.message").value("공고글이 이미 매칭된 경우 공고글을 수정할 수 없습니다"));
+                resultActions.andExpect(jsonPath("$.error.status").value(403));
+                resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+            }
+
+            @Test
+            @DisplayName("실패 : 서비스에서 제공하지 않는 가게의 경우")
+            void testBoardUpdateNotFoundStore() throws Exception {
+                // given
+                Long boardId = 6L;
+                String shopName = "팬도로시";
+                String accessToken = "Bearer " + jwtService.createAccessToken("6");
+                UpdateBoardRq requestDTO = UpdateBoardRq.builder()
+                        .shopName(shopName)
+                        .build();
+                String requestBody = om.writeValueAsString(requestDTO);
+                //when
+                ResultActions resultActions = mvc.perform(
+                        put("/articles/modify/{boardId}", boardId)
+                                .content(requestBody)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", accessToken)
+                );
+                //eye
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                System.out.println("testBoardUpdateNotFoundStore : " + responseBody);
+                //then
+                resultActions.andExpect(jsonPath("$.success").value("false"));
+                resultActions.andExpect(jsonPath("$.error.message").value(String.format(ErrorMessage.NOTFOUND_FORMAT, "가게명", "가게")));
+                resultActions.andExpect(jsonPath("$.error.status").value(404));
+                resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+            }
+
+            @Test
+            @DisplayName("실패 : 수정할 값이 없는 경우")
+            void testBoardUpdateNoFields() throws Exception {
+                // given
+                Long boardId = 6L;
+                String accessToken = "Bearer " + jwtService.createAccessToken("6");
+                UpdateBoardRq requestDTO = UpdateBoardRq.builder()
+                        .build();
+                String requestBody = om.writeValueAsString(requestDTO);
+                //when
+                ResultActions resultActions = mvc.perform(
+                        put("/articles/modify/{boardId}", boardId)
+                                .content(requestBody)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", accessToken)
+                );
+                //eye
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                System.out.println("testBoardUpdateNoFields : " + responseBody);
+                //then
+                resultActions.andExpect(jsonPath("$.success").value("false"));
+                resultActions.andExpect(jsonPath("$.error.message").value("수정할 값이 없는 경우 공고글을 수정할 수 없습니다"));
+                resultActions.andExpect(jsonPath("$.error.status").value(403));
+                resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+            }
+
+            @Test
+            @DisplayName("실패 : 가게명이 공백인 경우")
+            void testBoardUpdateBlankShopName() throws Exception {
+                // given
+                Long boardId = 6L;
+                String shopName = " ";
+                String accessToken = "Bearer " + jwtService.createAccessToken("6");
+                UpdateBoardRq requestDTO = UpdateBoardRq.builder()
+                        .shopName(shopName)
+                        .build();
+                String requestBody = om.writeValueAsString(requestDTO);
+                //when
+                ResultActions resultActions = mvc.perform(
+                        put("/articles/modify/{boardId}", boardId)
+                                .content(requestBody)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", accessToken)
+                );
+                //eye
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                System.out.println("testBoardUpdateBlankStore : " + responseBody);
+                //then
+                resultActions.andExpect(jsonPath("$.success").value("false"));
+                resultActions.andExpect(jsonPath("$.error.message").value("가게" + ErrorMessage.BADREQUEST_BLANK));
+                resultActions.andExpect(jsonPath("$.error.status").value(400));
+                resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+            }
+
+            @Test
+            @DisplayName("실패 : 가게명의 길이가 60을 초과하는 경우")
+            void testBoardUpdateMaxShopName() throws Exception {
+                // given
+                Long boardId = 6L;
+                String shopName = "더                                  벤                        티";
+                String accessToken = "Bearer " + jwtService.createAccessToken("6");
+                UpdateBoardRq requestDTO = UpdateBoardRq.builder()
+                        .shopName(shopName)
+                        .build();
+                String requestBody = om.writeValueAsString(requestDTO);
+                //when
+                ResultActions resultActions = mvc.perform(
+                        put("/articles/modify/{boardId}", boardId)
+                                .content(requestBody)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", accessToken)
+                );
+                //eye
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                System.out.println("testBoardUpdateBlankStore : " + responseBody);
+                //then
+                resultActions.andExpect(jsonPath("$.success").value("false"));
+                resultActions.andExpect(jsonPath("$.error.message").value("가게" + ErrorMessage.BADREQUEST_SIZE));
+                resultActions.andExpect(jsonPath("$.error.status").value(400));
+                resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+            }
+
+            @Test
+            @DisplayName("실패 : 음료명이 공백인 경우")
+            void testBoardUpdateBlankBeverage() throws Exception {
+                // given
+                Long boardId = 6L;
+                beverages.add(BeverageRq.builder()
+                        .name(" ")
+                        .build());
+                String accessToken = "Bearer " + jwtService.createAccessToken("6");
+                UpdateBoardRq requestDTO = UpdateBoardRq.builder()
+                        .beverages(beverages)
+                        .build();
+                String requestBody = om.writeValueAsString(requestDTO);
+                //when
+                ResultActions resultActions = mvc.perform(
+                        put("/articles/modify/{boardId}", boardId)
+                                .content(requestBody)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", accessToken)
+                );
+                //eye
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                System.out.println("testBoardUpdateBlankBeverage : " + responseBody);
+                //then
+                resultActions.andExpect(jsonPath("$.success").value("false"));
+                resultActions.andExpect(jsonPath("$.error.message").value("음료" + ErrorMessage.BADREQUEST_BLANK));
+                resultActions.andExpect(jsonPath("$.error.status").value(400));
+                resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+            }
+
+            @Test
+            @DisplayName("실패 : 음료명의 길이가 60을 초과하는 경우")
+            void testBoardUpdateMaxBeverage() throws Exception {
+                // given
+                Long boardId = 6L;
+                beverages.add(BeverageRq.builder()
+                        .name("아메리카노                                                               1잔 ")
+                        .build());
+                String accessToken = "Bearer " + jwtService.createAccessToken("6");
+                UpdateBoardRq requestDTO = UpdateBoardRq.builder()
+                        .beverages(beverages)
+                        .build();
+                String requestBody = om.writeValueAsString(requestDTO);
+                //when
+                ResultActions resultActions = mvc.perform(
+                        put("/articles/modify/{boardId}", boardId)
+                                .content(requestBody)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", accessToken)
+                );
+                //eye
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                System.out.println("testBoardUpdateBlankBeverage : " + responseBody);
+                //then
+                resultActions.andExpect(jsonPath("$.success").value("false"));
+                resultActions.andExpect(jsonPath("$.error.message").value("음료" + ErrorMessage.BADREQUEST_SIZE));
+                resultActions.andExpect(jsonPath("$.error.status").value(400));
+                resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+            }
+
+            @Test
+            @DisplayName("실패 : 음료가 없는 경우")
+            void testBoardUpdateBlankBeverages() throws Exception {
+                // given
+                Long boardId = 6L;
+                beverages.clear();
+                String accessToken = "Bearer " + jwtService.createAccessToken("6");
+                UpdateBoardRq requestDTO = UpdateBoardRq.builder()
+                        .beverages(beverages)
+                        .build();
+                String requestBody = om.writeValueAsString(requestDTO);
+                //when
+                ResultActions resultActions = mvc.perform(
+                        put("/articles/modify/{boardId}", boardId)
+                                .content(requestBody)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", accessToken)
+                );
+                //eye
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                System.out.println("testBoardUpdateBlankBeverage : " + responseBody);
+                //then
+                resultActions.andExpect(jsonPath("$.success").value("false"));
+                resultActions.andExpect(jsonPath("$.error.message").value("음료" + ErrorMessage.BADREQUEST_EMPTY));
+                resultActions.andExpect(jsonPath("$.error.status").value(400));
+                resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+            }
+
+            @Test
+            @DisplayName("실패 : 위치가 공백인 경우")
+            void testBoardUpdateBlankDestination() throws Exception {
+                // given
+                Long boardId = 6L;
+                String accessToken = "Bearer " + jwtService.createAccessToken("6");
+                UpdateBoardRq requestDTO = UpdateBoardRq.builder()
+                        .destination(" ")
+                        .build();
+                String requestBody = om.writeValueAsString(requestDTO);
+                //when
+                ResultActions resultActions = mvc.perform(
+                        put("/articles/modify/{boardId}", boardId)
+                                .content(requestBody)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", accessToken)
+                );
+                //eye
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                System.out.println("testBoardUpdateBlankBeverage : " + responseBody);
+                //then
+                resultActions.andExpect(jsonPath("$.success").value("false"));
+                resultActions.andExpect(jsonPath("$.error.message").value("위치" + ErrorMessage.BADREQUEST_BLANK));
+                resultActions.andExpect(jsonPath("$.error.status").value(400));
+                resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+            }
+
+            @Test
+            @DisplayName("실패 : 위치의 길이가 60을 초과하는 경우")
+            void testBoardUpdateMaxDestination() throws Exception {
+                // given
+                Long boardId = 6L;
+                String accessToken = "Bearer " + jwtService.createAccessToken("6");
+                UpdateBoardRq requestDTO = UpdateBoardRq.builder()
+                        .destination("공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대공대")
+                        .build();
+                String requestBody = om.writeValueAsString(requestDTO);
+                //when
+                ResultActions resultActions = mvc.perform(
+                        put("/articles/modify/{boardId}", boardId)
+                                .content(requestBody)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", accessToken)
+                );
+                //eye
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                System.out.println("testBoardUpdateBlankBeverage : " + responseBody);
+                //then
+                resultActions.andExpect(jsonPath("$.success").value("false"));
+                resultActions.andExpect(jsonPath("$.error.message").value("위치" + ErrorMessage.BADREQUEST_SIZE));
+                resultActions.andExpect(jsonPath("$.error.status").value(400));
+                resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+            }
+
+            @Test
+            @DisplayName("실패 : 픽업팁이 0 이하인 경우")
+            void testBoardUpdateMinTip() throws Exception {
+                // given
+                Long boardId = 6L;
+                int tip = 0;
+                String accessToken = "Bearer " + jwtService.createAccessToken("6");
+                UpdateBoardRq requestDTO = UpdateBoardRq.builder()
+                        .tip(tip)
+                        .build();
+                String requestBody = om.writeValueAsString(requestDTO);
+                //when
+                ResultActions resultActions = mvc.perform(
+                        put("/articles/modify/{boardId}", boardId)
+                                .content(requestBody)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", accessToken)
+                );
+                //eye
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                System.out.println("testBoardUpdateInvalidTip : " + responseBody);
+                //then
+                resultActions.andExpect(jsonPath("$.success").value("false"));
+                resultActions.andExpect(jsonPath("$.error.message").value("픽업팁" + ErrorMessage.BADREQUEST_MIN));
+                resultActions.andExpect(jsonPath("$.error.status").value(400));
+                resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+            }
+
+            @Test
+            @DisplayName("실패 : 요청사항의 길이가 60을 초과하는 경우")
+            void testBoardUpdateMaxRequest() throws Exception {
+                // given
+                Long boardId = 6L;
+                String accessToken = "Bearer " + jwtService.createAccessToken("6");
+                UpdateBoardRq requestDTO = UpdateBoardRq.builder()
+                        .request("요청사항요청사항요청사항요청사항요청사항요청사항요청사항요청사항요청사항요청사항요청사항요청사항요청사항요청사항요청사항요청사항")
+                        .build();
+                String requestBody = om.writeValueAsString(requestDTO);
+                //when
+                ResultActions resultActions = mvc.perform(
+                        put("/articles/modify/{boardId}", boardId)
+                                .content(requestBody)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", accessToken)
+                );
+                //eye
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                System.out.println("testBoardUpdateInvalidTip : " + responseBody);
+                //then
+                resultActions.andExpect(jsonPath("$.success").value("false"));
+                resultActions.andExpect(jsonPath("$.error.message").value("요청사항" + ErrorMessage.BADREQUEST_SIZE));
+                resultActions.andExpect(jsonPath("$.error.status").value(400));
+                resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+            }
+
+            @Test
+            @DisplayName("실패 : 마감기간의 형식이 yyyy-MM-dd HH:mm이 아닌 경우")
+            void testBoardUpdateInvalidFinishedAt() throws Exception {
+                // given
+                Long boardId = 6L;
+                String accessToken = "Bearer " + jwtService.createAccessToken("6");
+                UpdateBoardRq requestDTO = UpdateBoardRq.builder()
+                        .finishedAt("2023-11-18 19:00:00")
+                        .build();
+                String requestBody = om.writeValueAsString(requestDTO);
+                //when
+                ResultActions resultActions = mvc.perform(
+                        put("/articles/modify/{boardId}", boardId)
+                                .content(requestBody)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", accessToken)
+                );
+                //eye
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                System.out.println("testBoardUpdateInvalidTip : " + responseBody);
+                //then
+                resultActions.andExpect(jsonPath("$.success").value("false"));
+                resultActions.andExpect(jsonPath("$.error.message").value("마감기간은 yyyy-MM-dd HH:mm 형식이어야 합니다"));
+                resultActions.andExpect(jsonPath("$.error.status").value(400));
+                resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+            }
         }
     }
 }
