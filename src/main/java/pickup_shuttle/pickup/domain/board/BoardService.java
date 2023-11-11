@@ -109,7 +109,7 @@ public class BoardService {
                 () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
         );
         User user = userRepository.findById(board.getMatch().getUser().getUserId()).orElseThrow(
-                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "매칭된 공고글의 피커ID", "유저"))
+                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "매칭된 공고글의 유저ID", "유저"))
         );
         List<BeverageRp> beverageRpDTOS = board.getBeverages().stream().map(
                 b -> BeverageRp.builder()
@@ -195,7 +195,7 @@ public class BoardService {
         boardRepository.delete(board);
     }
     @Transactional
-    public UpdateBoardRp modify(UpdateBoardRq requestDTO, Long boardId, Long userId){
+    public UpdateBoardRp update(UpdateBoardRq requestDTO, Long boardId, Long userId){
         // 공고글 확인
         Board board = boardRepository.m4findByBoardId(boardId).orElseThrow(
                 () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
