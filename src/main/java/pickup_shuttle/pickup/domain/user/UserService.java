@@ -80,17 +80,20 @@ public class UserService {
                 .build();
     }
 
-    public String userAuthStatus(Long userId) {
+    public ReadUserAuthStatusRp userAuthStatus(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
         String userRole = user.getUserRole().getValue();
         String userUrl = user.getUrl();
-        return switch (userRole) {
+        String authStatus = switch (userRole) {
             case "ROLE_USER" -> userUrl.isEmpty() ? "미인증" : "인증 진행 중";
             case "ROLE_STUDENT" -> "인증";
             default -> "미인증";
         };
+        return ReadUserAuthStatusRp.builder()
+                .message(authStatus)
+                .build();
     }
 
     @Transactional
@@ -114,7 +117,7 @@ public class UserService {
 
 
     @Transactional
-    public void uploadImage(MultipartFile multipartFile, Long userId) {
+    public UpdateUserImageRp uploadImage(MultipartFile multipartFile, Long userId) {
         // 메타 데이터 설정
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(multipartFile.getSize());
@@ -143,6 +146,9 @@ public class UserService {
         } catch (Exception e) {
             throw new Exception500("AWS 이미지 업로드를 실패했습니다");
         }
+        return UpdateUserImageRp.builder()
+                .message("이미지 url 저장이 완료되었습니다")
+                .build();
     }
 
     public GetUserImageRp getImageUrl(Long userId) {
@@ -236,13 +242,15 @@ public class UserService {
     }
 
     @Transactional
-    public String authApprove(ApproveUserRq requestDTO) {
+    public ApproveUserRp authApprove(ApproveUserRq requestDTO) {
         User user = userRepository.findById(requestDTO.userId()).orElseThrow(
                 () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
         if (user.getUserRole() == UserRole.USER) {
             user.updateRole(UserRole.STUDENT);
-            return "학생 인증이 승인되었습니다";
+            return ApproveUserRp.builder()
+                    .message("학생 인증이 승인되었습니다")
+                    .build();
         }
         else throw new Exception403("일반 회원이 아닌 경우 학생 인증을 승인할 수 없습니다");
     }
@@ -391,28 +399,31 @@ public class UserService {
     }
 
     public LoginUserRp login(Authentication authentication) {
-        CustomOauth2User customOauth2User = (CustomOauth2User) authentication.getPrincipal();
-        if (customOauth2User == null) {
-            throw new Exception401("인증에 실패하였습니다.");
-        }
-        User user = userRepository.findBySocialId(customOauth2User.getName()).orElseThrow(
-                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "인증된 유저의 이름", "유저"))
-        );
-        String userPK = user.getUserId().toString();
-        String userRole = "";
-        if(user.getUserRole() == UserRole.ADMIN){
-            userRole = "ADMIN";
-        } else if(user.getUserRole() == UserRole.USER){
-            userRole = "USER";
-        } else if(user.getUserRole() == UserRole.STUDENT){
-            userRole = "STUDENT";
-        } else
-            userRole = "GUEST";
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof CustomOauth2User) {
+            CustomOauth2User customOauth2User = (CustomOauth2User) principal;
+            User user = userRepository.findBySocialId(customOauth2User.getName()).orElseThrow(
+                    () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "인증된 유저의 이름", "유저"))
+            );
+            String userPK = user.getUserId().toString();
+            String userRole = "";
+            if(user.getUserRole() == UserRole.ADMIN){
+                userRole = "ADMIN";
+            } else if(user.getUserRole() == UserRole.USER){
+                userRole = "USER";
+            } else if(user.getUserRole() == UserRole.STUDENT){
+                userRole = "STUDENT";
+            } else
+                userRole = "GUEST";
 
             return LoginUserRp.builder()
-                .AccessToken(jwtService.createAccessToken(userPK))
-                .nickName(user.getNickname())
-                .userAuth(userRole)
-                .build();
+                    .AccessToken(jwtService.createAccessToken(userPK))
+                    .nickName(user.getNickname())
+                    .userAuth(userRole)
+                    .build();
+        } else {
+            throw new RuntimeException("인증에 실패하였습니다.");
+        }
     }
 }

@@ -32,6 +32,7 @@ import pickup_shuttle.pickup.utils.Utils;
 
 
 import java.lang.reflect.Field;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +62,7 @@ public class BoardService {
                 .map(b -> ReadBoardListRp.builder()
                         .boardId(b.getBoardId())
                         .shopName(b.getStore().getName())
-                        .finishedAt(b.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                        .finishedAt(b.getFinishedAt().atZone(ZoneId.of("Asia/Seoul")).toEpochSecond())
                         .tip(b.getTip())
                         .isMatch(b.isMatch())
                         .destination(b.getDestination())
@@ -100,7 +101,7 @@ public class BoardService {
                 .destination(board.getDestination())
                 .request(board.getRequest())
                 .tip(board.getTip())
-                .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                .finishedAt(board.getFinishedAt().atZone(ZoneId.of("Asia/Seoul")).toEpochSecond())
                 .isMatch(board.isMatch())
                 .shopName(board.getStore().getName())
                 .beverages(beverageRpDTOS)
@@ -126,13 +127,13 @@ public class BoardService {
                 .destination(board.getDestination())
                 .request(board.getRequest())
                 .tip(board.getTip())
-                .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                .finishedAt(board.getFinishedAt().atZone(ZoneId.of("Asia/Seoul")).toEpochSecond())
                 .isMatch(board.isMatch())
                 .shopName(board.getStore().getName())
                 .pickerBank(user.getBank())
                 .pickerAccount(user.getAccount())
                 .pickerPhoneNumber(user.getPhoneNumber())
-                .arrivalTime(board.getMatch().getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).toEpochSecond(ZoneOffset.UTC))
+                .arrivalTime(board.getMatch().getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).atZone(ZoneId.of("Asia/Seoul")).toEpochSecond())
                 .isMatch(board.isMatch())
                 .beverages(beverageRpDTOS)
                 .isRequester(board.getUser().getUserId().equals(userId))
@@ -177,14 +178,14 @@ public class BoardService {
                 .shopName(board.getStore().getName())
                 .tip(board.getTip())
                 .destination(board.getDestination())
-                .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                .finishedAt(board.getFinishedAt().atZone(ZoneId.of("Asia/Seoul")).toEpochSecond())
                 .request(board.getRequest())
-                .arrivalTime(board.getMatch().getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).toEpochSecond(ZoneOffset.UTC))
+                .arrivalTime(board.getMatch().getMatchTime().plusMinutes(board.getMatch().getArrivalTime()).atZone(ZoneId.of("Asia/Seoul")).toEpochSecond())
                 .build();
     }
 
     @Transactional
-    public void boardDelete(Long boardId, Long userId){
+    public DeleteBoardRp boardDelete(Long boardId, Long userId){
         // 공고글 확인
         Board board = boardRepository.m3findByBoardId(boardId).orElseThrow(
                 () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "공고글ID", "공고글"))
@@ -197,6 +198,9 @@ public class BoardService {
             throw new Exception403("공고글이 이미 매칭된 경우 공고글을 삭제할 수 없습니다");
         // 삭제
         boardRepository.delete(board);
+        return DeleteBoardRp.builder()
+                .message("공고글 삭제를 완료하였습니다")
+                .build();
     }
     @Transactional
     public UpdateBoardRp update(UpdateBoardRq requestDTO, Long boardId, Long userId){
@@ -238,7 +242,7 @@ public class BoardService {
                 .destination(board.getDestination())
                 .tip(board.getTip())
                 .request(board.getRequest())
-                .finishedAt(board.getFinishedAt().toEpochSecond(ZoneOffset.UTC))
+                .finishedAt(board.getFinishedAt().atZone(ZoneId.of("Asia/Seoul")).toEpochSecond())
                 .isMatch(board.isMatch())
                 .build();
     }
