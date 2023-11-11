@@ -399,28 +399,31 @@ public class UserService {
     }
 
     public LoginUserRp login(Authentication authentication) {
-        CustomOauth2User customOauth2User = (CustomOauth2User) authentication.getPrincipal();
-        if (customOauth2User == null) {
-            throw new Exception401("인증에 실패하였습니다.");
-        }
-        User user = userRepository.findBySocialId(customOauth2User.getName()).orElseThrow(
-                () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "인증된 유저의 이름", "유저"))
-        );
-        String userPK = user.getUserId().toString();
-        String userRole = "";
-        if(user.getUserRole() == UserRole.ADMIN){
-            userRole = "ADMIN";
-        } else if(user.getUserRole() == UserRole.USER){
-            userRole = "USER";
-        } else if(user.getUserRole() == UserRole.STUDENT){
-            userRole = "STUDENT";
-        } else
-            userRole = "GUEST";
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof CustomOauth2User) {
+            CustomOauth2User customOauth2User = (CustomOauth2User) principal;
+            User user = userRepository.findBySocialId(customOauth2User.getName()).orElseThrow(
+                    () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "인증된 유저의 이름", "유저"))
+            );
+            String userPK = user.getUserId().toString();
+            String userRole = "";
+            if(user.getUserRole() == UserRole.ADMIN){
+                userRole = "ADMIN";
+            } else if(user.getUserRole() == UserRole.USER){
+                userRole = "USER";
+            } else if(user.getUserRole() == UserRole.STUDENT){
+                userRole = "STUDENT";
+            } else
+                userRole = "GUEST";
 
             return LoginUserRp.builder()
-                .AccessToken(jwtService.createAccessToken(userPK))
-                .nickName(user.getNickname())
-                .userAuth(userRole)
-                .build();
+                    .AccessToken(jwtService.createAccessToken(userPK))
+                    .nickName(user.getNickname())
+                    .userAuth(userRole)
+                    .build();
+        } else {
+            throw new RuntimeException("인증에 실패하였습니다.");
+        }
     }
 }

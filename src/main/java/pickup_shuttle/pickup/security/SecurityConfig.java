@@ -53,7 +53,11 @@ public class SecurityConfig {
                         .requestMatchers(new AntPathRequestMatcher("/admin")).hasAuthority("ROLE_ADMIN")
                         .requestMatchers(new AntPathRequestMatcher("/users/register/input")).hasAuthority("ROLE_GUEST")
                         .requestMatchers(
-                                new AntPathRequestMatcher("/"),
+                                new AntPathRequestMatcher("/**"),
+                                new AntPathRequestMatcher("/api/**"),
+                                new AntPathRequestMatcher("/api/articles"),
+                                new AntPathRequestMatcher("/api/articles?limit=3"),
+                                new AntPathRequestMatcher("/api/articles?offset=10&limit=10"),
                                 new AntPathRequestMatcher("/login/callback"),
                                 new AntPathRequestMatcher("/users/register/input"),
                                 new AntPathRequestMatcher("/css/**"),
