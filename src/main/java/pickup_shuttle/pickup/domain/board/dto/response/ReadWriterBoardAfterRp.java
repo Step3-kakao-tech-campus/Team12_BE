@@ -1,4 +1,4 @@
-package pickup_shuttle.pickup.domain.user.dto.response;
+package pickup_shuttle.pickup.domain.board.dto.response;
 
 import lombok.Builder;
 import pickup_shuttle.pickup.domain.beverage.dto.response.BeverageRp;

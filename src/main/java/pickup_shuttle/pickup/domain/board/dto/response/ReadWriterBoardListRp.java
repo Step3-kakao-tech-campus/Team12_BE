@@ -1,13 +1,13 @@
-package pickup_shuttle.pickup.domain.user.dto.response;
+package pickup_shuttle.pickup.domain.board.dto.response;
 
 import lombok.Builder;
 
 @Builder
-public record ReadPickerBoardListRp(
+public record ReadWriterBoardListRp(
         Long boardId,
         String shopName,
         String destination,
-        int tip,
         Long finishedAt,
+        int tip,
         boolean isMatch
 ) { }
