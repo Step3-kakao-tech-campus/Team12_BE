@@ -4,14 +4,17 @@
 </p>
 
 ## 저희 프로젝트를 소개합니다
-<img src="./images/main.png" width="450" height="204"/>
+<img src = "https://github.com/Step3-kakao-tech-campus/Team12_BE/assets/114290599/6999fc27-4d12-436c-8564-7e6693aa7528">
+
+<img src = "https://github.com/Step3-kakao-tech-campus/Team12_BE/assets/114290599/1ff68c37-814b-43a8-91da-bc4cb87c6d0e">
+
+<img src="https://github.com/Step3-kakao-tech-campus/Team12_BE/assets/114290599/8f494e42-601a-484c-b548-0fda714bc7be"/>
 
 ### 편리하게 음료를 픽업하고, 픽업 받을 수 있는 [픽업셔틀](https://www.notion.so/106c1c4b0e4b41f5a0f8e543b9190129?pvs=25)입니다. ###
 
-
 ## 프로젝트 구조
 ### ERD
-<img src="./images/MYSQLERD.png" width="450" height="450">
+<img src="https://github.com/Step3-kakao-tech-campus/Team12_BE/assets/114290599/b0ae89f6-545f-4796-94df-b29556a928b0">
 
 ### 디렉터리 구조
 
@@ -59,10 +62,10 @@
 
 | 분류      | Stack                   |
 |-----------|-------------------------|
-| BACK-END | <img src="https://img.shields.io/badge/JAVA-007396?style=forthebage"/> <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=forthebage&logo=springboot&logoColor=white"/> <img src="https://img.shields.io/badge/junit5-25A162?style=forthebage&logo=junit5&logoColor=white"/> <img src="https://img.shields.io/badge/Mockito-569A31?style=forthebadge"/> |
-| DATABASE | <img src="https://img.shields.io/badge/MySQL-4479A1?style=forthebadge&logo=MySQL&logoColor=white"/>                                                                 
-| INFRA    | <img src="https://img.shields.io/badge/AWS S3-569A31?style=forthebadge&logo=amazons3&logoColor=white"/> 
-| CI/CD    | <img src="https://img.shields.io/badge/GitHub Actions-2088FF?style=forthebage&logo=GitHub Actions&logoColor=white"/> <img src="https://img.shields.io/badge/MySQL Container-4479A1?style=forthebage&logo=MySQL&logoColor=white"/> <img src="https://img.shields.io/badge/NGINX-009639?style=forthebadge&logo=nginx&logoColor=white"/>                     
+| BACK-END | <img src="https://img.shields.io/badge/JAVA-007396?style=forthebage"/> <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=forthebage&logo=springboot&logoColor=white"/> |
+| DATABASE | <img src="https://img.shields.io/badge/MySQL-4479A1?style=forthebadge&logo=MySQL&logoColor=white"/>                                                         
+|Version Control|<img src = "https://img.shields.io/badge/git-%23F05033.svg?style=forthebage&logo=git&logoColor=white"> <img src ="https://img.shields.io/badge/github-%23121011.svg?style=forthebage&logo=github&logoColor=white">
+| INFRA    | <img src="https://img.shields.io/badge/AWS S3-569A31?style=forthebadge&logo=amazons3&logoColor=white"/> <img src="https://img.shields.io/badge/Krampoline-F7DF1E?style=forthebadge&logo=kakao&logoColor=white">
 
 
 ## 📒 참고 자료
@@ -75,24 +78,54 @@
 
 - 📁 [ERD](https://www.erdcloud.com/d/p3PSvuW4mboit2zdD)
 
-- 📝‍️ [DTO명 컨벤션](https://www.notion.so/DTO-50ba69bbeaae4f358111e9fc15b37f72?pvs=25)
+- 🔍‍️ [DTO명 컨벤션](https://www.notion.so/DTO-50ba69bbeaae4f358111e9fc15b37f72?pvs=25)
 
-- 📝‍️ [DTO 컨벤션](https://www.notion.so/DTO-5d7f2572d8994e8d91394e6fa985cdb2?pvs=25)
+- 📌‍️ [DTO 컨벤션](https://www.notion.so/DTO-5d7f2572d8994e8d91394e6fa985cdb2?pvs=25)
 
-- 📝️ [ErrorMessage 컨벤션](https://www.notion.so/61985a4e48834069b386b26513297960?pvs=25)
+- ⚠️ [ErrorMessage 컨벤션](https://www.notion.so/61985a4e48834069b386b26513297960?pvs=25)
 
-- 📝️ [상태코드 컨벤션](https://www.notion.so/1fd98ba5856c401ea20ccaba42dec05c?pvs=25)
+- 🚨 [상태코드 컨벤션](https://www.notion.so/1fd98ba5856c401ea20ccaba42dec05c?pvs=25)
 
-- 📝‍️ [테스트 시나리오](https://www.notion.so/106c1c4b0e4b41f5a0f8e543b9190129?pvs=25)
+- 🎞️‍️ [테스트 시나리오](https://www.notion.so/106c1c4b0e4b41f5a0f8e543b9190129?pvs=25)
 
 ## 🙋 참여 인원
-|       Backend       |         Backend       |         Backend         |
-|:-------------------:|:-----------------:|:-----------------------:|
-| ![](https://github.com/LJH098.png?size=50) | ![](https://github.com/dnjfqhd12345.png?size=100) | ![](https://github.com/B-JuHyeon.png?size=50) | 
-| [이진혁](https://github.com/LJH098)| [이기준](https://github.com/dnjfqhd12345)|[박주현](https://github.com/B-JuHyeon)  |
 
-
-
+<table>
+    <tr align="center">
+        <td style="min-width: 150px;">
+            <a href="https://github.com/LJH098">
+              <img src="https://github.com/LJH098.png" width="100">
+              <br />
+              <b>이진혁 </br>(LJH098)</b>
+            </a> 
+        </td>
+        <td style="min-width: 150px;">
+            <a href="https://github.com/dnjfqhd12345">
+              <img src="https://github.com/dnjfqhd12345.png" width="100">
+              <br />
+              <b>이기준</br> (dnjfqhd12345)</b>
+            </a>
+        </td>
+        <td style="min-width: 150px;">
+            <a href="https://github.com/B-JuHyeon">
+              <img src="https://github.com/B-JuHyeon.png" width="100">
+              <br />
+              <b>박주현 </br>(B-JuHyeon)</b>
+            </a>
+        </td>
+    </tr>
+    <tr align="center">
+        </td>
+                <td>
+            Backend
+        </td>
+                <td>
+            Backend
+        </td>   <td>
+            Backend
+        </td>
+    </tr>
+</table>
 
 
 
