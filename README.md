@@ -12,6 +12,32 @@
 
 ### 편리하게 음료를 픽업하고, 픽업 받을 수 있는 [픽업셔틀](https://k0d01653e1a11a.user-app.krampoline.com/)입니다. ###
 
+## ❗ 프로젝트에서 고민한 점
+### 사용자 로그인 과정에 대한 고민
+
+- 사용자로부터 ID와 PW를 입력 받아서 로그인하는 과정과 카카오 OAuth 로그인 중 어떤 것을 구현할지 고민했습니다.
+- 최대한 사용자가 회원가입할 때 편의성을 제공하기 위해 OAuth 로그인 과정을 선택했습니다.
+
+### OAuth 처리 및 Redirect URI 고민
+
+- Redirect URI를 백엔드 서버 주소로 할 것인가, 프론트엔드 서버 주소로 할 것인가에 대한 고민을 했습니다.
+- 결국, 카카오로부터 인가코드를 받고 엑세스 토큰과 리프레시 토큰을 요청하는 과정을 백엔드에서 처리하기로 결정했습니다.
+- 이는 프론트엔드 개발에 신경을 덜 쓸 수 있도록 편의성을 제공하기 위함입니다.
+
+### 인증 과정
+
+- 서비스의 인증 과정을 JWT로 구성했습니다.
+- 쿠키는 보안에 취약하고, 세션으로 사용할 경우 서버 과부하가 예상되어 JWT 선택했습니다.
+- 엑세스 토큰은 응답 Body로 프론트엔드에 전달하고, 리프레시 토큰은 DB 테이블에 저장합니다.
+- 엑세스 토큰 기간은 30분, 리프레시 토큰 기간은 2주로 설정했습니다.
+
+### 배포
+
+- 프론트엔드 서버와 백엔드 서버를 서로 다른 도메인으로 배포하려 했으나, CORS 및 SameSite 정책 문제 발생.
+- 프론트엔드와 백엔드 서버를 하나의 쿠버네티스 네임스페이스에서 동작시키는 방법으로 문제점 해결.
+- 도메인이 다르면 발생하는 통신 및 인증 객체 관리 문제를 네임스페이스로 해결함으로써 안정적인 배포 구현.
+
+
 ## 프로젝트 구조
 ### ERD
 <img src="https://github.com/Step3-kakao-tech-campus/Team12_BE/assets/114290599/b0ae89f6-545f-4796-94df-b29556a928b0">
@@ -56,7 +82,7 @@
  ┃ ┃ ┃ ┃ ┃ ┣ 📂board
  ┃ ┃ ┃ ┃ ┃ ┣ 📂user
 ```
-## Tech Stacks
+## 🪪 Tech Stacks
 
 ### Backend
 
@@ -70,23 +96,20 @@
 
 ## 📒 참고 자료
 
-- ✏️ [Notion](https://www.notion.so/795e1d561316494f8a156b89ebbd386b?v=9cbace0e7f0d4c0aaac74fc0e76dd238&pvs=4)
 
 - 💡 [기획 및 디자인](https://www.figma.com/file/UHfny7FM7ZtXo0cTsBcuKY/12%EC%A1%B0?type=design&node-id=376-1660&mode=design)
 
-- 📜 [API 명세서](https://www.notion.so/API-0e2e4398bd8a4bc5914b42cd4b7141b8?pvs=25)
+- 📜 [API 명세서](https://www.notion.so/API-0e2e4398bd8a4bc5914b42cd4b7141b8?pvs=4)
 
-- 📁 [ERD](https://www.erdcloud.com/d/p3PSvuW4mboit2zdD)
+- 🔍‍️ [DTO명 컨벤션](https://bronzed-amount-986.notion.site/DTO-0770d09a84e642819245e1c4846ba314?pvs=4)
 
-- 🔍‍️ [DTO명 컨벤션](https://www.notion.so/DTO-50ba69bbeaae4f358111e9fc15b37f72?pvs=25)
+- 📌‍️ [DTO 컨벤션](https://bronzed-amount-986.notion.site/DTO-0770d09a84e642819245e1c4846ba314?pvs=4)
 
-- 📌‍️ [DTO 컨벤션](https://www.notion.so/DTO-5d7f2572d8994e8d91394e6fa985cdb2?pvs=25)
+- ⚠️ [ErrorMessage 컨벤션](https://bronzed-amount-986.notion.site/d3f8c995552048e4bcdfe549291d68c2?pvs=4)
 
-- ⚠️ [ErrorMessage 컨벤션](https://www.notion.so/61985a4e48834069b386b26513297960?pvs=25)
+- 🚨 [상태코드 컨벤션](https://bronzed-amount-986.notion.site/46b20e72652d4f74b71accee9f73c04f?pvs=4)
 
-- 🚨 [상태코드 컨벤션](https://www.notion.so/1fd98ba5856c401ea20ccaba42dec05c?pvs=25)
-
-- 🎞️‍️ [테스트 시나리오](https://www.notion.so/106c1c4b0e4b41f5a0f8e543b9190129?pvs=25)
+- 🎞️‍️ [테스트 시나리오](https://bronzed-amount-986.notion.site/2bb8c9e7c2094d15a7e3c88ec09ea41f?pvs=4)
 
 ## 🙋 참여 인원
 
