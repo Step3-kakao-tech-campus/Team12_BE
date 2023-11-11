@@ -242,13 +242,15 @@ public class UserService {
     }
 
     @Transactional
-    public String authApprove(ApproveUserRq requestDTO) {
+    public ApproveUserRp authApprove(ApproveUserRq requestDTO) {
         User user = userRepository.findById(requestDTO.userId()).orElseThrow(
                 () -> new Exception404(String.format(ErrorMessage.NOTFOUND_FORMAT, "유저ID", "유저"))
         );
         if (user.getUserRole() == UserRole.USER) {
             user.updateRole(UserRole.STUDENT);
-            return "학생 인증이 승인되었습니다";
+            return ApproveUserRp.builder()
+                    .message("학생 인증이 승인되었습니다")
+                    .build();
         }
         else throw new Exception403("일반 회원이 아닌 경우 학생 인증을 승인할 수 없습니다");
     }

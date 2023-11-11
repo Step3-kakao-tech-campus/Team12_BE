@@ -119,15 +119,15 @@ public class UserController {
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
     @PutMapping("/admin/auth/approval")
-    public ResponseEntity<ApiUtils.ApiResult<String>> authApprove(@RequestBody @Valid ApproveUserRq requestDTO){
-        String message = userService.authApprove(requestDTO);
-        return ResponseEntity.ok(ApiUtils.success(message));
+    public ResponseEntity<ApiUtils.ApiResult<ApproveUserRp>> authApprove(@RequestBody @Valid ApproveUserRq requestDTO){
+        ApproveUserRp responseDTO = userService.authApprove(requestDTO);
+        return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 
     @PutMapping("/admin/auth/reject")
     public ResponseEntity<ApiUtils.ApiResult<RejectUserAuthRp>> authReject(@RequestBody @Valid RejectUserRq requestDTO){
-        RejectUserAuthRp message = userService.authReject(requestDTO);
-        return ResponseEntity.ok(ApiUtils.success(message));
+        RejectUserAuthRp responseDTO = userService.authReject(requestDTO);
+        return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 
     @GetMapping("/mypage/requester/list")
