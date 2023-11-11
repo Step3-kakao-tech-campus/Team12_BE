@@ -10,7 +10,7 @@
 
 <img src="https://github.com/Step3-kakao-tech-campus/Team12_BE/assets/114290599/8f494e42-601a-484c-b548-0fda714bc7be"/>
 
-### 편리하게 음료를 픽업하고, 픽업 받을 수 있는 [픽업셔틀](https://www.notion.so/106c1c4b0e4b41f5a0f8e543b9190129?pvs=25)입니다. ###
+### 편리하게 음료를 픽업하고, 픽업 받을 수 있는 [픽업셔틀](https://k0d01653e1a11a.user-app.krampoline.com/)입니다. ###
 
 ## 프로젝트 구조
 ### ERD
