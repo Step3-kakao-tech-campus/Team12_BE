@@ -67,9 +67,9 @@ public class UserController {
 
     // 유저 인증 상태 (인증/미인증/인증 진행 중) 반환
     @GetMapping("/mypage/auth")
-    public ResponseEntity<ApiUtils.ApiResult<String>> userAuthStatus(@Login Long userId){
-        String status = userService.userAuthStatus(userId);
-        return ResponseEntity.ok(ApiUtils.success(status));
+    public ResponseEntity<ApiUtils.ApiResult<ReadUserAuthStatusRp>> userAuthStatus(@Login Long userId){
+        ReadUserAuthStatusRp responseDTO = userService.userAuthStatus(userId);
+        return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 
     @GetMapping("/modify")
@@ -88,10 +88,10 @@ public class UserController {
 
     // 이미지 업로드
     @PutMapping("/mypage/image/url")
-    public ResponseEntity<ApiUtils.ApiResult<String>> uploadImage(@ModelAttribute @Valid UpdateUserImageRq requestDTO,
+    public ResponseEntity<ApiUtils.ApiResult<UpdateUserImageRp>> uploadImage(@ModelAttribute @Valid UpdateUserImageRq requestDTO,
                                        @Login Long userId) {
-        userService.uploadImage(requestDTO.image(), userId);
-        return ResponseEntity.ok(ApiUtils.success("이미지 url 저장이 완료되었습니다"));
+        UpdateUserImageRp responseDTO = userService.uploadImage(requestDTO.image(), userId);
+        return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
     // presigendUrl(GET) 발급
     @GetMapping("/mypage/image/url")
@@ -119,15 +119,15 @@ public class UserController {
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
     @PutMapping("/admin/auth/approval")
-    public ResponseEntity<ApiUtils.ApiResult<String>> authApprove(@RequestBody @Valid ApproveUserRq requestDTO){
-        String message = userService.authApprove(requestDTO);
-        return ResponseEntity.ok(ApiUtils.success(message));
+    public ResponseEntity<ApiUtils.ApiResult<ApproveUserRp>> authApprove(@RequestBody @Valid ApproveUserRq requestDTO){
+        ApproveUserRp responseDTO = userService.authApprove(requestDTO);
+        return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 
     @PutMapping("/admin/auth/reject")
     public ResponseEntity<ApiUtils.ApiResult<RejectUserAuthRp>> authReject(@RequestBody @Valid RejectUserRq requestDTO){
-        RejectUserAuthRp message = userService.authReject(requestDTO);
-        return ResponseEntity.ok(ApiUtils.success(message));
+        RejectUserAuthRp responseDTO = userService.authReject(requestDTO);
+        return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 
     @GetMapping("/mypage/requester/list")
